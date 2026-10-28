@@ -1,0 +1,56 @@
+      <sc-if value="{{ isStep8 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); max-width: var(--jr-measure);">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 8 sur 8 · Résultats</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Votre estimation MaPrimeAdapt’</h1>
+          <p style="margin: var(--jr-s-1) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">{{ profileLine }}</p>
+        </div>
+        <sc-if value="{{ notElig }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="JRv2.Notice" tone="info" title="D’autres aides sont possibles" hint-size="100%,96px">{{ notEligText }}</x-import>
+        </sc-if>
+        <sc-if value="{{ elig }}" hint-placeholder-val="{{ true }}">
+        <section data-surface="dark" aria-label="Aide estimée" style="background: var(--jr-ink); color: var(--jr-paper); border-radius: var(--jr-radius-m); padding: var(--jr-s-6); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--jr-s-4); align-items: center;">
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); min-width: 0;">
+            <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-paper);">Aide estimée</span>
+            <span style="font: var(--jr-type-amount-l); font-size: {{ bigSize }}; color: var(--jr-sprout); font-variant-numeric: tabular-nums; white-space: nowrap;">{{ r.total }}</span>
+            <span style="font: var(--jr-type-label); font-weight: 400; color: var(--jr-paper);">Source : {{ r.source }} · {{ r.date }} · montant indicatif</span>
+          </div>
+          <x-import component-from-global-scope="JRv2.IconBadge" name="valide" size="l" variant="encre" hint-size="48px,48px"></x-import>
+        </section>
+        <div style="display: grid; grid-template-columns: {{ threeCols }}; gap: var(--jr-gutter); align-items: stretch;">
+          <sc-for list="{{ r.trio }}" as="k" hint-placeholder-count="3">
+            <div style="{{ k.card }}">
+              <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: {{ k.labelColor }};">{{ k.label }}</span>
+              <span style="font: var(--jr-type-h2); font-size: var(--jr-s-6); line-height: 1.1; font-variant-numeric: tabular-nums; color: {{ k.color }};">{{ k.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <x-import component-from-global-scope="JRv2.Table" columns="{{ r.cols }}" rows="{{ r.rows }}" caption="Détail du calcul" hint-size="100%,320px"></x-import>
+        <x-import component-from-global-scope="JRv2.Notice" tone="info" title="Accompagnement" hint-size="100%,96px">Un opérateur AMO habilité est obligatoire ; son forfait Anah, de 350 à 800 €, est pris en charge. JungleRenov n’est pas agréé Mon Accompagnateur Rénov’ ; le dépôt se fait par vous, sur le site de l’Anah.</x-import>
+        </sc-if>
+        <x-import component-from-global-scope="JRv2.Accordion" title="À savoir" count="{{ savoirCount }}" items="{{ savoirItems }}" hint-size="100%,72px"></x-import>
+        <sc-if value="{{ elig }}" hint-placeholder-val="{{ true }}">
+        <section aria-label="Constituer mon dossier" style="background: var(--jr-leaf-wash); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; align-items: flex-start; gap: var(--jr-s-3);">
+          <h2 style="margin: 0; font: var(--jr-type-h2);">Prêt à constituer votre dossier&#8239;?</h2>
+          <p style="margin: 0; font: var(--jr-type-body);">Créez votre espace : le site y prépare votre dossier et le remet complet au partenaire habilité de votre secteur.</p>
+          <x-import component-from-global-scope="JRv2.Button" on-click="{{ constituer }}" full-width="{{ narrow }}" hint-size="auto,48px">Constituer mon dossier</x-import>
+        </section>
+        </sc-if>
+        <section aria-label="Recevoir mon récapitulatif" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-4);">
+          <h2 style="margin: 0; font: var(--jr-type-label-strong); font-size: calc(var(--jr-s-5) - var(--jr-s-1)); line-height: calc(var(--jr-s-5) + var(--jr-s-1));">Recevoir mon récapitulatif en PDF</h2>
+          <sc-if value="{{ pdfSent }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="JRv2.Notice" tone="valide" title="Demande enregistrée" hint-size="100%,72px">Le récapitulatif sera envoyé à cette adresse.</x-import>
+          </sc-if>
+          <sc-if value="{{ pdfForm }}" hint-placeholder-val="{{ true }}">
+            <div style="display: grid; grid-template-columns: {{ pdfCols }}; gap: var(--jr-s-3) var(--jr-gutter); align-items: end;">
+              <x-import component-from-global-scope="JRv2.TextField" id="pdf-email" label="E-mail" type="email" value="{{ s.pdfEmail }}" on-change="{{ set.pdfEmail }}" error="{{ err.pdf }}" hint-size="100%,100px"></x-import>
+              <x-import component-from-global-scope="JRv2.Button" variant="secondary" on-click="{{ sendPdf }}" full-width="{{ narrow }}" hint-size="auto,48px">Recevoir le PDF</x-import>
+            </div>
+            <x-import component-from-global-scope="JRv2.ChoiceCard" type="checkbox" name="pdf-consent" label="J’accepte de recevoir ce récapitulatif par e-mail" description="Aucun autre envoi, aucune revente." checked="{{ s.pdfConsent }}" on-change="{{ togglePdf }}" hint-size="100%,56px"></x-import>
+          </sc-if>
+        </section>
+        <p style="margin: 0; font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);">Sources : Guide des aides de l’Anah, édition février 2026, pp. 57-60 · barèmes 2026.</p>
+        <section data-surface="dark" aria-label="Notre garantie" style="background: var(--jr-ink); color: var(--jr-paper); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-2);">
+          <h2 style="margin: 0; font: var(--jr-type-h2); color: var(--jr-paper);">100&#8239;% indépendant · sans démarchage</h2>
+          <p style="margin: 0; font: var(--jr-type-body);">Aucun artisan ne nous paie pour être recommandé. Nous ne vous appellerons jamais sans votre demande.</p>
+        </section>
+      </sc-if>

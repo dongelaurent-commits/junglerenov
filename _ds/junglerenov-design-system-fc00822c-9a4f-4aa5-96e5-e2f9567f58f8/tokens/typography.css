@@ -1,0 +1,34 @@
+/* Typographie. Arsenica : logo, hero, H1 — jamais sous 20 px. Komet : tout le reste. Plancher 17 px partout. */
+:root{
+--font-display:"Arsenica Display","Abril Fatface",Georgia,serif;
+--font-text:"Komet","Red Hat Display",system-ui,sans-serif;
+--font-accent:var(--font-text);
+--fs-hero:56px;--lh-hero:60px;
+--fs-h1:40px;--lh-h1:46px;
+--fs-hook:32px;--lh-hook:36px;
+--fs-h2:28px;--lh-h2:34px;
+--fs-h3:22px;--lh-h3:28px;
+--fs-lead:21px;--lh-lead:32px;
+--fs-body:18px;--lh-body:28px;
+--fs-label:17px;--lh-label:24px;
+--fs-caption:17px;--lh-caption:24px;
+--fs-amount:44px;--lh-amount:48px;
+--fs-min:17px;--fs-display-min:20px;
+--fw-regular:400;/* @kind font */
+--fw-medium:500;/* @kind font */
+--fw-semibold:600;/* @kind font */
+--fw-bold:700;/* @kind font */
+--fw-heavy:900;/* @kind font */
+--fw-display:800;/* @kind font */
+/* Raccourcis font: */
+--type-hero:var(--fw-display) var(--fs-hero)/var(--lh-hero) var(--font-display);
+--type-h1:var(--fw-display) var(--fs-h1)/var(--lh-h1) var(--font-display);
+--type-hook:italic var(--fw-heavy) var(--fs-hook)/var(--lh-hook) var(--font-text);
+--type-h2:var(--fw-bold) var(--fs-h2)/var(--lh-h2) var(--font-text);
+--type-h3:var(--fw-medium) var(--fs-h3)/var(--lh-h3) var(--font-text);
+--type-lead:var(--fw-regular) var(--fs-lead)/var(--lh-lead) var(--font-text);
+--type-body:var(--fw-regular) var(--fs-body)/var(--lh-body) var(--font-text);
+--type-label:var(--fw-semibold) var(--fs-label)/var(--lh-label) var(--font-text);
+--type-caption:var(--fw-regular) var(--fs-caption)/var(--lh-caption) var(--font-text);
+--type-amount:italic var(--fw-heavy) var(--fs-amount)/var(--lh-amount) var(--font-text);
+}

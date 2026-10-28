@@ -1,0 +1,20 @@
+/* JungleRenov — couleurs. Charte v1.9 + tokens v1.8 (rôles). Palette fermée : 9 valeurs + 4 d'état. Aucune autre couleur, aucune transparence colorée. */
+:root,[data-branch="particulier"]{
+/* Base */
+--jr-encre:#123A2E;--jr-ivoire:#F4F1E8;--jr-ivoire-profond:#E9E3D3;--jr-blanc:#FFFFFF;--jr-feuille:#1F6B3F;--jr-pousse:#8FD14F;
+--jr-valide:#065F46;--jr-valide-fond:#ECFDF5;--jr-bloque:#991B1B;--jr-bloque-fond:#FEE2E2;--jr-secondaire:#6B7280;
+/* Rôles (noms de la charte, jungle-renov-tokens.css) */
+--ink:var(--jr-encre);--paper:var(--jr-ivoire);--paper-deep:var(--jr-ivoire-profond);--card:var(--jr-blanc);
+--line:var(--jr-ivoire-profond);--line-strong:var(--jr-secondaire);
+--action:var(--jr-feuille);--action-deep:var(--jr-encre);--action-wash:var(--jr-ivoire-profond);
+--accent-on-dark:var(--jr-pousse);
+--ok:var(--jr-valide);--ok-wash:var(--jr-valide-fond);--ko:var(--jr-bloque);--ko-wash:var(--jr-bloque-fond);--off:var(--jr-secondaire);
+/* Alias sémantiques */
+--surface-page:var(--paper);--surface-sunken:var(--paper-deep);--surface-card:var(--card);--surface-field:var(--card);--surface-dark:var(--ink);
+--text-body:var(--ink);--text-on-dark:var(--paper);--text-muted:var(--off);/* muted : sur blanc uniquement */
+--text-link:var(--action);--text-accent-on-dark:var(--accent-on-dark);
+--border-default:var(--line);--border-field:var(--line-strong);--border-strong:var(--ink);
+--button-primary-bg:var(--action);--button-primary-fg:var(--card);--button-primary-bg-hover:var(--action-deep);
+--button-on-dark-bg:var(--accent-on-dark);--button-on-dark-fg:var(--ink);--button-on-dark-bg-hover:var(--paper);
+--focus-ring:var(--ink);--focus-ring-on-dark:var(--paper);
+}

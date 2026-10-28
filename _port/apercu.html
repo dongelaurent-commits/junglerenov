@@ -1,0 +1,5 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Aperçu</title>
+<style>body{margin:0;background:#E9E3D3;font:17px system-ui}.row{display:flex;gap:24px;padding:16px;align-items:flex-start}.d{width:1280px;height:900px;border:0;background:#fff}.m{width:375px;height:900px;border:0;background:#fff}</style></head>
+<body><div class="row"><iframe class="d" id="d"></iframe><iframe class="m" id="m"></iframe></div>
+<script>var p=new URLSearchParams(location.search);var u='../'+(p.get('u')||'index.dc.html');d.src=u;m.src=u;
+var y=+(p.get('y')||0);if(y){[d,m].forEach(function(f){f.addEventListener('load',function(){setTimeout(function(){try{f.contentWindow.scrollTo(0,y)}catch(e){}},2500)})})}</script></body></html>

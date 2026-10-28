@@ -1,0 +1,4 @@
+
+var JR_HREF_PICTO=[[/dashboard/,'dossier'],[/mes-aides/,'revenus'],[/mes-documents/,'document'],[/annuaire/,'devis'],[/glossaire/,'information'],[/mon-profil/,'proprietaire'],[/contact|mailto/,'email'],[/index/,'retour'],[/choix-parcours|onboarding|parcours-/,'dossier'],[/guide|page-info/,'document'],[/tel:/,'telephone'],[/login/,'proprietaire']];
+function jrSvgByHref(svg){var a=svg.closest('a[href]');if(!a)return undefined;if(!a.textContent.trim())return 'chevron';var h=a.getAttribute('href');for(var i=0;i<JR_HREF_PICTO.length;i++)if(JR_HREF_PICTO[i][0].test(h))return JR_HREF_PICTO[i][1];return 'information';}
+function jrBrandToLogo(r){r.querySelectorAll('.brand').forEach(function(b){b.innerHTML='<span data-jr-logo="horizontal/principal" data-h="30"></span>';b.setAttribute('aria-label','JungleRenov, accueil');});}

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Estimer mes aides à la rénovation — JungleRenov</title>
+  <meta name="description" content="JungleRenov calcule les aides à la rénovation auxquelles vous avez droit, prépare votre dossier et le remet au partenaire habilité. Lorraine.">
+  <link rel="stylesheet" href="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/styles.css">
+  <link rel="stylesheet" href="lib/components.css">
+  <script src="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/_ds_bundle.js"></script>
+  <script src="lib/jr-v2.js"></script>
+  <style>html{scroll-behavior:smooth;scroll-padding-top:24px}*{box-sizing:border-box}</style>
+  <script src="lib/jr-motion.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon-couleur-32.svg">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon-couleur-180.svg">
+</helmet>
+<div style="background: var(--paper); color: var(--ink); min-height: 100vh;">
+  <dc-import name="site-header" mode="public" hint-size="100%,73px"></dc-import>
+
+  <section data-screen-label="01 Hero" style="padding: {{ secPad }} {{ gutter }};">
+    <div style="max-width: 1136px; margin: 0 auto; display: grid; grid-template-columns: {{ heroCols }}; gap: {{ heroGap }}; align-items: center; min-height: {{ heroMin }};">
+      <div style="min-width: 0;">
+        <p style="margin: 0; display: inline-block; white-space: {{ pillWrap }}; max-width: 100%; box-sizing: border-box; padding: 6px 12px; background: #E6F2EA; border: 1px solid var(--action); border-radius: 999px; font: var(--fw-semibold) 17px/22px var(--font-text); letter-spacing: 0.04em;">100&nbsp;% indépendant · sans démarchage</p>
+        <h1 ref="{{ h1Ref }}" style="margin: 20px 0 18px; font: var(--fw-bold) {{ h1Size }}/{{ h1Lh }} var(--font-text); letter-spacing: -0.025em;"><span style="display: block;">Sortez de la jungle</span><span style="display: block; color: var(--action);">administrative.</span><span style="display: block; white-space: nowrap;">{{ h1L3 }}</span></h1>
+        <p style="margin: 0 0 28px; max-width: 50ch; font: var(--fw-regular) 21px/1.55 var(--font-text); text-wrap: pretty;">JungleRenov calcule toutes les aides auxquelles vous avez droit, constitue votre dossier et le remet complet à un partenaire habilité. Gratuit pour vous.</p>
+        <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><p style="margin: 0 0 22px; display: flex; max-width: 640px; box-sizing: border-box; align-items: flex-start; gap: 10px; padding: 10px 16px; background: #E6F2EA; border: 1px solid var(--action); border-radius: var(--radius-sm); font: var(--fw-semibold) 17px/1.4 var(--font-text); max-width: 100%;"><x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Picto" name="valide" tone="var(--action)" hint-size="24px,24px"></x-import><span style="min-width: 0; flex: 1;">Simulation gratuite en 5&nbsp;minutes · Aucun paiement sur ce site · Dossier remis complet au partenaire</span></p></sc-if>
+        <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+          <ul style="list-style: none; margin: 0 0 var(--jr-s-5); padding: var(--jr-s-3); display: flex; flex-direction: column; gap: var(--jr-s-2); background: var(--jr-leaf-wash); border: var(--jr-border) solid var(--jr-leaf); border-radius: var(--jr-radius-s);">
+            <sc-for list="{{ reassMobile }}" as="it" hint-placeholder-count="3">
+              <li style="display: flex; align-items: center; gap: var(--jr-s-2); font: var(--jr-type-label-strong); line-height: 1.4;"><x-import component-from-global-scope="JRv2.Icon" name="valide" color="var(--jr-leaf)" hint-size="24px,24px"></x-import><span>{{ it }}</span></li>
+            </sc-for>
+          </ul>
+        </sc-if>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px;">
+          <x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Button" size="lg" href="choix-parcours.dc.html" dc-props="{{ btnProps }}" hint-size="auto,56px">Estimer mes aides</x-import>
+          <x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Button" variant="secondary" size="lg" href="#aides" dc-props="{{ btnProps }}" hint-size="auto,56px">Voir un exemple</x-import>
+        </div>
+        <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><p style="margin: 0; display: flex; align-items: center; gap: var(--jr-s-2); font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);"><x-import component-from-global-scope="JRv2.Icon" name="document" color="var(--jr-ink-70)" hint-size="24px,24px"></x-import><span>Sources : Anah, ADEME, Service Public · barèmes 2026</span></p></sc-if>
+        <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); margin-top: var(--jr-s-4);">
+            <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Sources · barèmes 2026</span>
+            <span style="display: flex; flex-wrap: nowrap; overflow-x: auto; gap: var(--jr-s-2);">
+              <sc-for list="{{ sources }}" as="s" hint-placeholder-count="3"><span style="flex: none; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink); padding: var(--jr-s-1) var(--jr-s-3); border-radius: var(--jr-radius-pill); background: var(--jr-leaf-wash);">{{ s }}</span></sc-for>
+            </span>
+          </div>
+        </sc-if>
+      </div>
+
+      <div role="group" aria-label="Exemple : maison de 1972 à Nancy" style="position: relative; width: 100%;">
+        <div style="height: {{ sceneH }}; background: var(--jr-paper-deep); border: 1px solid var(--line); border-radius: var(--radius-md); overflow: hidden;">
+          <svg viewBox="0 0 500 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Maison en coupe : toiture, solaire, pompe à chaleur et plancher bas" style="display: block; width: 100%; height: 100%;">
+            <defs><pattern id="jr-hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#1F6B3F" stroke-width="0.6"></line></pattern></defs>
+            <line x1="20" y1="340" x2="480" y2="340" stroke="#6B7280" stroke-dasharray="3 4"></line>
+            <polygon points="120,340 120,180 250,90 380,180 380,340" fill="#FFFFFF" stroke="#123A2E" stroke-width="1.5"></polygon>
+            <line x1="120" y1="180" x2="380" y2="180" stroke="#123A2E" stroke-width="1" stroke-dasharray="3 3"></line>
+            <polygon points="125,178 250,98 375,178" fill="url(#jr-hatch)"></polygon>
+            <rect x="120" y="180" width="14" height="160" fill="url(#jr-hatch)"></rect>
+            <rect x="366" y="180" width="14" height="160" fill="url(#jr-hatch)"></rect>
+            <rect x="232" y="260" width="36" height="80" fill="#F4F1E8" stroke="#123A2E" stroke-width="1"></rect>
+            <circle cx="262" cy="304" r="1.5" fill="#123A2E"></circle>
+            <rect x="160" y="220" width="40" height="40" fill="#E6F2EA" stroke="#123A2E" stroke-width="1"></rect>
+            <line x1="180" y1="220" x2="180" y2="260" stroke="#123A2E"></line><line x1="160" y1="240" x2="200" y2="240" stroke="#123A2E"></line>
+            <rect x="300" y="220" width="40" height="40" fill="#E6F2EA" stroke="#123A2E" stroke-width="1"></rect>
+            <line x1="320" y1="220" x2="320" y2="260" stroke="#123A2E"></line><line x1="300" y1="240" x2="340" y2="240" stroke="#123A2E"></line>
+            <rect x="320" y="100" width="18" height="40" fill="#FFFFFF" stroke="#123A2E" stroke-width="1.2"></rect>
+            <g transform="translate(265,110) rotate(-32)">
+              <rect width="80" height="38" fill="#1F6B3F" stroke="#123A2E" stroke-width="1"></rect>
+              <line x1="20" y1="0" x2="20" y2="38" stroke="#E6F2EA" stroke-width=".6"></line><line x1="40" y1="0" x2="40" y2="38" stroke="#E6F2EA" stroke-width=".6"></line><line x1="60" y1="0" x2="60" y2="38" stroke="#E6F2EA" stroke-width=".6"></line><line x1="0" y1="19" x2="80" y2="19" stroke="#E6F2EA" stroke-width=".6"></line>
+            </g>
+            <g transform="translate(395,250)">
+              <rect width="40" height="38" fill="#FFFFFF" stroke="#123A2E" stroke-width="1"></rect>
+              <circle cx="20" cy="19" r="10" fill="none" stroke="#1F6B3F" stroke-width="1.2"></circle><circle cx="20" cy="19" r="3" fill="#1F6B3F"></circle>
+              <line x1="14" y1="13" x2="26" y2="25" stroke="#1F6B3F" stroke-width="1"></line><line x1="26" y1="13" x2="14" y2="25" stroke="#1F6B3F" stroke-width="1"></line>
+            </g>
+            <rect x="135" y="335" width="231" height="6" fill="url(#jr-hatch)"></rect><line x1="380" y1="288" x2="395" y2="288" stroke="#123A2E" stroke-width="1"></line>
+            <g style="display: {{ annDisp }};" font-family="Komet, 'Red Hat Display', system-ui, sans-serif" font-size="{{ annFs }}" font-weight="600" fill="#123A2E">
+              <text x="24" y="132">Toiture</text><line x1="96" y1="136" x2="140" y2="160" stroke="#6B7280" stroke-width=".8"></line>
+              <text x="400" y="176">Solaire</text><line x1="404" y1="160" x2="345" y2="122" stroke="#6B7280" stroke-width=".8"></line>
+              <text x="444" y="236">PAC</text><line x1="450" y1="242" x2="436" y2="258" stroke="#6B7280" stroke-width=".8"></line>
+              <text x="24" y="384">Plancher bas</text><line x1="132" y1="378" x2="150" y2="344" stroke="#6B7280" stroke-width=".8"></line>
+            </g>
+          </svg>
+        </div>
+        <div style="position: absolute; display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-md); box-sizing: border-box; {{ fc1 }}" data-hero-card="">
+          <span style="width: 40px; height: 40px; flex: none; display: grid; place-items: center; border-radius: var(--radius-sm); background: #E6F2EA; color: var(--action);"><x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Picto" name="etape-en-cours" tone="var(--action)" hint-size="24px,24px"></x-import></span>
+          <span style="display: flex; flex-direction: column;"><span style="font: var(--fw-semibold) 17px/22px var(--font-text); letter-spacing: 0.06em;">Gain DPE</span><span style="font: var(--fw-bold) 20px/26px var(--font-text); font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 6px;"><span style="display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: var(--radius-sm); background: #FFB400; color: #123A2E;">E</span><span aria-label="vers">→</span><span style="display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: var(--radius-sm); background: #C8D400; color: #123A2E;">C</span></span></span>
+        </div>
+        <div data-surface="dark" class="jr-on-dark" style="position: absolute; display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-md); box-sizing: border-box; {{ fc3 }} background: var(--ink); border-color: var(--ink); color: var(--paper);" data-hero-card="">
+          <span style="width: 40px; height: 40px; flex: none; display: grid; place-items: center; border-radius: var(--radius-sm); background: #E6F2EA; color: var(--action); background: transparent; border: 1px solid var(--accent-on-dark); color: var(--accent-on-dark);"><x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Picto" name="valide" tone="var(--accent-on-dark)" hint-size="24px,24px"></x-import></span>
+          <span style="display: flex; flex-direction: column;"><span style="font: var(--fw-semibold) 17px/22px var(--font-text); letter-spacing: 0.06em;">Aides cumulées</span><span style="font: var(--fw-semibold) 17px/24px var(--font-text);">3 dispositifs cumulés</span></span>
+        </div>
+        <div style="position: absolute; display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-md); box-sizing: border-box; {{ fc2 }}" data-hero-card="">
+          <span style="width: 40px; height: 40px; flex: none; display: grid; place-items: center; border-radius: var(--radius-sm); background: #E6F2EA; color: var(--action);"><x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Picto" name="revenus" tone="var(--action)" hint-size="24px,24px"></x-import></span>
+          <span style="display: flex; flex-direction: column;"><span style="font: var(--fw-semibold) 17px/22px var(--font-text); letter-spacing: 0.06em;">Aides totales · exemple</span><span style="font: var(--fw-bold) 20px/26px var(--font-text); font-variant-numeric: tabular-nums;">16&nbsp;450&nbsp;€ <span style="font: var(--fw-regular) 17px/26px var(--font-text);">· barème 2026 · indicatif</span></span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-label="Nos engagements" style="background: var(--jr-white); border-top: var(--jr-border) solid var(--jr-line); border-bottom: var(--jr-border) solid var(--jr-line); padding: {{ secPad }} {{ gutter }};">
+    <div data-reveal-section="" style="max-width: 1136px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-5);">
+      <p style="margin: 0; font: 500 13px/18px 'JetBrains Mono', ui-monospace, monospace; letter-spacing: 0.08em; color: #567166;">Nos engagements</p>
+      <ul data-stagger="" style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: {{ trustCols }}; align-items: stretch;">
+        <sc-for list="{{ trust }}" as="r" hint-placeholder-count="5">
+          <li style="{{ r.cell }}">
+            <x-import component-from-global-scope="JRv2.IconBadge" name="{{ r.p }}" size="{{ badgeSize }}" variant="feuille" hint-size="40px,40px"></x-import>
+            <h3 style="margin: {{ trustHm }}; font: var(--jr-type-label-strong); font-size: {{ trustHs }}; line-height: calc(var(--jr-s-5) + var(--jr-s-1)); color: var(--jr-ink); text-wrap: balance;">{{ r.h }}</h3>
+            <p style="margin: {{ trustPm }}; grid-column: {{ trustPCol }}; font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70); text-wrap: pretty;">{{ r.s }}</p>
+          </li>
+        </sc-for>
+      </ul>
+    </div>
+  </section>
+
+  <section id="projets" data-screen-label="02 Projet" style="background: var(--jr-paper-deep); padding: {{ secPad }} {{ gutter }};">
+    <div data-reveal-section="" style="max-width: 1136px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-6);">
+      <div style="display: flex; flex-direction: column; gap: var(--space-3); max-width: 44rem;">
+        <p style="margin: 0; font: var(--type-label); letter-spacing: 0.1em;">02 — Votre projet</p>
+        <h2 style="margin: 0; font: var(--fw-display) 40px/46px var(--font-display);">Quel est votre projet&nbsp;?</h2>
+        <p style="margin: 0; font: var(--type-lead);">Trois parcours, selon les travaux que vous envisagez.</p>
+      </div>
+      <div data-stagger="" style="display: grid; grid-template-columns: {{ projCols }}; gap: 24px; align-items: stretch;">
+        <sc-for list="{{ projets }}" as="p" hint-placeholder-count="3">
+          <x-import component-from-global-scope="JRv2.ProjectCard" dc-props="{{ p }}" hint-size="100%,380px"></x-import>
+        </sc-for>
+            </span>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="fonctionnement" data-screen-label="03 Fonctionnement" data-surface="dark" class="jr-on-dark" style="background: var(--jr-ink); color: var(--jr-paper); padding: {{ secPad }} {{ gutter }};">
+    <div data-reveal-section="" style="max-width: 1136px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-6);">
+      <div style="display: flex; flex-direction: column; gap: var(--space-3); max-width: 44rem;">
+        <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-sprout);">03 — Comment ça marche</p>
+        <h2 style="margin: 0; font: var(--jr-type-h1); color: var(--jr-paper);">De la simulation à la remise du dossier</h2>
+      </div>
+      <ol data-stagger="" style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: {{ stepCols }}; gap: var(--space-6) 24px;">
+        <sc-for list="{{ etapes }}" as="e" hint-placeholder-count="4">
+          <li style="{{ stepLi }}">
+            <span aria-hidden="true" data-count="{{ e.n }}" style="{{ stepNum }}">{{ e.n }}</span>
+            <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); min-width: 0;"><h3 style="margin: 0; font: var(--fw-bold) 20px/26px var(--font-text); white-space: nowrap; color: var(--jr-paper);">{{ e.t }}</h3>
+            <p style="margin: 0; font: var(--type-body); text-wrap: pretty; color: var(--jr-paper);">{{ e.d }}</p></div>
+          </li>
+        </sc-for>
+      </ol>
+      <sc-if value="{{ showStepper }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Stepper" steps="{{ stepLabels }}" current="{{ stepNone }}" surface="dark" hint-size="100%,72px"></x-import></sc-if>
+    </div>
+  </section>
+
+  <section id="aides" data-screen-label="04 Aides" style="background: var(--jr-paper); padding: {{ secPad }} {{ gutter }};">
+    <div data-reveal-section="" style="max-width: calc(var(--jr-container) - 2 * var(--jr-margin)); margin: 0 auto; display: flex; flex-direction: column; gap: var(--jr-s-6);">
+      <div style="display: flex; flex-direction: column; gap: var(--jr-s-3); max-width: var(--jr-measure);">
+        <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">04 — Les aides cumulables</p>
+        <h2 style="margin: 0; font: var(--jr-type-h1);">Ce que vous pouvez toucher</h2>
+        <p style="margin: 0; font: var(--jr-type-lead);">En France, quatre dispositifs peuvent se cumuler, plus les aides locales. C’est l’empilement qui fait la différence.</p>
+      </div>
+      <div style="display: grid; grid-template-columns: {{ aidesCols }}; gap: var(--jr-s-6) var(--jr-gutter); align-items: start;">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-4); min-width: 0;">
+          <ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-auto-rows: 1fr;">
+            <sc-for list="{{ familles }}" as="f" hint-placeholder-count="5">
+              <li style="{{ f.row }}">
+                <x-import component-from-global-scope="JRv2.IconBadge" name="{{ f.picto }}" size="s" variant="feuille" hint-size="32px,32px"></x-import>
+                <div style="display: flex; flex-direction: column; gap: var(--jr-s-1); min-width: 0;">
+                  <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">{{ f.famille }}</span>
+                  <span style="font: var(--jr-type-label-strong); font-size: calc(var(--jr-s-5) - var(--jr-s-1)); line-height: calc(var(--jr-s-5) + var(--jr-s-1));">{{ f.nom }}</span>
+                  <span style="font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70); text-wrap: pretty;">{{ f.ligne }}</span>
+                </div>
+              </li>
+            </sc-for>
+          </ul>
+          <div><x-import component-from-global-scope="JRv2.Button" variant="tertiary" href="glossaire-aides.dc.html" dc-props="{{ glossProps }}" hint-size="auto,48px">Voir le glossaire des aides</x-import></div>
+        </div>
+
+        <article aria-label="Exemple chiffré" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-l); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-5); min-width: 0;">
+          <header style="display: flex; flex-direction: column; gap: var(--jr-s-2);">
+            <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Exemple · maison de 1972, Nancy</span>
+            <span style="font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70); text-wrap: pretty;">110&#8239;m² · DPE E · revenus intermédiaires · isolation des combles et des murs, pompe à chaleur, audit — 31&#8239;330&#8239;€ HT</span>
+          </header>
+          <div style="display: flex; flex-direction: column;">
+            <sc-for list="{{ lignes }}" as="l" hint-placeholder-count="4">
+              <div style="{{ l.row }}">
+                <span style="{{ l.famStyle }}">{{ l.famille }}</span>
+                <span style="display: flex; flex-direction: column; min-width: 0; grid-area: nom;"><span style="font: var(--jr-type-label-strong);">{{ l.nom }}</span><span style="font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);">{{ l.detail }}</span></span>
+                <span style="grid-area: amt; justify-self: end; font: var(--jr-type-label-strong); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right;">{{ l.montant }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: var(--jr-s-2) var(--jr-s-4); margin: 0 {{ totalBleed }}; padding: var(--jr-s-5) {{ cardPadX }}; background: var(--jr-leaf-wash);">
+            <span style="font: var(--jr-type-label);">Total estimé · borne basse</span>
+            <span style="font: var(--jr-type-h1); font-size: {{ totalSize }}; line-height: 1; font-variant-numeric: tabular-nums; color: var(--jr-ink);" data-count="16450" data-suffix=" €">16&#8239;450&#8239;€</span>
+          </div>
+          <p style="margin: 0; font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);">Source : barèmes Anah et Région Grand Est 2026, consultés en février 2026. Montant indicatif, non contractuel.</p>
+          <footer style="display: flex; flex-wrap: wrap; align-items: center; gap: var(--jr-s-3) var(--jr-s-5); padding-top: var(--jr-s-5); border-top: var(--jr-border) solid var(--jr-line);">
+            <x-import component-from-global-scope="JRv2.Button" href="choix-parcours.dc.html" full-width="{{ narrow }}" hint-size="auto,48px">Faire ma simulation</x-import>
+          </footer>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="modele" data-screen-label="05 Modèle" style="position: relative; z-index: 1; background: var(--jr-leaf-wash); padding: {{ secPad }} {{ gutter }} 0;">
+    <div data-reveal-section="" style="max-width: 1136px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-6);">
+      <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+        <p style="margin: 0; font: var(--type-label); letter-spacing: 0.1em;">05 — Notre modèle</p>
+        <h2 style="margin: 0; font: var(--fw-display) 40px/46px var(--font-display);">Notre modèle</h2>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+        <p style="margin: 0; font: var(--type-hook);">Gratuit pour vous.</p>
+        <p style="margin: 0; font: var(--type-lead); max-width: 44rem; text-wrap: pretty;">Nous sommes rémunérés par le partenaire habilité à qui votre dossier est remis, dans le cadre d’un accord conclu avec lui. Aucune commission sur vos travaux, aucun lead vendu.</p>
+        <p style="margin: 0; font: var(--type-body); max-width: 44rem; text-wrap: pretty;">L’accompagnement du partenaire peut être à sa charge ou à la vôtre selon le dispositif. Son montant vous est indiqué par écrit, avant tout engagement.</p>
+      </div>
+      <div data-surface="dark" class="jr-on-dark" style="display: flex; gap: var(--space-4); align-items: flex-start; padding: clamp(24px, 4vw, 48px); background: var(--ink); color: var(--paper); border-radius: var(--radius-md); margin-bottom: calc(-1 * var(--jr-s-7));">
+        <x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Picto" name="valide" size="48" tone="ivoire" hint-size="48px,48px"></x-import>
+        <div style="display: flex; flex-direction: column; gap: var(--space-2);">
+          <h3 style="margin: 0; font: var(--type-h2);">100&nbsp;% indépendant · sans démarchage</h3>
+          <p style="margin: 0; font: var(--type-body); max-width: 44rem; text-wrap: pretty;">Aucun artisan ne nous paie pour être recommandé. Nous ne vous appellerons jamais sans votre demande.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" data-screen-label="06 FAQ" style="background: var(--jr-white); padding: calc({{ secPad }} + var(--jr-s-7)) {{ gutter }} {{ secPad }};">
+    <div data-reveal-section="" style="max-width: 1136px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-6);">
+      <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+        <p style="margin: 0; font: var(--type-label); letter-spacing: 0.1em;">06 — Questions fréquentes</p>
+        <h2 style="margin: 0; font: var(--fw-display) 40px/46px var(--font-display);">Questions fréquentes</h2>
+      </div>
+      <div id="faq-list" style="max-width: 52rem;"><x-import component-from-global-scope="JRv2.Accordion" variant="group" default-open="{{ 0 }}" sections="{{ faqSections }}" hint-size="100%,480px"></x-import></div>
+    </div>
+  </section>
+
+  <section data-screen-label="07 Dernier appel" data-surface="dark" class="jr-on-dark" style="background: var(--jr-ink); color: var(--jr-paper); padding: {{ secPad }} {{ gutter }};">
+    <div data-reveal-section="" style="max-width: 1136px; margin: 0 auto; display: flex; flex-direction: column; gap: var(--space-4); align-items: flex-start;">
+      <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-sprout);">07 — Commencer</p>
+      <h2 style="margin: 0; font: var(--fw-display) {{ lcSize }} var(--font-display); color: var(--paper);">Cinq minutes pour savoir où vous en êtes</h2>
+      <x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Button" variant="on-dark" size="lg" href="choix-parcours.dc.html" dc-props="{{ btnProps }}" hint-size="auto,56px">Estimer mes aides</x-import>
+    </div>
+  </section>
+
+  <div aria-hidden="true" style="height: var(--jr-border); background: var(--jr-ink-70);"></div>
+  <dc-import name="site-footer" hint-size="100%,320px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { open: 0, w: typeof window !== 'undefined' ? window.innerWidth : 1280 };
+  componentDidMount() {
+    this.onR = () => this.setState({ w: window.innerWidth });
+    window.addEventListener('resize', this.onR);
+    this.onR(); requestAnimationFrame(() => this.fitH1()); if (document.fonts) document.fonts.ready.then(() => this.fitH1());
+    if (window.innerWidth < 640 && this.state.open === 0) this.setState({ open: -1 });
+    const m = () => { const r = document.querySelector('[data-screen-label="01 Hero"]'); if (window.jrMotion && r) window.jrMotion(r.parentElement); else setTimeout(m, 60); };
+    setTimeout(m, 120);
+  }
+  h1Ref = React.createRef();
+  fitH1() {
+    // Provisoire, en attendant les polices : desktop 56, ou 52 si cela ramène à 3 lignes (sinon 56 sur 4) ; mobile 40 si 3 lignes, sinon 36.
+    const el = this.h1Ref.current; if (!el) return;
+    const desk = this.state.w >= 960, lh = desk ? 1.05 : 1.1, cs = getComputedStyle(el), w = el.getBoundingClientRect().width;
+    const c = el.cloneNode(true); c.removeAttribute('style');
+    Object.assign(c.style, { position: 'absolute', visibility: 'hidden', pointerEvents: 'none', left: '0', top: '0', margin: '0', width: w + 'px', fontFamily: cs.fontFamily, fontWeight: cs.fontWeight, letterSpacing: cs.letterSpacing, textWrap: 'balance', lineHeight: String(lh) });
+    el.parentElement.appendChild(c);
+    const lines = (px) => { c.style.fontSize = px + 'px'; return Math.round(c.getBoundingClientRect().height / (px * lh)); };
+    const pick = desk ? (lines(56) <= 3 ? 56 : (lines(52) <= 3 ? 52 : 56)) : (lines(40) <= 3 ? 40 : 36);
+    c.remove();
+    if (pick !== this.state.h1Px) this.setState({ h1Px: pick });
+  }
+  componentDidUpdate(pp, ps) {
+    const ok = (this.state.w >= 960 ? [56, 52] : [40, 36]).indexOf(this.state.h1Px) >= 0;
+    if (ps.w !== this.state.w || !ok) requestAnimationFrame(() => this.fitH1());
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); }
+  renderVals() {
+    const go = (href) => () => { location.href = href; };
+    const cap = 'des travaux financés';
+    const projets = [
+      { href: 'tunnel-energetique.dc.html?fresh=1', label: '01 — Énergie', title: 'Rénovation énergétique', titleSize: (typeof window !== 'undefined' && window.innerWidth < 640) ? 'calc(var(--jr-s-5) - var(--jr-s-1) / 2)' : 'calc(var(--jr-s-5) + var(--jr-s-1) / 2)', description: 'Pour payer moins de chauffage et avoir un logement plus confortable.', figurePrefix: 'jusqu’à', figure: '80\u202f%', figureCaption: cap, aides: ['MaPrimeRénov’', 'CEE', 'Éco-PTZ'] },
+      { href: 'tunnel-autonomie.dc.html?fresh=1', label: '02 — Autonomie', title: 'Perte d’autonomie', description: 'Pour rester chez soi en sécurité malgré l’âge ou un handicap.', figurePrefix: 'jusqu’à', figure: '70\u202f%', figureCaption: cap, aides: ['MaPrimeAdapt’', 'APA', 'PCH'] },
+      { href: 'tunnel-degrade.dc.html?fresh=1', label: '03 — Logement dégradé', title: 'Logement dégradé', description: 'Pour remettre en état un logement très dégradé ou insalubre.', figurePrefix: 'jusqu’à', figure: '80\u202f%', figureCaption: cap, aides: ['Ma Prime Logement Décent', 'Anah LHI'] },
+    ];
+    const etapes = [
+      { n: '01', t: 'Simulation', d: 'Adresse, logement, revenus, travaux, à partir des données ADEME.' },
+      { n: '02', t: 'Aides cumulées', d: "MaPrimeRénov', CEE, éco-PTZ, TVA réduite, aides locales : empilées et chiffrées." },
+      { n: '03', t: 'Dossier constitué', d: 'Pré-rempli et vérifié, il est prêt à être remis, avec votre accord.' },
+      { n: '04', t: 'Remise du dossier', d: "Le partenaire habilité de votre département le reprend ; le dépôt se fait sur le site de l'Anah." },
+    ];
+    const fam = [
+      { famille: 'État', picto: 'facade', nom: 'MaPrimeRénov’', ligne: "Prime selon vos revenus et vos travaux, versée par l’Anah." },
+      { famille: 'Énergie', picto: 'chaudiere', nom: 'CEE', ligne: "Prime des fournisseurs d’énergie, quels que soient vos revenus." },
+      { famille: 'Banque', picto: 'revenus', nom: 'Éco-prêt à taux zéro', ligne: "Jusqu’à 50\u202f000\u202f€ sans intérêts, remboursables sur 20 ans." },
+      { famille: 'Fiscal', picto: 'avis-imposition', nom: 'TVA à 5,5\u202f%', ligne: "Appliquée directement sur la facture de l’artisan." },
+      { famille: 'Local', picto: 'logement', nom: 'Aides régionales et communales', ligne: 'Région, département, intercommunalité : souvent oubliées.' },
+    ];
+    const lg = [
+      { famille: 'État', nom: 'MaPrimeRénov’ rénovation d’ampleur', detail: '45\u202f% sur 30\u202f000\u202f€ HT, gain de 2 classes', montant: '13\u202f500\u202f€' },
+      { famille: 'Énergie', nom: 'CEE', detail: 'Intégrés au parcours accompagné', montant: 'inclus' },
+      { famille: 'Local', nom: 'Plan Climat Métropole du Grand Nancy', detail: '5 à 15\u202f% des dépenses éligibles', montant: '1\u202f950 à 4\u202f950\u202f€' },
+      { famille: 'Local', nom: 'Climaxion, Région Grand Est', detail: 'Cumulable avec MaPrimeRénov’', montant: '1\u202f000\u202f€' },
+    ];
+    const Q = [
+      ["Comment garantissez-vous la fiabilité des calculs d'aides ?", "Nos calculs s'appuient sur les barèmes publiés par l'Anah, l'ATEE, Service Public et les services locaux. Le moteur est vérifié à chaque mise à jour réglementaire. Les cas atypiques sont redirigés vers votre conseiller France Rénov', service public joignable au 0 808 800 700."],
+      ['Avez-vous des liens avec les artisans ou les énergéticiens ?', "Aucun lien financier avec les artisans, les énergéticiens, les fabricants ou les courtiers. Cet engagement figure dans nos conditions générales."],
+      ["Que faites-vous si MaPrimeRénov' refuse mon dossier ?", "Vous recevez les motifs détaillés du refus et un guide pas-à-pas pour formuler un recours dans les délais. Si le refus est lié à une erreur de notre côté, nous vous accompagnons jusqu'à la résolution sans frais supplémentaires."],
+      ['Travaillez-vous avec des artisans ?', "Nous référençons les artisans RGE de votre département depuis l'annuaire de l'ADEME. Aucun ne nous paie : le classement dépend de la proximité et des certifications."],
+      ['Mes données sont-elles partagées ?', "Vos réponses restent dans votre navigateur. Elles ne sont transmises qu'au partenaire habilité que vous aurez accepté, après votre accord explicite. Vous pouvez tout effacer depuis votre profil."],
+      ['Que devient mon dossier une fois remis ?', "Le partenaire habilité de votre département vous contacte, dépose votre demande auprès de l'Anah et la suit jusqu'au versement. Vous pouvez retirer votre accord à tout moment depuis votre espace."],
+    ];
+    const faq = Q.map(([q, a], i) => {
+      const open = this.state.open === i;
+      return { q, a, open, expanded: open ? 'true' : 'false', word: open ? 'Fermer' : 'Lire', chev: { transform: open ? 'rotate(180deg)' : 'none' },
+        toggle: () => this.setState(s => ({ open: s.open === i ? -1 : i })) };
+    });
+    const w = this.state.w, narrow = w < 640, desk = w >= 960;
+    const full = w >= 640; const out = full ? '-24px' : '-12px';
+    const famStyle = { font: 'var(--jr-type-micro)', letterSpacing: 'var(--jr-micro-tracking)', color: 'var(--jr-ink-70)', gridArea: 'fam', paddingTop: 'var(--jr-s-1)' };
+    const familles = fam.map((f, i) => Object.assign({}, f, { row: { display: 'grid', gridTemplateColumns: 'var(--jr-s-6) minmax(0, 1fr)', columnGap: 'var(--jr-s-4)', alignItems: 'start', padding: 'var(--jr-s-4) 0', borderTop: i ? 'var(--jr-border) solid var(--jr-line)' : 0 } }));
+    const lignes = lg.map((l, i) => Object.assign({}, l, { famStyle, row: { display: 'grid', columnGap: 'var(--jr-s-4)', rowGap: 'var(--jr-s-1)', alignItems: 'start', padding: 'var(--jr-s-4) 0', borderTop: 'var(--jr-border) solid var(--jr-line)',
+      gridTemplateColumns: w < 640 ? 'minmax(0, 1fr) auto' : 'calc(var(--jr-s-8) + var(--jr-s-4)) minmax(0, 1fr) auto',
+      gridTemplateAreas: w < 640 ? '"fam fam" "nom nom" ". amt"' : '"fam nom amt"' } }));
+    return { faqSections: Q.map(([q, a]) => ({ title: q, text: a })), projets, etapes, familles, lignes, faq,
+      aidesCols: w >= 960 ? 'minmax(0, 5fr) minmax(0, 7fr)' : 'minmax(0, 1fr)',
+      cardPad: w < 640 ? 'var(--jr-s-5)' : 'var(--jr-s-6)', cardPadX: w < 640 ? 'var(--jr-s-5)' : 'var(--jr-s-6)', totalBleed: w < 640 ? 'calc(-1 * var(--jr-s-5))' : 'calc(-1 * var(--jr-s-6))',
+      glossProps: { iconAfter: 'chevron' }, narrow: w < 640,
+      stepLabels: ['Simulation', 'Aides', 'Dossier', 'Remise'], stepNone: -1,
+      gutter: narrow ? '20px' : '32px', secPad: desk ? '96px' : '64px', heroPad: desk ? '0' : 'var(--space-6)',
+      heroCols: w >= 960 ? 'minmax(0, 1.05fr) minmax(0, 1fr)' : 'minmax(0, 1fr)',
+      pillWrap: narrow ? 'normal' : 'nowrap', heroPadTop: desk ? '64px' : '40px', heroGap: desk ? '64px' : '40px', h1Ref: this.h1Ref, h1Size: (((desk ? [56, 52] : [40, 36]).indexOf(this.state.h1Px) >= 0 ? this.state.h1Px : 0) || (desk ? 56 : 40)) + 'px', h1Lh: desk ? '1.05' : '1.1', totalSize: narrow ? 'var(--jr-s-6)' : 'var(--jr-s-7)', lcSize: narrow ? '28px/34px' : '40px/46px',
+      showStepper: !narrow, badgeSize: narrow ? 's' : 'm', trustHm: narrow ? '0' : 'var(--jr-s-4) 0 0',
+      pillRowWrap: narrow ? 'nowrap' : 'wrap', pillBleed: narrow ? 'calc(-1 * var(--jr-s-5))' : '0',
+      stepLi: narrow ? { display: 'grid', gridTemplateColumns: 'var(--jr-s-7) minmax(0, 1fr)', columnGap: 'var(--jr-s-4)', alignItems: 'start' } : { display: 'flex', flexDirection: 'column', gap: 'var(--jr-s-3)' },
+      stepNum: Object.assign({ font: 'var(--jr-type-h1)', lineHeight: 1, fontVariantNumeric: 'tabular-nums', color: 'var(--jr-sprout)' }, narrow ? { fontSize: 'var(--jr-s-6)' } : { fontSize: 'calc(var(--jr-s-8) + var(--jr-s-2))', paddingBottom: 'var(--jr-s-3)', borderBottom: 'var(--jr-border) solid var(--jr-ink-70)' }),
+      annDisp: w >= 640 ? 'inline' : 'none', annFs: Math.max(14, Math.round(17 * 500 / Math.max(300, desk ? (Math.min(w, 1200) - 64 - 64) / 2.05 : Math.min(w, 1200) - 64))),
+      fc1: desk ? 'top: 24px; left: -18px;' : 'top: 16px; left: 8px;',
+      fc3: desk ? 'bottom: 140px; left: -12px;' : 'display: none;',
+      fc2: desk ? 'bottom: -24px; right: -18px;' : 'bottom: 16px; right: 8px;',
+      heroMin: desk ? '640px' : '0', sceneH: desk ? '520px' : (narrow ? '320px' : '400px'),
+      trust: (() => {
+        const items = [
+          { p: 'proprietaire', h: 'Indépendant', s: 'Aucune commission, aucun lead vendu, aucun lien financier avec les artisans.' },
+          { p: 'document', h: 'Sources officielles', s: 'Anah, ADEME, Service Public : chaque calcul est documenté et daté.' },
+          { p: 'revenus', h: 'Gratuit pour vous', s: 'Aucun paiement sur ce site. Notre modèle est expliqué en bas de page.' },
+          { p: 'logement', h: 'Aides locales incluses', s: 'Climaxion, Grand Nancy, CEE bonifiés, aides locales.' },
+          { p: 'piece-identite', h: 'Données protégées', s: 'Vos données servent à votre dossier, rien n’est partagé sans votre accord.' },
+        ];
+        const cols = w >= 1100 ? 5 : w >= 640 ? 3 : 1;
+        const short = ['Aucune commission, aucun lead vendu.', 'Anah, ADEME, Service Public, daté.', 'Aucun paiement sur ce site.', 'Climaxion, Grand Nancy, CEE bonifiés.', 'Rien n’est partagé sans votre accord.'];
+        if (cols === 1) items.forEach((it, i) => { it.s = short[i]; });
+        return items.map((it, i) => {
+          const col = i % cols, row = Math.floor(i / cols);
+          const cell = { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', boxSizing: 'border-box', minWidth: 0 };
+          if (cols === 1) Object.assign(cell, { display: 'grid', gridTemplateColumns: 'var(--jr-s-6) minmax(0, 1fr)', columnGap: 'var(--jr-s-3)', alignItems: 'center', padding: 'var(--jr-s-3) 0', borderTop: i ? 'var(--jr-border) solid var(--jr-line)' : 0 });
+          else Object.assign(cell, { padding: (row ? '24px ' : '0 ') + (col === cols - 1 ? '0 ' : '12px ') + (row < Math.ceil(items.length / cols) - 1 ? '24px ' : '0 ') + (col ? '12px' : '0'),
+            borderLeft: col ? '1px solid #DDDFD5' : 0, borderTop: row ? '1px solid #DDDFD5' : 0 });
+          return Object.assign({}, it, { cell });
+        });
+      })(),
+      trustCols: w >= 1100 ? 'repeat(5, minmax(0, 1fr))' : w >= 640 ? 'repeat(3, minmax(0, 1fr))' : 'minmax(0, 1fr)',
+      trustPCol: narrow ? '2' : 'auto', trustPm: narrow ? 'var(--jr-s-1) 0 0' : 'var(--jr-s-2) 0 0', trustHs: narrow ? '18px' : 'calc(var(--jr-s-5) - var(--jr-s-1))',
+      wide: !narrow, reassMobile: ['Simulation gratuite, 5 minutes', 'Aucun paiement sur ce site', 'Dossier remis au partenaire'], sources: ['Anah', 'ADEME', 'Service Public'],
+      btnFull: narrow ? { width: '100%' } : {}, btnProps: { style: narrow ? { width: '100%', whiteSpace: 'nowrap' } : { whiteSpace: 'nowrap' } },
+      projCols: w >= 1024 ? 'repeat(3, minmax(0, 1fr))' : 'minmax(0, 1fr)',
+      stepCols: desk ? 'repeat(4, minmax(0, 1fr))' : (narrow ? 'minmax(0, 1fr)' : 'repeat(2, minmax(0, 1fr))'),
+    };
+  }
+}
+</script>
+</body>
+</html>

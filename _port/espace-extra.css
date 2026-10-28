@@ -1,0 +1,62 @@
+
+.jr-legacy .layout{background:var(--paper)}
+.jr-legacy .sidebar{background:var(--card);border-right:1px solid var(--line);gap:var(--space-5);padding:var(--space-5) var(--space-4)}
+.jr-legacy .sidebar .brand{padding:0 var(--space-2);text-decoration:none}
+.jr-legacy .total-widget{background:var(--ink);color:var(--paper);border-radius:var(--radius-md);padding:var(--space-4)}
+.jr-legacy .total-widget::before{display:none}
+.jr-legacy .total-widget .lbl{font:var(--type-label);opacity:1}
+.jr-legacy .total-widget .val{font:var(--type-amount);font-size:32px;line-height:36px;color:var(--accent-on-dark);font-variant-numeric:tabular-nums}
+.jr-legacy .total-widget .sub{font:var(--type-caption);opacity:1}
+.jr-legacy .total-widget .pgrs{background:var(--action)}
+.jr-legacy .total-widget .pgrs i{background:var(--accent-on-dark)}
+.jr-legacy .nav{display:flex;flex-direction:column;gap:2px}
+.jr-legacy .nav-section{font:var(--type-label);color:var(--ink);padding:var(--space-3) var(--space-2) var(--space-1);opacity:1}
+.jr-legacy .nav a{display:flex;align-items:center;gap:var(--space-3);min-height:var(--hit-min);padding:0 var(--space-2);border-radius:var(--radius-sm);font:var(--type-body);color:var(--ink);text-decoration:none;background:transparent}
+.jr-legacy .nav a:hover{background:var(--paper)}
+.jr-legacy .nav a.active{font-weight:700;background:var(--paper-deep);color:var(--ink);text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px}
+.jr-legacy .nav a .jr-picto{color:var(--ink)}
+.jr-legacy .nav a .badge{background:var(--paper-deep);color:var(--ink);border-radius:var(--radius-sm);font:var(--type-label);padding:0 var(--space-2)}
+.jr-legacy .me{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-2);border-top:1px solid var(--line)}
+.jr-legacy .me .av{width:40px;height:40px;border-radius:var(--radius-sm);background:var(--ink);color:var(--paper);display:grid;place-items:center;font:var(--type-label)}
+.jr-legacy .me .nm{font:var(--type-label)}
+.jr-legacy .me .em{font:var(--type-caption)}
+@media (max-width:880px){
+ .jr-legacy .layout{display:block}
+ .jr-legacy .sidebar,.jr-legacy .sidebar:not(.open){display:flex!important;position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}
+ .jr-legacy .sidebar .nav{flex-direction:row;flex-wrap:wrap;gap:var(--space-1) var(--space-2)}
+ .jr-legacy .sidebar .nav-section,.jr-legacy .sidebar .exit,.jr-legacy .sidebar .me{display:none}
+ .jr-legacy .nav a{border:1px solid var(--line-strong)}
+}
+.jr-legacy h1{font:var(--type-h1);font-size:clamp(30px,5vw,40px);line-height:1.15;letter-spacing:normal;color:var(--ink)}
+.jr-legacy main h2{font-family:var(--font-text)}
+.jr-legacy .btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);min-height:var(--hit-min);padding:0 var(--space-5);border-radius:var(--radius-sm);font:var(--fw-bold) var(--fs-body)/var(--lh-label) var(--font-text);cursor:pointer;text-decoration:none;border:1px solid transparent}
+.jr-legacy .btn-primary,.jr-legacy .btn-amber{background:var(--action);color:var(--card)}
+.jr-legacy .btn-primary:hover,.jr-legacy .btn-amber:hover{background:var(--action-deep);color:var(--card)}
+.jr-legacy .btn-secondary,.jr-legacy .btn-ghost,.jr-legacy .btn-outline{background:var(--card);color:var(--ink);border-color:var(--ink)}
+.jr-legacy .btn-secondary:hover,.jr-legacy .btn-ghost:hover,.jr-legacy .btn-outline:hover{background:var(--paper-deep)}
+.jr-legacy .btn:disabled,.jr-legacy .btn[disabled]{background:var(--paper-deep)!important;color:var(--ink)!important;border-color:var(--paper-deep)!important;cursor:not-allowed}
+.jr-legacy input:not([type=checkbox]):not([type=radio]):not([type=range]),.jr-legacy select,.jr-legacy textarea{min-height:var(--hit-min);font:var(--type-body);border:1px solid var(--line-strong);border-radius:var(--radius-sm);background:var(--card);color:var(--ink)}
+.jr-legacy input[type=checkbox],.jr-legacy input[type=radio]{width:22px;height:22px;accent-color:var(--action)}
+
+/* Échelle DPE : couleurs réglementaires A→G (exception documentée au design system — code officiel du diagnostic de performance énergétique). */
+.jr-legacy{--dpe-a:#00A651;--dpe-b:#52B847;--dpe-c:#C8D400;--dpe-d:#FFED00;--dpe-e:#FFB400;--dpe-f:#FF6900;--dpe-g:#E20613}
+.jr-legacy [data-dpe="A"] .dpe-l,.jr-legacy [data-classe="A"] .dpe-letter,.jr-legacy [data-classe="A"] .lvl{background:var(--dpe-a)!important;color:#123A2E!important}
+.jr-legacy [data-dpe="B"] .dpe-l,.jr-legacy [data-classe="B"] .dpe-letter,.jr-legacy [data-classe="B"] .lvl{background:var(--dpe-b)!important;color:#123A2E!important}
+.jr-legacy [data-dpe="C"] .dpe-l,.jr-legacy [data-classe="C"] .dpe-letter,.jr-legacy [data-classe="C"] .lvl{background:var(--dpe-c)!important;color:#123A2E!important}
+.jr-legacy [data-dpe="D"] .dpe-l,.jr-legacy [data-classe="D"] .dpe-letter,.jr-legacy [data-classe="D"] .lvl{background:var(--dpe-d)!important;color:#123A2E!important}
+.jr-legacy [data-dpe="E"] .dpe-l,.jr-legacy [data-classe="E"] .dpe-letter,.jr-legacy [data-classe="E"] .lvl{background:var(--dpe-e)!important;color:#123A2E!important}
+.jr-legacy [data-dpe="F"] .dpe-l,.jr-legacy [data-classe="F"] .dpe-letter,.jr-legacy [data-classe="F"] .lvl{background:var(--dpe-f)!important;color:#123A2E!important}
+.jr-legacy [data-dpe="G"] .dpe-l,.jr-legacy [data-classe="G"] .dpe-letter,.jr-legacy [data-classe="G"] .lvl{background:var(--dpe-g)!important;color:#FFFFFF!important}
+.jr-legacy [data-dpe=""] .dpe-l{background:var(--paper-deep)!important;color:var(--ink)!important}
+.jr-legacy .dpe-l,.jr-legacy .dpe-letter{font-weight:800!important;font-size:20px!important}
+.jr-legacy .dpe-bar .lvl{height:16px!important}
+.jr-legacy .dpe-bar.from{outline:3px dashed var(--ink)!important;outline-offset:2px}
+.jr-legacy .dpe-bar.to{outline:3px solid var(--ink)!important;outline-offset:2px}
+.jr-legacy .dpe-bar.from .kwh::after{content:" · actuel"!important;font-weight:700}
+.jr-legacy .dpe-bar.to .kwh::after{content:" · projeté"!important;font-weight:700}
+.jr-legacy .dpe-bar.from.to .kwh::after{content:" · actuel et projeté"!important}
+.jr-legacy .dpe-tile.selected .dpe-r::after{content:"Classe actuelle";font:var(--type-label);margin-top:2px}
+/* Encart garantie */
+.jr-legacy .jr-garantie{display:flex;gap:var(--space-3);align-items:flex-start;padding:var(--space-5);background:var(--card);border:2px solid var(--action);border-radius:var(--radius-md);margin:0 0 var(--space-4)}
+.jr-legacy .jr-garantie h3{margin:0 0 var(--space-1);font:var(--type-h3);font-weight:700}
+.jr-legacy .jr-garantie p{margin:0;font:var(--type-body)}

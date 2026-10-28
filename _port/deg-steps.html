@@ -1,0 +1,237 @@
+
+      <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; max-width: var(--jr-measure);">
+          <p style="margin: 0 0 var(--jr-title-gap); font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape {{ pos1 }} sur {{ nSteps }} · Situation</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Quelle est votre situation&#8239;?</h1>
+          <p style="margin: var(--jr-s-3) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">Votre statut détermine l’aide mobilisable et les questions suivantes.</p>
+        </div>
+        <section aria-label="Situation" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: var(--jr-card-pad); display: flex; flex-direction: column; gap: var(--jr-s-6);">
+          <sc-if value="{{ resumed }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="JRv2.Notice" tone="valide" title="Reprise de votre dernière simulation" action="{{ restartBtn }}" hint-size="100%,96px">Vos réponses enregistrées sur cet appareil sont reprises. Vous pouvez les modifier à chaque étape.</x-import>
+          </sc-if>
+          <x-import component-from-global-scope="JRv2.QuestionBlock" first="{{ true }}" group="{{ true }}" label="Vous êtes…" error="{{ err.variant }}" hint-size="100%,140px">
+            <x-import component-from-global-scope="JRv2.ChoiceGrid" name="variant" options="{{ optVariant }}" value="{{ s.variant }}" on-change="{{ set.variant }}" narrow="{{ narrow }}" narrow-cols="{{ 1 }}" cols="{{ optVariantCols }}" error="{{ err.variant }}" aria-label="Vous êtes…" hint-size="100%,72px"></x-import>
+          </x-import>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; max-width: var(--jr-measure);">
+          <p style="margin: 0 0 var(--jr-title-gap); font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape {{ pos2 }} sur {{ nSteps }} · État</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Dans quel état se trouve le logement&#8239;?</h1>
+          <p style="margin: var(--jr-s-3) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">Une estimation suffit : l’opérateur la confirmera lors de sa visite.</p>
+        </div>
+        <section aria-label="État du logement" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: var(--jr-card-pad); display: flex; flex-direction: column; gap: var(--jr-s-6);">
+          <x-import component-from-global-scope="JRv2.QuestionBlock" first="{{ true }}" group="{{ true }}" label="État du logement" error="{{ err.etat }}" hint-size="100%,140px">
+            <x-import component-from-global-scope="JRv2.ChoiceGrid" name="etat" options="{{ optEtat }}" value="{{ s.etat }}" on-change="{{ set.etat }}" narrow="{{ narrow }}" narrow-cols="{{ 1 }}" cols="{{ optEtatCols }}" error="{{ err.etat }}" aria-label="État du logement" hint-size="100%,72px"></x-import>
+          </x-import>
+          <sc-if value="{{ isArrete }}" hint-placeholder-val="{{ false }}">
+          <div style="display: grid; grid-template-columns: {{ twoCols }}; gap: var(--jr-s-5) var(--jr-gutter); align-items: start; padding-top: var(--jr-s-6); border-top: var(--jr-border) solid var(--jr-line);">
+            <x-import component-from-global-scope="JRv2.Select" id="arrete" label="Nature de l’arrêté" options="{{ optArrete }}" value="{{ s.arrete }}" on-change="{{ set.arrete }}" placeholder="Choisir" error="{{ err.arrete }}" hint-size="100%,100px"></x-import>
+          </div>
+          </sc-if>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; max-width: var(--jr-measure);">
+          <p style="margin: 0 0 var(--jr-title-gap); font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape {{ pos3 }} sur {{ nSteps }} · Logement</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Le logement et le chantier</h1>
+          <p style="margin: var(--jr-s-3) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">Ces informations fixent le plafond de travaux et le gain énergétique.</p>
+        </div>
+        <section aria-label="Logement et chantier" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: var(--jr-card-pad); display: flex; flex-direction: column; gap: var(--jr-s-6);">
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-2);">
+            <x-import component-from-global-scope="JRv2.TextField" id="addr" label="Adresse complète" hint="Saisissez au moins 5 caractères pour voir les suggestions. Source : Base Adresse Nationale (IGN, La Poste, Etalab)." placeholder="Ex : 12 rue Saint-Georges, Nancy" value="{{ addrQuery }}" on-change="{{ onAddr }}" error="{{ err.addr }}" hint-size="100%,140px"></x-import>
+            <sc-if value="{{ hasSug }}" hint-placeholder-val="{{ false }}">
+              <ul role="listbox" aria-label="Suggestions d’adresse" style="list-style: none; margin: 0; padding: 0; background: var(--jr-white); border: var(--jr-border) solid var(--jr-line-field); border-radius: var(--jr-radius-s); overflow: hidden;">
+                <sc-for list="{{ sug }}" as="g" hint-placeholder-count="4">
+                  <li role="option" aria-selected="false" style="border-top: {{ g.sep }};">
+                    <button type="button" onClick="{{ g.pick }}" style="all: unset; box-sizing: border-box; width: 100%; min-height: var(--jr-hit); padding: var(--jr-s-2) var(--jr-s-4); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--jr-s-1) var(--jr-s-3); cursor: pointer; font: var(--jr-type-body); color: var(--jr-ink);" style-hover="background: var(--jr-leaf-wash);" style-focus="background: var(--jr-leaf-wash); outline: var(--jr-focus-width) solid var(--jr-focus); outline-offset: calc(-1 * var(--jr-focus-width));">
+                      <span>{{ g.label }}</span>
+                      <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">{{ g.ctx }}</span>
+                    </button>
+                  </li>
+                </sc-for>
+              </ul>
+            </sc-if>
+            <sc-if value="{{ sugMsg }}" hint-placeholder-val="{{ false }}">
+              <p role="status" style="margin: 0; font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);">{{ sugMsg }}</p>
+            </sc-if>
+          </div>
+          <sc-if value="{{ zoneOut }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="JRv2.Notice" tone="info" title="Service ouvert en Lorraine pour l’instant." hint-size="100%,72px">Laissez-nous votre e-mail, nous vous prévenons.</x-import>
+            <sc-if value="{{ wlForm }}" hint-placeholder-val="{{ true }}">
+              <div style="display: grid; grid-template-columns: {{ wlCols }}; gap: var(--jr-s-3) var(--jr-gutter); align-items: end;">
+                <x-import component-from-global-scope="JRv2.TextField" id="wl-email" label="E-mail" type="email" value="{{ wlEmail }}" on-change="{{ onWl }}" error="{{ err.wl }}" hint-size="100%,100px"></x-import>
+                <x-import component-from-global-scope="JRv2.Button" variant="secondary" on-click="{{ joinWl }}" full-width="{{ narrow }}" hint-size="auto,48px">Me prévenir</x-import>
+              </div>
+            </sc-if>
+            <sc-if value="{{ wlDone }}" hint-placeholder-val="{{ false }}">
+              <p role="status" style="margin: 0; font: var(--jr-type-label); color: var(--jr-ink);">C’est noté : nous vous écrirons à l’ouverture.</p>
+            </sc-if>
+          </sc-if>
+          <x-import component-from-global-scope="JRv2.QuestionBlock" group="{{ true }}" label="Type de logement" error="{{ err.type }}" hint-size="100%,140px">
+            <x-import component-from-global-scope="JRv2.ChoiceGrid" name="type" options="{{ optType }}" value="{{ s.type }}" on-change="{{ set.type }}" narrow="{{ narrow }}" narrow-cols="{{ 1 }}" cols="{{ optTypeCols }}" error="{{ err.type }}" aria-label="Type de logement" hint-size="100%,72px"></x-import>
+          </x-import>
+          <div style="display: grid; grid-template-columns: {{ twoCols }}; gap: var(--jr-s-5) var(--jr-gutter); align-items: start; padding-top: var(--jr-s-6); border-top: var(--jr-border) solid var(--jr-line);">
+            <x-import component-from-global-scope="JRv2.TextField" id="surface" label="Surface habitable" hint="Pièces chauffées seulement." hint-below="{{ true }}" unit="m²" input-mode="numeric" value="{{ s.surface }}" on-change="{{ set.surface }}" error="{{ err.surface }}" hint-size="100%,120px"></x-import>
+            <x-import component-from-global-scope="JRv2.TextField" id="annee" label="Année de construction" hint="Plus de 15 ans pour l’aide." hint-below="{{ true }}" input-mode="numeric" value="{{ s.annee }}" on-change="{{ set.annee }}" error="{{ err.annee }}" hint-size="100%,120px"></x-import>
+          </div>
+          <x-import component-from-global-scope="JRv2.QuestionBlock" group="{{ true }}" label="DPE actuel" hint="Page 1 de votre DPE. Sans DPE, choisissez « ? »." optional="{{ true }}" hint-size="100%,160px">
+            <x-import component-from-global-scope="JRv2.DpeSelector" name="dpeAvant" value="{{ s.dpeAvant }}" on-change="{{ set.dpeAvant }}" narrow="{{ narrow }}" aria-label="DPE actuel" hint-size="100%,88px"></x-import>
+          </x-import>
+          <x-import component-from-global-scope="JRv2.QuestionBlock" group="{{ true }}" label="DPE visé après travaux" hint="Classe E au minimum pour la prime de sortie de passoire." optional="{{ true }}" hint-size="100%,160px">
+            <x-import component-from-global-scope="JRv2.DpeSelector" name="dpeApres" value="{{ s.dpeApres }}" on-change="{{ set.dpeApres }}" narrow="{{ narrow }}" aria-label="DPE visé après travaux" hint-size="100%,88px"></x-import>
+          </x-import>
+          <div style="display: grid; grid-template-columns: {{ twoCols }}; gap: var(--jr-s-5) var(--jr-gutter); align-items: start; padding-top: var(--jr-s-6); border-top: var(--jr-border) solid var(--jr-line);">
+            <x-import component-from-global-scope="JRv2.TextField" id="cout" label="Coût estimé des travaux" hint="Hors taxes, tous corps d’état." hint-below="{{ true }}" unit="€" input-mode="numeric" value="{{ s.cout }}" on-change="{{ set.cout }}" error="{{ err.cout }}" hint-size="100%,120px"></x-import>
+            <x-import component-from-global-scope="JRv2.TextField" id="cout-energie" label="Dont part énergie" hint="Isolation, chauffage, ventilation. Sans réponse : la moitié est retenue." hint-below="{{ true }}" unit="€" input-mode="numeric" value="{{ s.coutEnergie }}" on-change="{{ set.coutEnergie }}" error="{{ err.coutEnergie }}" optional="{{ true }}" hint-size="100%,120px"></x-import>
+          </div>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep4 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; max-width: var(--jr-measure);">
+          <p style="margin: 0 0 var(--jr-title-gap); font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape {{ pos4 }} sur {{ nSteps }} · Convention</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Êtes-vous prêt à signer une convention Loc’Avantages&#8239;?</h1>
+          <p style="margin: var(--jr-s-3) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">Elle engage à louer à loyer modéré en échange d’une aide majorée.</p>
+        </div>
+        <section aria-label="Convention" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: var(--jr-card-pad); display: flex; flex-direction: column; gap: var(--jr-s-6);">
+          <x-import component-from-global-scope="JRv2.QuestionBlock" first="{{ true }}" group="{{ true }}" label="Convention Loc’Avantages" error="{{ err.convention }}" hint-size="100%,140px">
+            <x-import component-from-global-scope="JRv2.ChoiceGrid" name="convention" options="{{ optConv }}" value="{{ s.convention }}" on-change="{{ set.convention }}" narrow="{{ narrow }}" narrow-cols="{{ 1 }}" cols="{{ optConvCols }}" error="{{ err.convention }}" aria-label="Convention Loc’Avantages" hint-size="100%,72px"></x-import>
+          </x-import>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep5 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; max-width: var(--jr-measure);">
+          <p style="margin: 0 0 var(--jr-title-gap); font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape {{ pos5 }} sur {{ nSteps }} · Copropriété</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Votre copropriété</h1>
+          <p style="margin: var(--jr-s-3) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">L’aide collective dépend de l’immeuble, pas de votre lot.</p>
+        </div>
+        <section aria-label="Copropriété" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: var(--jr-card-pad); display: flex; flex-direction: column; gap: var(--jr-s-6);">
+          <div style="display: grid; grid-template-columns: {{ twoCols }}; gap: var(--jr-s-5) var(--jr-gutter); align-items: start;">
+            <x-import component-from-global-scope="JRv2.TextField" id="copro-adr" label="Adresse de la copropriété" value="{{ s.coproAdr }}" on-change="{{ set.coproAdr }}" error="{{ err.coproAdr }}" hint-size="100%,100px"></x-import>
+            <x-import component-from-global-scope="JRv2.TextField" id="lots" label="Nombre de lots" hint="Lots d’habitation et autres." hint-below="{{ true }}" input-mode="numeric" value="{{ s.lots }}" on-change="{{ set.lots }}" error="{{ err.lots }}" hint-size="100%,120px"></x-import>
+          </div>
+          <div style="display: grid; grid-template-columns: {{ twoCols }}; gap: var(--jr-s-5) var(--jr-gutter); align-items: start; padding-top: var(--jr-s-6); border-top: var(--jr-border) solid var(--jr-line);">
+            <x-import component-from-global-scope="JRv2.TextField" id="annee-copro" label="Année de construction" hint="De l’immeuble." hint-below="{{ true }}" input-mode="numeric" value="{{ s.anneeCopro }}" on-change="{{ set.anneeCopro }}" error="{{ err.anneeCopro }}" hint-size="100%,120px"></x-import>
+            <x-import component-from-global-scope="JRv2.TextField" id="part-rp" label="Lots en résidence principale" hint="Seuil : 75 %, ou 65 % jusqu’à 20 lots." hint-below="{{ true }}" unit="%" input-mode="numeric" value="{{ s.partRp }}" on-change="{{ set.partRp }}" error="{{ err.partRp }}" hint-size="100%,120px"></x-import>
+          </div>
+          <x-import component-from-global-scope="JRv2.QuestionBlock" group="{{ true }}" label="Copropriété immatriculée au registre national ?" error="{{ err.immat }}" hint-size="100%,140px">
+            <x-import component-from-global-scope="JRv2.ChoiceGrid" name="immat" options="{{ optImmat }}" value="{{ s.immat }}" on-change="{{ set.immat }}" narrow="{{ narrow }}" narrow-cols="{{ 1 }}" cols="{{ optImmatCols }}" error="{{ err.immat }}" aria-label="Copropriété immatriculée au registre national ?" hint-size="100%,72px"></x-import>
+          </x-import>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep6 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; max-width: var(--jr-measure);">
+          <p style="margin: 0 0 var(--jr-title-gap); font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape {{ pos6 }} sur {{ nSteps }} · Revenus</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Quels sont les revenus du foyer&#8239;?</h1>
+          <p style="margin: var(--jr-s-3) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">Ils fixent votre catégorie de ressources Anah, donc le taux de l’aide.</p>
+        </div>
+        <p style="margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--jr-s-2); font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);"><span>{{ zoneLine }}</span><x-import component-from-global-scope="JRv2.Button" variant="tertiary" on-click="{{ to3 }}" hint-size="auto,48px">modifier</x-import></p>
+        <section aria-label="Revenus" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: var(--jr-card-pad); display: flex; flex-direction: column; gap: var(--jr-s-6);">
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-5);">
+            <div style="display: grid; grid-template-columns: {{ twoCols }}; gap: var(--jr-s-5) var(--jr-gutter); align-items: start;">
+              <x-import component-from-global-scope="JRv2.QuestionBlock" first="{{ true }}" group="{{ true }}" label="Personnes au foyer" error="{{ err.foyer }}" hint-size="100%,140px">
+                <x-import component-from-global-scope="JRv2.ChoiceGrid" name="foyer" options="{{ optFoyer }}" value="{{ s.foyer }}" on-change="{{ set.foyer }}" cols="{{ 3 }}" compact="{{ true }}" error="{{ err.foyer }}" aria-label="Personnes au foyer" hint-size="100%,120px"></x-import>
+              </x-import>
+              <x-import component-from-global-scope="JRv2.TextField" id="rfr" label="Revenu fiscal de référence" q-label="{{ true }}" hint-below="{{ true }}" hint="Il figure en page 1 de votre avis d’imposition." unit="€" input-mode="numeric" value="{{ s.rfr }}" on-change="{{ set.rfr }}" error="{{ err.rfr }}" hint-size="100%,140px"></x-import>
+            </div>
+            <sc-if value="{{ hasCat }}" hint-placeholder-val="{{ false }}">
+              <x-import component-from-global-scope="JRv2.Notice" tone="action" title="{{ catTitle }}" hint-size="100%,56px"></x-import>
+            </sc-if>
+          </div>
+        </section>
+        <p style="margin: 0; font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);">Vos réponses restent sur cet appareil et ne sont transmises qu’avec votre accord. <a href="page-info.dc.html?p=privacy">Confidentialité</a></p>
+      </sc-if>
+      <sc-if value="{{ isStep7 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; max-width: var(--jr-measure);">
+          <p style="margin: 0 0 var(--jr-title-gap); font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape {{ pos7 }} sur {{ nSteps }} · Récapitulatif</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Vérifions vos réponses</h1>
+          <p style="margin: var(--jr-s-3) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">Un clic sur une section pour la relire ; « modifier » dans le récapitulatif pour corriger.</p>
+        </div>
+        <x-import component-from-global-scope="JRv2.Accordion" variant="group" default-open="{{ 0 }}" sections="{{ recap7 }}" hint-size="100%,240px"></x-import>
+      </sc-if>
+      <sc-if value="{{ isStep8 }}" hint-placeholder-val="{{ false }}">
+        <section aria-label="Calcul en cours" aria-live="polite" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-6); align-items: center; text-align: center;">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape {{ pos8 }} sur {{ nSteps }} · Calcul</p>
+          <svg viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="{{ ringLabel }}">
+            <circle cx="48" cy="48" r="42" fill="none" stroke="var(--jr-paper-deep)" stroke-width="8"></circle>
+            <circle cx="48" cy="48" r="42" fill="none" stroke="var(--jr-leaf)" stroke-width="8" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="{{ ringOffset }}" transform="rotate(-90 48 48)"></circle>
+            <text x="48" y="55" text-anchor="middle" font-family="Komet, system-ui, sans-serif" font-weight="700" font-size="20" fill="var(--jr-ink)">{{ ringPct }}</text>
+          </svg>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Calcul de votre aide</h1>
+          <ul style="list-style: none; margin: 0; padding: 0; width: 100%; max-width: var(--jr-measure); display: flex; flex-direction: column; text-align: left;">
+            <sc-for list="{{ checks }}" as="c" hint-placeholder-count="6">
+              <li style="{{ c.row }}"><span style="font: var(--jr-type-body);">{{ c.label }}</span><x-import component-from-global-scope="JRv2.StatusTag" status="{{ c.status }}" hint-size="auto,32px">{{ c.word }}</x-import></li>
+            </sc-for>
+          </ul>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep9 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); max-width: var(--jr-measure);">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape {{ pos9 }} sur {{ nSteps }} · Résultats</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Votre estimation Ma Prime Logement Décent</h1>
+          <p style="margin: var(--jr-s-1) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">{{ profileLine }}</p>
+        </div>
+        <sc-if value="{{ notElig }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="JRv2.Notice" tone="info" title="{{ notEligTitle }}" hint-size="100%,96px">{{ notEligText }}</x-import>
+        </sc-if>
+        <sc-if value="{{ elig }}" hint-placeholder-val="{{ true }}">
+        <section data-surface="dark" aria-label="Aide estimée" style="background: var(--jr-ink); color: var(--jr-paper); border-radius: var(--jr-radius-m); padding: var(--jr-s-6); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--jr-s-4); align-items: center;">
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); min-width: 0;">
+            <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-paper);">Aide estimée</span>
+            <span style="font: var(--jr-type-amount-l); font-size: {{ bigSize }}; color: var(--jr-sprout); font-variant-numeric: tabular-nums; white-space: nowrap;">{{ r.total }}</span>
+            <span style="font: var(--jr-type-label); font-weight: 400; color: var(--jr-paper);">Source : {{ r.source }} · {{ r.date }} · montant indicatif</span>
+          </div>
+          <x-import component-from-global-scope="JRv2.IconBadge" name="valide" size="l" variant="encre" hint-size="48px,48px"></x-import>
+        </section>
+        <div style="display: grid; grid-template-columns: {{ threeCols }}; gap: var(--jr-gutter); align-items: stretch;">
+          <sc-for list="{{ r.trio }}" as="k" hint-placeholder-count="3">
+            <div style="{{ k.card }}">
+              <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: {{ k.labelColor }};">{{ k.label }}</span>
+              <span style="font: var(--jr-type-h2); font-size: var(--jr-s-6); line-height: 1.1; font-variant-numeric: tabular-nums; color: {{ k.color }};">{{ k.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <x-import component-from-global-scope="JRv2.Table" columns="{{ r.cols }}" rows="{{ r.rows }}" caption="Détail du calcul" hint-size="100%,320px"></x-import>
+        <sc-if value="{{ hasDpe }}" hint-placeholder-val="{{ false }}">
+        <section aria-label="Performance énergétique visée" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: var(--jr-card-pad); display: flex; flex-direction: column; gap: var(--jr-s-5);">
+          <h2 style="margin: 0; font: var(--jr-type-label-strong); font-size: calc(var(--jr-s-5) - var(--jr-s-1)); line-height: calc(var(--jr-s-5) + var(--jr-s-1));">Performance énergétique visée</h2>
+          <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: var(--jr-s-4);">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: var(--jr-s-2);"><span style="{{ dpeA.badge }}">{{ dpeA.letter }}</span><span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">actuel</span></div>
+            <div aria-hidden="true" style="height: var(--jr-s-8); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: var(--jr-s-1);">
+              <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink); background: var(--jr-leaf-wash); padding: var(--jr-s-1) var(--jr-s-2); border-radius: var(--jr-radius-pill); white-space: nowrap;">{{ dpeGain }}</span>
+              <svg viewBox="0 0 96 16" width="96" height="16" style="display: block;"><path d="M1 8h92M86 2l7 6-7 6" fill="none" stroke="var(--jr-ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: var(--jr-s-2);"><span style="{{ dpeB.badge }}">{{ dpeB.letter }}</span><span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">visé</span></div>
+          </div>
+          <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">{{ dpeSr }}</span>
+        </section>
+        </sc-if>
+        <x-import component-from-global-scope="JRv2.Notice" tone="info" title="Accompagnement" hint-size="100%,96px">Un opérateur agréé par l’Anah accompagne obligatoirement ce projet ; l’Anah finance une partie de sa mission. JungleRenov n’est pas agréé Mon Accompagnateur Rénov’ ; le dépôt se fait par vous, sur le site de l’Anah.</x-import>
+        </sc-if>
+        <x-import component-from-global-scope="JRv2.Accordion" title="À savoir" count="{{ savoirCount }}" items="{{ savoirItems }}" hint-size="100%,72px"></x-import>
+        <sc-if value="{{ elig }}" hint-placeholder-val="{{ true }}">
+        <section aria-label="Constituer mon dossier" style="background: var(--jr-leaf-wash); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; align-items: flex-start; gap: var(--jr-s-3);">
+          <h2 style="margin: 0; font: var(--jr-type-h2);">Prêt à constituer votre dossier&#8239;?</h2>
+          <p style="margin: 0; font: var(--jr-type-body);">Créez votre espace : le site y prépare votre dossier et le remet complet au partenaire habilité de votre secteur.</p>
+          <x-import component-from-global-scope="JRv2.Button" on-click="{{ constituer }}" full-width="{{ narrow }}" hint-size="auto,48px">Constituer mon dossier</x-import>
+        </section>
+        </sc-if>
+        <section aria-label="Recevoir mon récapitulatif" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-4);">
+          <h2 style="margin: 0; font: var(--jr-type-label-strong); font-size: calc(var(--jr-s-5) - var(--jr-s-1)); line-height: calc(var(--jr-s-5) + var(--jr-s-1));">Recevoir mon récapitulatif en PDF</h2>
+          <sc-if value="{{ pdfSent }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="JRv2.Notice" tone="valide" title="Demande enregistrée" hint-size="100%,72px">Le récapitulatif sera envoyé à cette adresse.</x-import>
+          </sc-if>
+          <sc-if value="{{ pdfForm }}" hint-placeholder-val="{{ true }}">
+            <div style="display: grid; grid-template-columns: {{ pdfCols }}; gap: var(--jr-s-3) var(--jr-gutter); align-items: end;">
+              <x-import component-from-global-scope="JRv2.TextField" id="pdf-email" label="E-mail" type="email" value="{{ s.pdfEmail }}" on-change="{{ set.pdfEmail }}" error="{{ err.pdf }}" hint-size="100%,100px"></x-import>
+              <x-import component-from-global-scope="JRv2.Button" variant="secondary" on-click="{{ sendPdf }}" full-width="{{ narrow }}" hint-size="auto,48px">Recevoir le PDF</x-import>
+            </div>
+            <x-import component-from-global-scope="JRv2.ChoiceCard" type="checkbox" name="pdf-consent" label="J’accepte de recevoir ce récapitulatif par e-mail" description="Aucun autre envoi, aucune revente." checked="{{ s.pdfConsent }}" on-change="{{ togglePdf }}" hint-size="100%,56px"></x-import>
+          </sc-if>
+        </section>
+        <p style="margin: 0; font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);">Sources : Guide des aides de l’Anah, édition février 2026, pp. 64-65 · barèmes 2026.</p>
+        <section data-surface="dark" aria-label="Notre garantie" style="background: var(--jr-ink); color: var(--jr-paper); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-2);">
+          <h2 style="margin: 0; font: var(--jr-type-h2); color: var(--jr-paper);">100&#8239;% indépendant · sans démarchage</h2>
+          <p style="margin: 0; font: var(--jr-type-body);">Aucun artisan ne nous paie pour être recommandé. Nous ne vous appellerons jamais sans votre demande.</p>
+        </section>
+      </sc-if>

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Simulation — adaptation à la perte d’autonomie — JungleRenov</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/styles.css">
+  <link rel="stylesheet" href="lib/components.css">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon-couleur-32.svg">
+  <script src="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/_ds_bundle.js"></script>
+  <script src="lib/jr-v2.js"></script>
+  <script src="lib/_geo.js"></script>
+  <script src="lib/_baremes_sources.js"></script>
+  <script src="lib/_travaux_catalog.js"></script>
+  <script src="lib/_compute_aids.js"></script>
+  <script src="lib/_storage.js"></script>
+  <script src="lib/_dossiers.js"></script>
+  <script src="lib/_transmission.js"></script>
+</helmet>
+<div class="jr2" data-screen-label="Tunnel autonomie" style="background: var(--jr-surface-page); min-height: 100vh; display: flex; flex-direction: column;">
+  <div style="width: 100%; max-width: var(--jr-container); margin: 0 auto; padding: 0 {{ gut }}; box-sizing: border-box; display: flex; flex-direction: column; gap: {{ vGap }};">
+    <x-import component-from-global-scope="JRv2.TunnelHeader" compact="{{ narrow }}" hint-size="100%,64px"></x-import>
+    <x-import component-from-global-scope="JRv2.Stepper" steps="{{ steps }}" current="{{ stepIdx }}" surface="light" on-step-click="{{ jump }}" scroll="{{ notWide }}" min-width="0" hint-size="100%,104px"></x-import>
+  </div>
+
+  <main style="flex: 1; width: 100%; max-width: var(--jr-container); margin: 0 auto; padding: {{ titleTop }} {{ gut }} var(--jr-s-5); box-sizing: border-box; display: grid; grid-template-columns: {{ cols }}; column-gap: var(--jr-gutter); row-gap: var(--jr-s-5); align-items: start;">
+    <div ref="{{ formRef }}" style="grid-column: {{ formSpan }}; display: flex; flex-direction: column; gap: {{ blockGap }}; min-width: 0;">
+      <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); max-width: var(--jr-measure);">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 1 sur 8 · Logement</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Parlez-nous du logement.</h1>
+          <p style="margin: var(--jr-s-1) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">L’adresse détermine le partenaire habilité de votre secteur.</p>
+        </div>
+        <section aria-label="Adresse du logement" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-5);">
+          <sc-if value="{{ resumed }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="JRv2.Notice" tone="valide" title="Reprise de votre dernière simulation" action="{{ restartBtn }}" hint-size="100%,96px">Vos réponses enregistrées sur cet appareil sont reprises. Vous pouvez les modifier à chaque étape.</x-import>
+          </sc-if>
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-2);">
+            <x-import component-from-global-scope="JRv2.TextField" id="addr" label="Adresse complète" hint="Saisissez au moins 5 caractères pour voir les suggestions. Source : Base Adresse Nationale (IGN, La Poste, Etalab)." placeholder="Ex : 12 rue Saint-Georges, Nancy" value="{{ addrQuery }}" on-change="{{ onAddr }}" error="{{ err.addr }}" hint-size="100%,140px"></x-import>
+            <sc-if value="{{ hasSug }}" hint-placeholder-val="{{ false }}">
+              <ul role="listbox" aria-label="Suggestions d’adresse" style="list-style: none; margin: 0; padding: 0; background: var(--jr-white); border: var(--jr-border) solid var(--jr-line-field); border-radius: var(--jr-radius-s); overflow: hidden;">
+                <sc-for list="{{ sug }}" as="g" hint-placeholder-count="4">
+                  <li role="option" aria-selected="false" style="border-top: {{ g.sep }};">
+                    <button type="button" onClick="{{ g.pick }}" style="all: unset; box-sizing: border-box; width: 100%; min-height: var(--jr-hit); padding: var(--jr-s-2) var(--jr-s-4); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--jr-s-1) var(--jr-s-3); cursor: pointer; font: var(--jr-type-body); color: var(--jr-ink);" style-hover="background: var(--jr-leaf-wash);" style-focus="background: var(--jr-leaf-wash); outline: var(--jr-focus-width) solid var(--jr-focus); outline-offset: calc(-1 * var(--jr-focus-width));">
+                      <span>{{ g.label }}</span>
+                      <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">{{ g.ctx }}</span>
+                    </button>
+                  </li>
+                </sc-for>
+              </ul>
+            </sc-if>
+            <sc-if value="{{ sugMsg }}" hint-placeholder-val="{{ false }}">
+              <p role="status" style="margin: 0; font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);">{{ sugMsg }}</p>
+            </sc-if>
+          </div>
+          <sc-if value="{{ zoneActive }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="JRv2.Notice" tone="info" title="{{ zoneTitle }}" hint-size="100%,96px">JungleRenov n’est pas agréé Mon Accompagnateur Rénov’. Le dépôt se fait par vous, sur le site de l’Anah.</x-import>
+          </sc-if>
+          <sc-if value="{{ zoneOut }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="JRv2.Notice" tone="bloque" title="Le service n’est pas encore ouvert dans votre département" action="{{ waitBtn }}" hint-size="100%,120px">JungleRenov couvre la Lorraine : Meurthe-et-Moselle, Meuse, Moselle, Vosges. Inscrivez-vous pour être prévenu de l’ouverture.</x-import>
+          </sc-if>
+          <x-import component-from-global-scope="JRv2.QuestionBlock" group="{{ true }}" label="Type de logement" error="{{ err.type }}" hint-size="100%,140px">
+            <x-import component-from-global-scope="JRv2.ChoiceGrid" name="type" options="{{ optType }}" value="{{ s.type }}" on-change="{{ set.type }}" narrow="{{ narrow }}" narrow-cols="{{ 1 }}" cols="{{ optTypeCols }}" error="{{ err.type }}" aria-label="Type de logement" hint-size="100%,72px"></x-import>
+          </x-import>
+          <x-import component-from-global-scope="JRv2.QuestionBlock" group="{{ true }}" label="Vous êtes…" error="{{ err.occ }}" hint-size="100%,140px">
+            <x-import component-from-global-scope="JRv2.ChoiceGrid" name="occ" options="{{ optOcc }}" value="{{ s.occ }}" on-change="{{ set.occ }}" narrow="{{ narrow }}" narrow-cols="{{ 1 }}" cols="{{ optOccCols }}" error="{{ err.occ }}" aria-label="Vous êtes…" hint-size="100%,72px"></x-import>
+          </x-import>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); max-width: var(--jr-measure);">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 2 sur 8 · Personne</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Pour qui sont les aménagements&#8239;?</h1>
+          <p style="margin: var(--jr-s-1) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">L’aide est attribuée selon la situation de la personne qui vit dans le logement.</p>
+        </div>
+        <section aria-label="Personne concernée" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-6);">
+          <x-import component-from-global-scope="JRv2.QuestionBlock" first="{{ true }}" group="{{ true }}" label="La personne concernée est…" error="{{ err.who }}" hint-size="100%,140px">
+            <x-import component-from-global-scope="JRv2.ChoiceGrid" name="who" options="{{ optWho }}" value="{{ s.who }}" on-change="{{ set.who }}" narrow="{{ narrow }}" narrow-cols="{{ 1 }}" cols="{{ optWhoCols }}" error="{{ err.who }}" aria-label="La personne concernée est…" hint-size="100%,72px"></x-import>
+          </x-import>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); max-width: var(--jr-measure);">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 3 sur 8 · Âge</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Quel âge a cette personne&#8239;?</h1>
+          <p style="margin: var(--jr-s-1) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">À partir de 70 ans, seuls les revenus sont examinés.</p>
+        </div>
+        <section aria-label="Âge" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-6);">
+          <x-import component-from-global-scope="JRv2.QuestionBlock" first="{{ true }}" group="{{ true }}" label="Âge de la personne" error="{{ err.age }}" hint-size="100%,140px">
+            <x-import component-from-global-scope="JRv2.ChoiceGrid" name="age" options="{{ optAge }}" value="{{ s.age }}" on-change="{{ set.age }}" narrow="{{ narrow }}" narrow-cols="{{ 1 }}" cols="{{ optAgeCols }}" error="{{ err.age }}" aria-label="Âge de la personne" hint-size="100%,72px"></x-import>
+          </x-import>
+          <sc-if value="{{ needGir }}" hint-placeholder-val="{{ false }}">
+            <div style="display: grid; grid-template-columns: {{ twoCols }}; gap: var(--jr-gutter); padding-top: var(--jr-s-6); border-top: var(--jr-border) solid var(--jr-line);">
+              <x-import component-from-global-scope="JRv2.Select" id="gir" label="Niveau de perte d’autonomie (GIR)" hint="Il figure sur la notification APA ; sinon, choisissez « Je ne sais pas »." options="{{ optGir }}" value="{{ s.gir }}" on-change="{{ set.gir }}" placeholder="Choisir" error="{{ err.gir }}" hint-size="100%,140px"></x-import>
+            </div>
+          </sc-if>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep4 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); max-width: var(--jr-measure);">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 4 sur 8 · Handicap</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Cette personne est-elle en situation de handicap&#8239;?</h1>
+          <p style="margin: var(--jr-s-1) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">Une reconnaissance de handicap ouvre l’aide sans condition d’âge.</p>
+        </div>
+        <section aria-label="Handicap" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-6);">
+          <x-import component-from-global-scope="JRv2.QuestionBlock" first="{{ true }}" group="{{ true }}" label="Situation de handicap" error="{{ err.hand }}" hint-size="100%,140px">
+            <x-import component-from-global-scope="JRv2.ChoiceGrid" name="hand" options="{{ optHand }}" value="{{ s.hand }}" on-change="{{ set.hand }}" narrow="{{ narrow }}" narrow-cols="{{ 1 }}" cols="{{ optHandCols }}" error="{{ err.hand }}" aria-label="Situation de handicap" hint-size="100%,72px"></x-import>
+          </x-import>
+          <sc-if value="{{ hasElig }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="JRv2.Notice" tone="{{ eligTone }}" title="{{ eligTitle }}" hint-size="100%,56px"></x-import>
+          </sc-if>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep5 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); max-width: var(--jr-measure);">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 5 sur 8 · Revenus</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Quels sont les revenus du foyer&#8239;?</h1>
+          <p style="margin: var(--jr-s-1) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">Ils fixent votre catégorie de ressources Anah, donc le taux de l’aide.</p>
+        </div>
+        <p style="margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--jr-s-2); font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);"><span>{{ zoneLine }}</span><x-import component-from-global-scope="JRv2.Button" variant="tertiary" on-click="{{ to1 }}" hint-size="auto,48px">modifier</x-import></p>
+        <section aria-label="Revenus" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-6);">
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-5);">
+            <div style="display: grid; grid-template-columns: {{ twoCols }}; gap: var(--jr-s-5) var(--jr-gutter); align-items: start;">
+              <x-import component-from-global-scope="JRv2.QuestionBlock" first="{{ true }}" group="{{ true }}" label="Personnes au foyer" error="{{ err.foyer }}" hint-size="100%,140px">
+                <x-import component-from-global-scope="JRv2.ChoiceGrid" name="foyer" options="{{ optFoyer }}" value="{{ s.foyer }}" on-change="{{ set.foyer }}" cols="{{ 3 }}" compact="{{ true }}" error="{{ err.foyer }}" aria-label="Personnes au foyer" hint-size="100%,120px"></x-import>
+              </x-import>
+              <x-import component-from-global-scope="JRv2.TextField" id="rfr" label="Revenu fiscal de référence" q-label="{{ true }}" hint-below="{{ true }}" hint="Il figure en page 1 de votre avis d’imposition." unit="€" input-mode="numeric" value="{{ s.rfr }}" on-change="{{ set.rfr }}" error="{{ err.rfr }}" hint-size="100%,140px"></x-import>
+            </div>
+            <sc-if value="{{ hasCat }}" hint-placeholder-val="{{ false }}">
+              <x-import component-from-global-scope="JRv2.Notice" tone="action" title="{{ catTitle }}" hint-size="100%,56px"></x-import>
+            </sc-if>
+          </div>
+        </section>
+        <p style="margin: 0; font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);">Vos réponses restent sur cet appareil et ne sont transmises qu’avec votre accord. <a href="page-info.dc.html?p=privacy">Confidentialité</a></p>
+      </sc-if>
+      <sc-if value="{{ isStep6 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); max-width: var(--jr-measure);">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 6 sur 8 · Aménagements</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Quels aménagements envisagez-vous&#8239;?</h1>
+          <p style="margin: var(--jr-s-1) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">Coûts moyens constatés, pour estimer l’aide ; les devis feront foi.</p>
+        </div>
+        <section aria-label="Aménagements" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-6);">
+          <sc-for list="{{ workGroups }}" as="g" hint-placeholder-count="3">
+            <div style="{{ g.wrap }}">
+              <h3 style="margin: 0; font: var(--jr-type-h3);">{{ g.title }}</h3>
+              <x-import component-from-global-scope="JRv2.ChoiceGrid" type="checkbox" name="{{ g.name }}" options="{{ g.options }}" value="{{ s.works }}" on-change="{{ set.works }}" cols="{{ worksCols }}" aria-label="{{ g.title }}" hint-size="100%,200px"></x-import>
+            </div>
+          </sc-for>
+          <div aria-live="polite" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: var(--jr-s-2); margin: 0 {{ bleed }} {{ bleed }}; padding: var(--jr-s-4) {{ cardPadX }}; background: var(--jr-paper); border-top: var(--jr-border) solid var(--jr-line); border-radius: 0 0 var(--jr-radius-m) var(--jr-radius-m);">
+            <span style="font: var(--jr-type-label);">Coût estimé des aménagements sélectionnés</span>
+            <span style="font: var(--jr-type-h3); font-variant-numeric: tabular-nums;">{{ worksCost }}</span>
+          </div>
+        </section>
+        <sc-if value="{{ noWorks }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="JRv2.Notice" tone="bloque" title="Cochez au moins un aménagement" hint-size="100%,72px">Le calcul a besoin d’au moins un aménagement pour estimer l’aide.</x-import>
+        </sc-if>
+      </sc-if>
+      <sc-if value="{{ isStep7 }}" hint-placeholder-val="{{ false }}">
+        <section aria-label="Calcul en cours" aria-live="polite" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-6); align-items: center; text-align: center;">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 7 sur 8 · Calcul</p>
+          <svg viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="{{ ringLabel }}">
+            <circle cx="48" cy="48" r="42" fill="none" stroke="var(--jr-paper-deep)" stroke-width="8"></circle>
+            <circle cx="48" cy="48" r="42" fill="none" stroke="var(--jr-leaf)" stroke-width="8" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="{{ ringOffset }}" transform="rotate(-90 48 48)"></circle>
+            <text x="48" y="55" text-anchor="middle" font-family="Komet, system-ui, sans-serif" font-weight="700" font-size="20" fill="var(--jr-ink)">{{ ringPct }}</text>
+          </svg>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Calcul de votre aide</h1>
+          <ul style="list-style: none; margin: 0; padding: 0; width: 100%; max-width: var(--jr-measure); display: flex; flex-direction: column; text-align: left;">
+            <sc-for list="{{ checks }}" as="c" hint-placeholder-count="6">
+              <li style="{{ c.row }}"><span style="font: var(--jr-type-body);">{{ c.label }}</span><x-import component-from-global-scope="JRv2.StatusTag" status="{{ c.status }}" hint-size="auto,32px">{{ c.word }}</x-import></li>
+            </sc-for>
+          </ul>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep8 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); max-width: var(--jr-measure);">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 8 sur 8 · Résultats</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Votre estimation MaPrimeAdapt’</h1>
+          <p style="margin: var(--jr-s-1) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">{{ profileLine }}</p>
+        </div>
+        <sc-if value="{{ notElig }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="JRv2.Notice" tone="bloque" title="Non éligible à MaPrimeAdapt’" hint-size="100%,96px">{{ notEligText }}</x-import>
+        </sc-if>
+        <sc-if value="{{ elig }}" hint-placeholder-val="{{ true }}">
+        <section data-surface="dark" aria-label="Aide estimée" style="background: var(--jr-ink); color: var(--jr-paper); border-radius: var(--jr-radius-m); padding: var(--jr-s-6); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--jr-s-4); align-items: center;">
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); min-width: 0;">
+            <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-paper);">Aide estimée</span>
+            <span style="font: var(--jr-type-amount-l); font-size: {{ bigSize }}; color: var(--jr-sprout); font-variant-numeric: tabular-nums; white-space: nowrap;">{{ r.total }}</span>
+            <span style="font: var(--jr-type-label); font-weight: 400; color: var(--jr-paper);">Source : {{ r.source }} · {{ r.date }} · montant indicatif, non contractuel</span>
+          </div>
+          <x-import component-from-global-scope="JRv2.IconBadge" name="valide" size="l" variant="encre" hint-size="48px,48px"></x-import>
+        </section>
+        <div style="display: grid; grid-template-columns: {{ threeCols }}; gap: var(--jr-gutter); align-items: stretch;">
+          <sc-for list="{{ r.trio }}" as="k" hint-placeholder-count="3">
+            <div style="{{ k.card }}">
+              <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: {{ k.labelColor }};">{{ k.label }}</span>
+              <span style="font: var(--jr-type-h2); font-size: var(--jr-s-6); line-height: 1.1; font-variant-numeric: tabular-nums; color: {{ k.color }};">{{ k.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <x-import component-from-global-scope="JRv2.Table" columns="{{ r.cols }}" rows="{{ r.rows }}" caption="Détail du calcul" hint-size="100%,320px"></x-import>
+        <x-import component-from-global-scope="JRv2.Notice" tone="info" title="Accompagnement" hint-size="100%,96px">Un opérateur AMO habilité est obligatoire ; son forfait Anah, de 350 à 800 €, est pris en charge. JungleRenov n’est pas agréé Mon Accompagnateur Rénov’ ; le dépôt se fait par vous, sur le site de l’Anah.</x-import>
+        </sc-if>
+        <details style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m);">
+          <summary style="cursor: pointer; min-height: var(--jr-hit); display: flex; align-items: center; padding: 0 var(--jr-s-5); font: var(--jr-type-label-strong);">À savoir</summary>
+          <ul style="margin: 0; padding: 0 var(--jr-s-5) var(--jr-s-5) var(--jr-s-7); display: flex; flex-direction: column; gap: var(--jr-s-2); font: var(--jr-type-body);">
+            <li>MaPrimeAdapt’ se cumule avec l’APA, la PCH et les aides des caisses de retraite.</li>
+            <li>Le montant affiché est arrondi au millier inférieur ; le calcul exact figure dans le détail.</li>
+            <li>Les travaux sont retenus dans la limite d’un plafond de 22&#8239;000&#8239;€ HT.</li>
+            <li>Les coûts sont des moyennes constatées ; seuls les devis feront foi.</li>
+          </ul>
+        </details>
+        <sc-if value="{{ elig }}" hint-placeholder-val="{{ true }}">
+        <section aria-label="Constituer mon dossier" style="background: var(--jr-leaf-wash); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; align-items: flex-start; gap: var(--jr-s-3);">
+          <h2 style="margin: 0; font: var(--jr-type-h2);">Prêt à constituer votre dossier&#8239;?</h2>
+          <p style="margin: 0; font: var(--jr-type-body);">Créez votre espace : le site y prépare votre dossier et le remet complet au partenaire habilité de votre secteur.</p>
+          <x-import component-from-global-scope="JRv2.Button" on-click="{{ constituer }}" full-width="{{ narrow }}" hint-size="auto,48px">Constituer mon dossier</x-import>
+        </section>
+        </sc-if>
+        <section aria-label="Recevoir mon récapitulatif" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-4);">
+          <h2 style="margin: 0; font: var(--jr-type-h3);">Recevoir mon récapitulatif en PDF</h2>
+          <sc-if value="{{ pdfSent }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="JRv2.Notice" tone="valide" title="Demande enregistrée" hint-size="100%,72px">Le récapitulatif sera envoyé à cette adresse.</x-import>
+          </sc-if>
+          <sc-if value="{{ pdfForm }}" hint-placeholder-val="{{ true }}">
+            <x-import component-from-global-scope="JRv2.TextField" id="pdf-email" label="E-mail" type="email" value="{{ s.pdfEmail }}" on-change="{{ set.pdfEmail }}" error="{{ err.pdf }}" hint-size="100%,100px"></x-import>
+            <x-import component-from-global-scope="JRv2.ChoiceCard" type="checkbox" name="pdf-consent" label="J’accepte de recevoir ce récapitulatif par e-mail" description="Aucun autre envoi, aucune revente." checked="{{ s.pdfConsent }}" on-change="{{ togglePdf }}" hint-size="100%,56px"></x-import>
+            <div><x-import component-from-global-scope="JRv2.Button" variant="secondary" on-click="{{ sendPdf }}" full-width="{{ narrow }}" hint-size="auto,48px">Recevoir le PDF</x-import></div>
+          </sc-if>
+        </section>
+        <p style="margin: 0; font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);">Sources : Guide des aides de l’Anah, édition février 2026, pp. 57-60 · barèmes 2026.</p>
+        <section data-surface="dark" aria-label="Notre garantie" style="background: var(--jr-ink); color: var(--jr-paper); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-2);">
+          <h2 style="margin: 0; font: var(--jr-type-h2); color: var(--jr-paper);">100&#8239;% indépendant · sans démarchage</h2>
+          <p style="margin: 0; font: var(--jr-type-body);">Aucun artisan ne nous paie pour être recommandé. Nous ne vous appellerons jamais sans votre demande.</p>
+        </section>
+      </sc-if>
+    </div>
+
+    <div style="grid-column: {{ recapSpan }}; margin-top: {{ recapTop }}; position: {{ recapPos }}; top: var(--jr-s-5); min-width: 0; max-height: {{ recapMax }}; overflow-y: auto;">
+      <x-import component-from-global-scope="JRv2.ProjectRecap" rows="{{ recap }}" title="{{ recapTitle }}" footer="{{ recapFooter }}" hint-size="100%,360px"></x-import>
+    </div>
+  </main>
+
+  <sc-if value="{{ showFooter }}" hint-placeholder-val="{{ true }}">
+    <x-import component-from-global-scope="JRv2.StickyFooter" on-prev="{{ prev }}" prev-disabled="{{ isFirst }}" on-next="{{ next }}" next-label="{{ nextLabel }}" loading="{{ sending }}" narrow="{{ narrow }}" hint-size="100%,80px"></x-import>
+  </sc-if>
+  <div aria-hidden="true" style="height: {{ footGap }};"></div>
+  <dc-import name="site-footer" compact="{{ true }}" hint-size="100%,200px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { step: 1, w: window.innerWidth, s: { type: '', surface: '', annee: '', dept: '', epci: '', heat: '', bois: '', dpe: '', status: '', rental: '', legal: '', rent: '', budget: '', prio: '', rfr: '', foyer: '', works: [], pdfEmail: '', pdfConsent: false, fn: '', ln: '', em: '', tel: '', consent: false }, err: {}, addr: null, addrQuery: '', sug: [], sugMsg: '', resumed: false, libs: false, calc: 0, result: null, worksTouched: false, pdfSent: false, sending: false };
+  KEY = 'junglerenov.tunnelv2';
+  OLD = ['junglerenov.tunnelv2.etape2', 'junglerenov.tunnel.energetique.step'];
+  STEPS = ['Adresse', 'Logement', 'Situation', 'Revenus', 'Travaux', 'Calcul', 'Résultats', 'Remise'];
+  goStep(n) {
+    n = Math.max(1, Math.min(8, n));
+    clearInterval(this.calcT);
+    this.setState({ step: n, err: {} }); window.scrollTo(0, 0);
+    if (n === 6) this.runCalc();
+  }
+  save(s, addr) { try { localStorage.setItem(this.KEY, JSON.stringify({ s, addr })); } catch (_) {} }
+  componentDidMount() {
+    this.onR = () => this.setState({ w: window.innerWidth }); window.addEventListener('resize', this.onR);
+    this.libT = setInterval(() => { if (window.RFGeo && window.RFCompute && window.RFDossiers) { clearInterval(this.libT); this.setState({ libs: true }); } }, 50);
+    const q = new URLSearchParams(location.search);
+    try {
+      if (q.get('fresh') === '1') {
+        [this.KEY].concat(this.OLD).forEach(k => localStorage.removeItem(k));
+        q.delete('fresh'); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash);
+        return;
+      }
+      let saved = JSON.parse(localStorage.getItem(this.KEY) || 'null');
+      if (!saved) { const old = JSON.parse(localStorage.getItem(this.OLD[0]) || 'null'); if (old) saved = { s: old, addr: null }; }
+      if (!saved) return;
+      const s = Object.assign({}, this.state.s, saved.s || {});
+      if (!Array.isArray(s.works)) s.works = [];
+      const any = !!saved.addr || Object.keys(s).some(k => Array.isArray(s[k]) ? s[k].length : s[k]);
+      this.setState({ s, addr: saved.addr || null, addrQuery: saved.addr ? saved.addr.label : '', resumed: any });
+    } catch (_) {}
+  }
+  formRef = React.createRef();
+  componentDidUpdate() { this.alignRecap(); }
+  alignRecap() {
+    const col = this.formRef.current; if (!col) return;
+    let off = 0;
+    if (this.state.w >= 1024) { const card = col.querySelector('section'); if (card) off = Math.round(card.getBoundingClientRect().top - col.getBoundingClientRect().top); }
+    if (Math.abs(off - (this.state.recapOff || 0)) > 1) this.setState({ recapOff: off });
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); clearTimeout(this.deb); clearInterval(this.libT); clearInterval(this.calcT); }
+  update(k, v) {
+    this.setState(st => {
+      const s = Object.assign({}, st.s, { [k]: v });
+      if (k === 'dept') s.epci = '';
+      const err = Object.assign({}, st.err); delete err[k];
+      this.save(s, st.addr);
+      return { s, err, worksTouched: st.worksTouched || k === 'works' };
+    });
+  }
+  onAddr(val) {
+    const err = Object.assign({}, this.state.err); delete err.addr;
+    this.setState({ addrQuery: val, addr: null, err });
+    clearTimeout(this.deb);
+    const q = val.trim();
+    if (q.length < 5) { this.setState({ sug: [], sugMsg: '' }); return; }
+    this.deb = setTimeout(() => this.fetchBan(q), 250);
+  }
+  async fetchBan(q) {
+    this.lastQ = q;
+    try {
+      const r = await fetch('https://api-adresse.data.gouv.fr/search/?q=' + encodeURIComponent(q) + '&limit=6&autocomplete=1');
+      if (!r.ok) throw new Error('BAN ' + r.status);
+      const j = await r.json(); if (q !== this.lastQ) return;
+      const sug = (j.features || []).map(f => ({ label: f.properties.label, postcode: f.properties.postcode, city: f.properties.city, citycode: f.properties.citycode, context: f.properties.context }));
+      this.setState({ sug, sugMsg: sug.length ? '' : 'Aucune adresse trouvée. Vérifiez la saisie, ou indiquez la rue et la commune.' });
+    } catch (e) { if (q === this.lastQ) this.setState({ sug: [], sugMsg: 'Le service d’adresses ne répond pas. Réessayez dans un instant.' }); }
+  }
+  pick(it) {
+    const cp = String(it.postcode || ''); const dep = /^20/.test(cp) ? (parseInt(cp.slice(2), 10) >= 200 ? '2B' : '2A') : cp.slice(0, 2);
+    const s = Object.assign({}, this.state.s);
+    if (['54', '55', '57', '88'].indexOf(dep) >= 0) { if (s.dept !== dep) s.epci = ''; s.dept = dep; }
+    if (dep === '54' && /^(Nancy|Vandœuvre-lès-Nancy|Villers-lès-Nancy|Laxou|Maxéville|Malzéville|Essey-lès-Nancy|Saint-Max|Tomblaine|Jarville-la-Malgrange|Heillecourt|Houdemont|Ludres|Fléville-devant-Nancy|Art-sur-Meurthe|Dommartemont|Seichamps|Pulnoy|Saulxures-lès-Nancy|Laneuveville-devant-Nancy)$/.test(it.city || '') && !s.epci) s.epci = 'metropole_grand_nancy';
+    const addr = Object.assign({}, it, { dep });
+    this.setState({ addr, addrQuery: it.label, sug: [], sugMsg: '', s, err: {} });
+    this.save(s, addr);
+  }
+  zone() { const a = this.state.addr; if (!a || !window.RFGeo) return null; return window.RFGeo.check(a.postcode); }
+  num(v) { const n = parseInt(String(v || '').replace(/\D/g, ''), 10); return Number.isFinite(n) ? n : 0; }
+  bailleurCase() {
+    const s = this.state.s; if (s.status !== 'bailleur') return 'occupant';
+    if (s.legal === 'copro-communes') return 'copro'; if (s.rental === 'saisonnier') return 'saisonnier'; if (s.rental === 'meuble') return 'meuble';
+    if (s.legal === 'sci-is') return 'sci-is'; if (s.legal === 'sci-ir') return 'sci-ir-nu'; if (s.legal === 'indivision') return 'indivision-nu'; if (s.legal === 'particulier') return 'particulier-nu'; return null;
+  }
+  input() {
+    const s = this.state.s, bc = this.bailleurCase() || 'occupant', bail = s.status === 'bailleur';
+    return {
+      surface: this.num(s.surface) || 110, foyer: Number(s.foyer) || 4, rfr: this.num(s.rfr) || 32000, region: 'Grand Est',
+      heat: ({ gaz: 'gaz', fioul: 'fioul', elec: 'electrique', bois: 'bois' })[s.heat] || 'fioul',
+      dept: s.dept || null, epci: s.epci || null, typeLogement: s.type === 'appartement' ? 'appartement' : 'maison',
+      hasCoproCollectifs: bc === 'copro' ? 'yes' : 'no', copro: {}, dpeCurrent: s.dpe && s.dpe !== '?' ? s.dpe : null,
+      oldWoodStove: s.bois === 'oui', status: bail ? 'bailleur' : 'occupant', ownerType: bail ? 'bailleur' : 'occupant', bailleurCase: bc,
+      rent: this.num(s.rent), nbLogementsBailleur: 1, zone: null, locLevel: 'none', locDuration: 6, lpe: 'no', locAvantagesLevel: null, rentToMobility: false,
+      selection: s.works.length ? s.works.slice() : ['combles', 'ite', 'pac_aireau'],
+    };
+  }
+  runCalc() {
+    let result = null;
+    try { result = window.RFCompute.compute(this.input()); } catch (e) { console.error('[calcul]', e); }
+    this.setState({ calc: 0, result });
+    this.calcT = setInterval(() => {
+      const c = this.state.calc + 1;
+      if (c > 6) { clearInterval(this.calcT); if (result) this.goStep(7); return; }
+      this.setState({ calc: c });
+    }, 450);
+  }
+  validate(step) {
+    const s = this.state.s, err = {}, y = new Date().getFullYear();
+    if (step === 2) {
+      if (!s.type) err.type = 'Choisissez le type de logement.';
+      const sf = this.num(s.surface); if (!sf || sf < 9 || sf > 1000) err.surface = 'Indiquez une surface entre 9 et 1 000 m².';
+      const an = this.num(s.annee); if (!an || an < 1700 || an > y) err.annee = 'Indiquez une année entre 1700 et ' + y + '.';
+      if (!s.dept) err.dept = 'Choisissez votre département.';
+      if (!s.heat) err.heat = 'Choisissez une énergie de chauffage.';
+    }
+    if (step === 3) {
+      if (!s.status) err.status = 'Indiquez si vous habitez ce logement ou le louez.';
+      if (s.status === 'bailleur') { if (!s.rental) err.rental = 'Choisissez le type de location.'; if (!s.legal) err.legal = 'Choisissez la forme de détention.'; }
+      if (!s.budget) err.budget = 'Choisissez une fourchette de budget.';
+      if (!s.prio) err.prio = 'Choisissez votre priorité.';
+    }
+    if (step === 4) {
+      const r = this.num(s.rfr); if (!r || r > 2000000) err.rfr = 'Indiquez votre revenu fiscal de référence, en euros.';
+      if (!s.foyer) err.foyer = 'Indiquez le nombre de personnes au foyer.';
+    }
+    if (step === 5 && !s.works.length) err.works = true;
+    if (step === 8) {
+      if (!s.fn.trim()) err.fn = 'Indiquez votre prénom.'; if (!s.ln.trim()) err.ln = 'Indiquez votre nom.';
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s.em.trim())) err.em = 'Indiquez une adresse e-mail valide, par exemple nom@exemple.fr.';
+      if (!s.consent) err.consent = 'Cochez la case pour autoriser la remise de votre dossier.';
+    }
+    return err;
+  }
+  remettre() {
+    const err = this.validate(8); if (Object.keys(err).length) { this.setState({ err }); return; }
+    const s = this.state.s, r = this.state.result; if (!r) return;
+    this.setState({ sending: true });
+    try {
+      const prev = JSON.parse(localStorage.getItem('junglerenov.profile') || '{}');
+      const profile = Object.assign({}, prev, {
+        firstname: s.fn.trim(), lastname: s.ln.trim(), email: s.em.trim(), phone: s.tel.trim(),
+        address: this.state.addr ? this.state.addr.label : '',
+        logement: { type: s.type, surface: this.num(s.surface), annee: this.num(s.annee), dept: s.dept, epci: s.epci, chauffage: s.heat, dpe: s.dpe, address: this.state.addr ? this.state.addr.label : '' },
+        situation: { status: s.status, bailleurCase: this.bailleurCase(), budget: s.budget, priorite: s.prio },
+        foyer: { rfr: this.num(s.rfr), personnes: Number(s.foyer), categorie: r.profile && r.profile.cat },
+        travaux: s.works.slice(), aids: r, diagnostiqueLe: new Date().toISOString(),
+      });
+      localStorage.setItem('junglerenov.profile', JSON.stringify(profile));
+      let client = null;
+      if (window.RFStore && RFStore.saveClient) {
+        const ex = RFStore.getClientByEmail ? RFStore.getClientByEmail(profile.email) : null;
+        client = RFStore.saveClient(Object.assign({}, ex || {}, { email: profile.email, firstname: profile.firstname, lastname: profile.lastname, phone: profile.phone, dept: s.dept }));
+      }
+      const pro = window.RFTransmission ? RFTransmission.professionnelPour('energetique', s.dept) : null;
+      const d = RFDossiers.createTransmis('energetique', profile, r, { partenaireNom: pro && pro.nom, partenaireRole: pro && pro.role, departement: s.dept, consentementTransmission: { date: new Date().toISOString(), texte: 'Remise au partenaire habilité du département' } });
+      localStorage.setItem('junglerenov.session', JSON.stringify({ id: client ? client.id : 'client_' + Date.now(), email: profile.email, role: 'client', firstname: profile.firstname, loggedAt: Date.now() }));
+      [this.KEY].concat(this.OLD).forEach(k => localStorage.removeItem(k));
+      location.href = 'dashboard.dc.html?dossier=' + encodeURIComponent(d.id);
+    } catch (e) { console.error('[remise]', e); this.setState({ sending: false, err: { em: 'La remise n’a pas abouti. Réessayez dans un instant.' } }); }
+  }
+  renderVals() {
+    const w = this.state.w, narrow = w < 640, wide = w >= 1024, s = this.state.s, J = window.JRv2, zone = this.zone(), step = this.state.step, h = React.createElement;
+    const C = window.RFCompute;
+    const v = e => (e && e.target ? e.target.value : e);
+    const set = {}; ['type', 'surface', 'annee', 'dept', 'epci', 'heat', 'bois', 'dpe', 'status', 'rental', 'legal', 'rent', 'budget', 'prio', 'rfr', 'foyer', 'works', 'pdfEmail', 'fn', 'ln', 'em', 'tel'].forEach(k => { set[k] = e => this.update(k, v(e)); });
+    const eur = n => Math.round(n || 0).toLocaleString('fr-FR').replace(/\s/g, '\u202f') + '\u202f€';
+    const EPCI = {
+      '54': [['metropole_grand_nancy', 'Métropole du Grand Nancy'], ['cc_pays_sel_vermois', 'CC des Pays du Sel et du Vermois'], ['cc_seille_grand_couronne', 'CC Seille et Grand Couronné'], ['autre_grand_est', 'Autre EPCI (54)']],
+      '57': [['metz_metropole', 'Metz Métropole'], ['autre_grand_est', 'Autre EPCI (57)']],
+      '55': [['autre_grand_est', 'EPCI (55)']], '88': [['autre_grand_est', 'EPCI (88)']],
+    };
+    const DEPTS = { '54': 'Meurthe-et-Moselle', '55': 'Meuse', '57': 'Moselle', '88': 'Vosges' };
+    const o = (arr) => arr.map(([value, label, description, icon]) => ({ value, label, description, icon }));
+    const optDept = o([['54', '54 — Meurthe-et-Moselle'], ['55', '55 — Meuse'], ['57', '57 — Moselle'], ['88', '88 — Vosges'], ['autre', 'Autre département']]);
+    const optEpci = (EPCI[s.dept] || []).map(([value, label]) => ({ value, label }));
+    const optType = o([['maison', 'Maison individuelle', 'Pavillon, fermette, longère'], ['appartement', 'Appartement', 'En copropriété ou non']]);
+    const optHeat = o([['gaz', 'Gaz', 'Chaudière individuelle'], ['fioul', 'Fioul', 'Cuve à remplacer'], ['elec', 'Électrique', 'Convecteurs'], ['bois', 'Bois', 'Poêle ou chaudière']]);
+    const optBois = o([['oui', 'Oui', 'Prime Air Bois'], ['non', 'Non', 'Pas d’appareil'], ['nsp', 'Je ne sais pas', 'À vérifier']]);
+    const optStatus = o([['occupant', 'Occupant', 'Vous habitez ce logement'], ['bailleur', 'Bailleur', 'Vous le mettez en location']]);
+    const optRental = o([['nu', 'Nu, en résidence principale'], ['meuble', 'Meublé (LMNP / LMP)'], ['saisonnier', 'Saisonnier ou touristique']]);
+    const optLegal = o([['particulier', 'Particulier'], ['indivision', 'Indivision'], ['sci-ir', 'SCI à l’IR'], ['sci-is', 'SCI à l’IS'], ['copro-communes', 'Copropriété, parties communes']]);
+    const optBudget = o([['lt10', 'Moins de 10\u202f000\u202f€', 'Geste ciblé'], ['10-30', '10 à 30\u202f000\u202f€', 'Bouquet de travaux'], ['30-60', '30 à 60\u202f000\u202f€', 'Rénovation d’ampleur'], ['gt60', 'Plus de 60\u202f000\u202f€', 'Rénovation globale']]);
+    const optPrio = o([['eco', 'Économies', 'Réduire la facture'], ['confort', 'Confort', 'Plus chaud, moins humide'], ['ecologie', 'Écologie', 'Sortir des énergies fossiles']]);
+    const optFoyer = ['1', '2', '3', '4', '5', '6'].map(n => ({ value: n, label: n === '6' ? '6+' : n }));
+    const lab = (arr, val) => (arr.find(x => x.value === val) || {}).label;
+    const cat = C && this.num(s.rfr) && s.foyer ? C.categorie(this.num(s.rfr), Number(s.foyer), 'Grand Est') : null;
+    const CAT = { bleus: ['Très modestes', 'taux d’aide les plus élevés.'], jaunes: ['Modestes', 'taux d’aide majorés.'], violets: ['Intermédiaires', 'taux d’aide intermédiaires.'], roses: ['Aisés', 'primes par geste réduites.'] };
+    const W = {
+      combles: ['Isolation des combles', 'combles'], toiture_terrasse: ['Isolation toiture-terrasse', 'combles'], ite: ['Isolation des murs (ITE)', 'facade'], menuiseries: ['Fenêtres, menuiseries', 'fenetres'],
+      pac_aireau: ['Pompe à chaleur air/eau', 'pompe-a-chaleur'], pac_geothermique: ['PAC géothermique', 'pompe-a-chaleur'], chauffe_eau_thermo: ['Chauffe-eau thermodynamique', 'pompe-a-chaleur'], chauffe_eau_solaire: ['Chauffe-eau solaire', 'chaudiere'], chauffage_solaire_combine: ['Chauffage solaire combiné', 'chaudiere'], pvt_eau: ['Panneau photo-thermique', 'chaudiere'], raccordement_reseau: ['Réseau de chaleur', 'chaudiere'], poele_granules: ['Poêle à granulés', 'chaudiere'], poele_buches: ['Poêle à bûches', 'chaudiere'], insert_foyer: ['Insert, foyer fermé', 'chaudiere'], biomasse: ['Chaudière biomasse', 'chaudiere'],
+      vmc_df: ['VMC double flux', 'logement'], audit_energetique: ['Audit énergétique', 'document'], depose_cuve_fioul: ['Dépose de cuve à fioul', 'chaudiere'],
+    };
+    const sub = k => { const m = C && C.MPR && C.MPR[k]; const c = cat || 'bleus'; return m && typeof m[c] === 'number' ? (m[c] ? 'MaPrimeRénov’ : ' + eur(m[c]) : 'Sans prime par geste') : 'Montant selon surface et devis'; };
+    const GROUPS = [['Isolation', ['combles', 'toiture_terrasse', 'ite', 'menuiseries']], ['Chauffage et eau chaude', ['pac_aireau', 'pac_geothermique', 'chauffe_eau_thermo', 'chauffe_eau_solaire', 'chauffage_solaire_combine', 'pvt_eau', 'raccordement_reseau', 'poele_granules', 'poele_buches', 'insert_foyer', 'biomasse']], ['Autres', ['vmc_df', 'audit_energetique', 'depose_cuve_fioul']]];
+    const workGroups = GROUPS.map(([title, keys], i) => ({ title, name: 'works-' + i, options: keys.map(k => ({ value: k, label: W[k][0], description: sub(k), icon: W[k][1] })),
+      wrap: { display: 'flex', flexDirection: 'column', gap: 'var(--jr-s-3)', paddingTop: i ? 'var(--jr-s-6)' : 0, borderTop: i ? 'var(--jr-border) solid var(--jr-line)' : 0 } }));
+    const an = this.num(s.annee), heatL = (lab(optHeat, s.heat) || '').toLowerCase();
+    const tip = an && an < 1975 && (s.heat === 'gaz' || s.heat === 'fioul')
+      ? 'Une maison de ' + an + ' chauffée au ' + heatL + ' gagne d’abord à isoler combles et murs, puis à changer le chauffage : cet enchaînement ouvre la rénovation d’ampleur, mieux financée.'
+      : 'Isoler avant de changer le chauffage permet de choisir un appareil moins puissant, donc moins cher.';
+    // éligibilité (table d’origine)
+    const ELIG = { occupant: { mpr: 'yes', 'mpr-bailleur': 'no', 'mpr-copro': 'no', 'loc-avantages': 'no', cee: 'yes', 'eco-ptz': 'yes', tva: 'yes', lpe: 'no' },
+      'particulier-nu': { mpr: 'no', 'mpr-bailleur': 'yes', 'mpr-copro': 'no', 'loc-avantages': 'yes', cee: 'yes', 'eco-ptz': 'yes', tva: 'yes', lpe: 'cond' }, 'indivision-nu': { mpr: 'no', 'mpr-bailleur': 'yes', 'mpr-copro': 'no', 'loc-avantages': 'yes', cee: 'yes', 'eco-ptz': 'yes', tva: 'yes', lpe: 'cond' },
+      'sci-ir-nu': { mpr: 'no', 'mpr-bailleur': 'yes', 'mpr-copro': 'no', 'loc-avantages': 'yes', cee: 'yes', 'eco-ptz': 'yes', tva: 'yes', lpe: 'cond' }, 'sci-is': { mpr: 'no', 'mpr-bailleur': 'no', 'mpr-copro': 'no', 'loc-avantages': 'no', cee: 'yes', 'eco-ptz': 'yes', tva: 'yes', lpe: 'no' },
+      meuble: { mpr: 'no', 'mpr-bailleur': 'no', 'mpr-copro': 'no', 'loc-avantages': 'no', cee: 'yes', 'eco-ptz': 'yes', tva: 'yes', lpe: 'no' }, saisonnier: { mpr: 'no', 'mpr-bailleur': 'no', 'mpr-copro': 'no', 'loc-avantages': 'no', cee: 'yes', 'eco-ptz': 'no', tva: 'no', lpe: 'no' },
+      copro: { mpr: 'no', 'mpr-bailleur': 'no', 'mpr-copro': 'yes', 'loc-avantages': 'cond', cee: 'yes', 'eco-ptz': 'yes', tva: 'yes', lpe: 'no' } };
+    const AIDES = [['mpr', 'MaPrimeRénov’'], ['mpr-bailleur', 'MPR’ bailleur'], ['mpr-copro', 'MPR’ copropriété'], ['loc-avantages', 'Loc’Avantages'], ['cee', 'CEE'], ['eco-ptz', 'Éco-PTZ'], ['tva', 'TVA 5,5\u202f%'], ['lpe', 'Louer pour l’emploi']];
+    const bc = s.status ? this.bailleurCase() : null;
+    const tbl = bc && ELIG[bc] ? Object.assign({}, ELIG[bc]) : null;
+    if (tbl && s.type === 'appartement' && ['copro', 'meuble', 'saisonnier', 'sci-is'].indexOf(bc) < 0) tbl['mpr-copro'] = 'cond';
+    const res = this.state.result;
+    let recapFooter = null;
+    if (J && step >= 7 && res) {
+      recapFooter = h('div', { 'data-surface': 'dark', style: { padding: 'var(--jr-s-4) var(--jr-s-5)', background: 'var(--jr-ink)', color: 'var(--jr-paper)', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 'var(--jr-s-3)' } },
+        h('span', { style: { font: 'var(--jr-type-label-strong)' } }, 'Aides estimées'), h('span', { style: { font: 'var(--jr-type-amount-s)', color: 'var(--jr-sprout)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' } }, eur(res.totalAides)));
+    } else if (J && step >= 3 && tbl) {
+      const S = { yes: ['valide', 'Applicable'], cond: ['en-cours', 'Sous conditions'] };
+      const nYes = AIDES.filter(([k]) => tbl[k] === 'yes' || tbl[k] === 'cond').length, open = !!this.state.aidesOpen;
+      recapFooter = h('div', { style: { background: 'var(--jr-leaf-wash)' } },
+        h('button', { type: 'button', 'aria-expanded': open, onClick: () => this.setState({ aidesOpen: !open }), style: { all: 'unset', boxSizing: 'border-box', width: '100%', minHeight: 'var(--jr-hit)', padding: '0 var(--jr-s-5)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 'var(--jr-s-3)', cursor: 'pointer', font: 'var(--jr-type-label-strong)', color: 'var(--jr-ink)' } },
+          'Aides applicables · ' + nYes + ' sur ' + AIDES.length, h(J.Icon, { name: 'chevron', style: { transform: open ? 'rotate(180deg)' : 'none' } })),
+        open ? h('ul', { style: { listStyle: 'none', margin: 0, padding: '0 var(--jr-s-5) var(--jr-s-4)', display: 'flex', flexDirection: 'column', gap: 'var(--jr-s-1)' } },
+          AIDES.map(([k, n]) => { const st = tbl[k] || 'no'; return h('li', { key: k, style: { display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', alignItems: 'center', gap: 'var(--jr-s-2)', minHeight: 'var(--jr-s-6)' } },
+            h('span', { title: n, style: { font: 'var(--jr-type-label)', fontWeight: st === 'no' ? 400 : 600, color: 'var(--jr-ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' } }, n),
+            st === 'no' ? h('span', { style: { font: 'var(--jr-type-label)', fontWeight: 400, color: 'var(--jr-ink)', whiteSpace: 'nowrap' } }, 'Non') : h('span', { style: { whiteSpace: 'nowrap' } }, h(J.StatusTag, { status: S[st][0] }, S[st][1]))); })) : null);
+    }
+    const logement = [lab(optType, s.type), s.surface && (this.num(s.surface) + '\u202fm²'), s.annee, lab(optHeat, s.heat), s.dpe && (s.dpe === '?' ? 'DPE à estimer' : 'DPE ' + s.dpe), s.bois && ('bois avant 2005 : ' + ({ oui: 'oui', non: 'non', nsp: 'à vérifier' })[s.bois])].filter(Boolean).join(' · ');
+    const situation = [lab(optStatus, s.status), s.status === 'bailleur' && lab(optRental, s.rental), lab(optBudget, s.budget), lab(optPrio, s.prio)].filter(Boolean).join(' · ');
+    const foyer = [this.num(s.rfr) ? eur(this.num(s.rfr)) : '', s.foyer && (s.foyer === '6' ? '6 personnes et +' : s.foyer + (s.foyer === '1' ? ' personne' : ' personnes')), cat && CAT[cat][0]].filter(Boolean).join(' · ');
+    const edit = n => e => { e.preventDefault(); this.goStep(n); };
+    const recap = [
+      { key: 'Adresse', value: this.state.addr ? this.state.addr.label : '', href: '#', onEdit: edit(1) },
+      { key: 'Logement', value: logement, href: '#', onEdit: edit(2) },
+      { key: 'Situation', value: situation, href: '#', onEdit: edit(3) },
+      { key: 'Foyer', value: foyer, href: '#', onEdit: edit(4) },
+      { key: 'Travaux', value: s.works.map(k => W[k] ? W[k][0] : k), href: '#', onEdit: edit(5) },
+    ];
+    // calcul
+    const CHECKS = ['Adresse et zone couverte', 'Catégorie de ressources Anah', 'Éligibilité MaPrimeRénov’', 'Primes CEE', 'Aides de la Région et de la métropole', 'Plafonds et cumuls'];
+    const c = this.state.calc;
+    const checks = CHECKS.map((l, i) => ({ label: l, status: i < c ? 'valide' : i === c ? 'en-cours' : 'a-venir', word: i < c ? 'Fait' : i === c ? 'En cours' : 'À venir',
+      row: { display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', alignItems: 'center', gap: 'var(--jr-s-3)', minHeight: 'var(--jr-hit)', borderTop: i ? 'var(--jr-border) solid var(--jr-line)' : 0 } }));
+    const pct = Math.round(Math.min(c, 6) / 6 * 100);
+    // résultats
+    const dpeOf = kwhm2 => kwhm2 <= 70 ? 'A' : kwhm2 <= 110 ? 'B' : kwhm2 <= 180 ? 'C' : kwhm2 <= 250 ? 'D' : kwhm2 <= 330 ? 'E' : kwhm2 <= 420 ? 'F' : 'G';
+    const badge = (L, end) => ({ display: 'grid', placeItems: 'center', width: 'var(--jr-s-8)', height: 'var(--jr-s-8)', boxSizing: 'border-box', borderRadius: 'var(--jr-radius-s)', background: 'var(--jr-dpe-' + L.toLowerCase() + ')', color: L === 'A' || L === 'G' ? 'var(--jr-white)' : 'var(--jr-ink)', font: 'var(--jr-type-h2)', fontSize: 'var(--jr-s-6)', outline: end ? 'var(--jr-border-strong) solid var(--jr-ink)' : 'none', outlineOffset: end ? 'var(--jr-border-strong)' : 0 });
+    let R7 = { total: '', trio: [], lines: [], notes: [], dpeA: { letter: '', badge: {} }, dpeB: { letter: '', badge: {} } };
+    if (res) {
+      const A = res.aides || {}, surf = this.num(s.surface) || 110, en = res.energie || {};
+      const ttc = (res.travaux && res.travaux.totalTTC) || 0, tot = res.totalAides || 0;
+      const row = { display: 'grid', columnGap: 'var(--jr-s-4)', rowGap: 'var(--jr-s-1)', alignItems: 'start', padding: 'var(--jr-s-4) 0', gridTemplateColumns: narrow ? 'minmax(0, 1fr) auto' : 'calc(var(--jr-s-8) + var(--jr-s-4)) minmax(0, 1fr) auto', gridTemplateAreas: narrow ? '"fam fam" "nom nom" ". amt"' : '"fam nom amt"' };
+      const L = [];
+      if (A.mpr && A.mpr.total) L.push(['État', A.mpr.isRenovAmpleur ? 'MaPrimeRénov’ rénovation d’ampleur' : 'MaPrimeRénov’ par geste', A.mpr.isRenovAmpleur ? Math.round((A.mpr.taux || 0) * 100) + '\u202f% sur ' + eur(A.mpr.plafondHT) + ' HT' : 'Forfaits par poste de travaux', eur(A.mpr.total)]);
+      if (A.mprCopro && A.mprCopro.partPersonnelle) L.push(['État', 'MaPrimeRénov’ Copropriété', 'Quote-part de l’aide collective, à confirmer en assemblée générale', eur(A.mprCopro.partPersonnelle)]);
+      if (A.cee) L.push(['Énergie', 'CEE', A.cee.cumulBloque ? 'Intégrés au parcours accompagné' : 'Primes des fournisseurs d’énergie', A.cee.cumulBloque ? 'inclus' : eur(A.cee.total)]);
+      const ge = A.grandEst;
+      if (ge && ge.planClimatMgn) L.push(['Local', 'Plan Climat Métropole du Grand Nancy', ge.planClimatMgnFourchette ? 'Fourchette ' + eur(ge.planClimatMgnFourchette.min) + ' à ' + eur(ge.planClimatMgnFourchette.max) : 'Selon dépenses éligibles', eur(ge.planClimatMgn)]);
+      if (ge && ge.climaxion) L.push(['Local', 'Climaxion, Région Grand Est', 'Cumulable avec MaPrimeRénov’', eur(ge.climaxion)]);
+      if (A.local && A.local.total && A.local.nom) L.push(['Local', A.local.nom, 'Aide locale', eur(A.local.total)]);
+      if (A.ecoPtz && A.ecoPtz.eligible) L.push(['Banque', 'Éco-prêt à taux zéro', 'Prêt sans intérêts sur ' + (A.ecoPtz.duree_max_annees || 20) + ' ans, hors total', 'jusqu’à ' + eur(A.ecoPtz.montant)]);
+      if (A.tva && A.tva.total) L.push(['Fiscal', 'TVA à 5,5\u202f%', 'Moindre dépense sur la facture, hors total', eur(A.tva.total)]);
+      const da = s.dpe && s.dpe !== '?' ? s.dpe : dpeOf((en.avant || 0) / surf), db = dpeOf((en.apres || 0) / surf);
+      const acc = res.accompagnement || {};
+      R7 = {
+        total: eur(tot), source: 'barèmes Anah, ATEE et Région Grand Est 2026', date: new Date().toLocaleDateString('fr-FR'),
+        trio: (() => { const base = { display: 'flex', flexDirection: 'column', gap: 'var(--jr-s-3)', padding: 'var(--jr-s-4) var(--jr-s-5)', borderRadius: 'var(--jr-radius-m)', background: 'var(--jr-white)', border: 'var(--jr-border) solid var(--jr-line)', height: '100%', boxSizing: 'border-box' }; const reste = Math.max(0, ttc - tot);
+          return [{ label: 'Coût des travaux TTC', value: eur(ttc), card: base, color: 'var(--jr-ink)', labelColor: 'var(--jr-ink-70)', note: '' },
+            { label: 'Total des aides', value: eur(tot), card: Object.assign({}, base, { background: 'var(--jr-leaf-wash)', border: 'var(--jr-border-strong) solid var(--jr-leaf)' }), color: 'var(--jr-leaf)', labelColor: 'var(--jr-leaf)', note: '' },
+            { label: 'Reste à votre charge', value: eur(reste), card: base, color: 'var(--jr-ink)', labelColor: 'var(--jr-ink-70)', note: ttc ? 'soit ' + Math.round(reste / ttc * 100) + '\u202f% du coût' : '' }]; })(),
+        lines: L.map((x, i) => ({ fam: x[0], nom: x[1], detail: x[2], amt: x[3], row: Object.assign({}, row, { borderTop: i ? 'var(--jr-border) solid var(--jr-line)' : 0 }) })),
+        dpeA: { letter: da, badge: badge(da), kwh: Math.round((en.avant || 0) / surf) + '\u202fkWh/m²/an' }, dpeB: { letter: db, badge: badge(db, true), kwh: Math.round((en.apres || 0) / surf) + '\u202fkWh/m²/an' },
+        gain: (() => { const g = 'ABCDEFG'.indexOf(da) - 'ABCDEFG'.indexOf(db); return g > 0 ? '+' + g + (g > 1 ? ' classes' : ' classe') : 'classe inchangée'; })(),
+        dpeSr: 'Classe énergétique : ' + da + ' actuelle, ' + db + ' projetée.', savingAmt: eur(en.economieAn || 0), declared: !!(s.dpe && s.dpe !== '?'),
+        saving: en.economieAn ? 'Économie estimée : ' + eur(en.economieAn) + ' par an sur la facture d’énergie.' : 'Économie annuelle non estimée.',
+        marText: (acc.obligatoire ? 'Un partenaire habilité (MAR) est obligatoire pour ce parcours. L’Anah prend en charge son accompagnement jusqu’à ' + eur(acc.priseEnCharge) + '. ' : '') + 'JungleRenov n’est pas agréé Mon Accompagnateur Rénov’ ; le dépôt se fait par vous, sur le site de l’Anah.',
+        notes: [A.mpr && A.mpr.isRenovAmpleur ? 'La rénovation d’ampleur exige un audit énergétique avant travaux.' : 'Les primes par geste sont versées après travaux, sur facture.', 'Le calcul retient l’hypothèse basse des aides locales.', en.hypothese ? 'L’économie annuelle est estimée à partir d’un prix moyen de l’énergie.' : 'L’économie annuelle repose sur votre DPE.', A.cee && A.cee.cumulBloque ? 'Dans le parcours accompagné, les CEE sont intégrés à MaPrimeRénov’ et ne s’ajoutent pas.' : 'Les CEE sont versés par un fournisseur d’énergie, au choix.'],
+        cta: 'Prêt à obtenir vos ' + eur(tot) + ' d’aides\u202f?', sources: 'Sources : Anah, ATEE, Service Public, Région Grand Est · barèmes 2026.',
+      };
+    }
+    const ok = this.state.addr ? this.state.addr.city + ', ' + this.state.addr.dep : '';
+    const summary = [['Adresse', this.state.addr ? this.state.addr.label : '—'], ['Logement', logement || '—'], ['Foyer', foyer || '—'], ['Travaux', s.works.map(k => W[k] ? W[k][0] : k).join(', ') || '—'], ['Aides estimées', res ? eur(res.totalAides) : '—']]
+      .map(([k, vv], i) => ({ k, v: vv, row: { display: 'grid', gridTemplateColumns: narrow ? 'minmax(0, 1fr)' : 'calc(var(--jr-s-9) + var(--jr-s-8)) minmax(0, 1fr)', gap: 'var(--jr-s-1) var(--jr-s-4)', padding: 'var(--jr-s-3) 0', borderTop: i ? 'var(--jr-border) solid var(--jr-line)' : 0 } }));
+    return {
+      s, set, err: this.state.err, narrow, wide, steps: this.STEPS, recap, recapTitle: step >= 7 ? 'Votre dossier' : 'Votre projet', recapFooter,
+      optType, optHeat, optBois, optDept, optEpci, noEpci: !optEpci.length, optStatus, optRental, optLegal, optBudget, optPrio, optFoyer,
+      formRef: this.formRef, recapTop: wide ? (this.state.recapOff || 0) + 'px' : '0', notWide: !wide,
+      vGap: narrow ? 'var(--jr-s-4)' : 'var(--jr-s-5)', titleTop: narrow ? 'var(--jr-s-5)' : 'calc(var(--jr-s-7) - var(--jr-s-2))', blockGap: narrow ? 'var(--jr-s-5)' : 'var(--jr-s-6)', footGap: narrow ? 'var(--jr-s-8)' : 'var(--jr-s-9)',
+      bigSize: narrow ? 'var(--jr-s-7)' : 'calc(var(--jr-s-8) + var(--jr-s-2))',
+      gut: narrow ? 'var(--jr-margin-mobile)' : 'var(--jr-margin)',
+      cols: wide ? 'repeat(12, minmax(0, 1fr))' : 'minmax(0, 1fr)', formSpan: wide ? '1 / span 8' : '1 / -1', recapSpan: wide ? '9 / span 4' : '1 / -1', recapMax: wide ? 'calc(100vh - var(--jr-s-5) * 2)' : 'none', recapPos: wide ? 'sticky' : 'static',
+      shortCols: narrow ? 'minmax(0, 1fr)' : w < 1024 ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))',
+      twoCols: narrow ? 'minmax(0, 1fr)' : 'repeat(2, minmax(0, 1fr))', threeCols: narrow ? 'minmax(0, 1fr)' : 'repeat(3, minmax(0, 1fr))',
+      rfrCols: narrow ? 'minmax(0, 1fr)' : 'repeat(2, minmax(0, 1fr))', foyerCols: 3, worksCols: narrow ? 1 : 2,
+      cardPad: narrow ? 'var(--jr-s-5)' : 'var(--jr-s-6)',
+      isBailleur: s.status === 'bailleur',
+      zoneLine: s.dept && DEPTS[s.dept] ? 'Lorraine · ' + DEPTS[s.dept] + ' (' + s.dept + '), détecté depuis l’adresse ·' : 'Département non détecté ·',
+      hasCat: !!cat, catTitle: cat ? 'Catégorie Anah : ' + CAT[cat][0] + ' — ' + CAT[cat][1] : '',
+      tip, workGroups, noWorks: this.state.worksTouched && !s.works.length || !!this.state.err.works,
+      checks, ringPct: pct + '\u202f%', ringOffset: String(Math.round(264 * (1 - pct / 100))), ringLabel: 'Calcul en cours : ' + pct + ' %',
+      profileLine: [lab(optStatus, s.status), foyer, s.dept && DEPTS[s.dept] ? DEPTS[s.dept] + ' (' + s.dept + ')' : ''].filter(Boolean).join(' · '),
+      workPills: s.works.map(k => W[k] ? W[k][0] : k), res: R7, summary,
+      pdfSent: this.state.pdfSent, pdfForm: !this.state.pdfSent,
+      togglePdf: () => this.update('pdfConsent', !s.pdfConsent), toggleConsent: () => this.update('consent', !s.consent),
+      sendPdf: () => { if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s.pdfEmail.trim()) || !s.pdfConsent) { this.setState({ err: { pdf: 'Indiquez votre e-mail et cochez la case d’accord.' } }); return; }
+        try { const l = JSON.parse(localStorage.getItem('junglerenov.leadPdf') || '[]'); l.push({ email: s.pdfEmail.trim(), ts: Date.now(), total: res && res.totalAides }); localStorage.setItem('junglerenov.leadPdf', JSON.stringify(l)); } catch (_) {}
+        this.setState({ pdfSent: true, err: {} }); },
+      jump: i => { if (i + 1 < step && step !== 6) this.goStep(i + 1); },
+      stepIdx: step - 1, isStep1: step === 1, isStep2: step === 2, isStep3: step === 3, isStep4: step === 4, isStep5: step === 5, isStep6: step === 6, isStep7: step === 7, isStep8: step === 8,
+      isFirst: step === 1, showFooter: step !== 6, sending: this.state.sending,
+      nextLabel: step === 7 ? 'Constituer mon dossier' : step === 8 ? 'Remettre mon dossier' : step === 5 ? 'Calculer mes aides' : 'Continuer',
+      addrQuery: this.state.addrQuery, onAddr: e => this.onAddr(e && e.target ? e.target.value : e),
+      sug: this.state.sug.map((g, i) => ({ label: g.label, ctx: (g.context || '').split(',').slice(0, 2).join(' ·'), sep: i ? 'var(--jr-border) solid var(--jr-line)' : '0', pick: () => this.pick(g) })),
+      hasSug: this.state.sug.length > 0, sugMsg: this.state.sugMsg,
+      zoneActive: !!(zone && zone.status === 'active'), zoneOut: !!(zone && zone.status !== 'active' && zone.status !== 'unknown'),
+      zoneTitle: 'Votre région (Lorraine) est active · ' + ok,
+      resumed: this.state.resumed && step === 1,
+      restartBtn: J ? h(J.Button, { variant: 'tertiary', href: 'tunnel-energetique.dc.html?fresh=1' }, 'Recommencer à zéro') : null,
+      waitBtn: J ? h(J.Button, { variant: 'secondary', href: 'merci-liste-attente.dc.html?region=' + encodeURIComponent((zone && zone.region) || '') }, 'M’inscrire sur la liste d’attente') : null,
+      to1: () => this.goStep(1), to5: () => this.goStep(5), to8: () => this.goStep(8),
+      prev: () => this.goStep(step === 7 ? 5 : step - 1),
+      next: () => {
+        if (step === 1) {
+          if (!this.state.addr) { this.setState({ err: { addr: 'Choisissez votre adresse dans la liste des suggestions.' } }); return; }
+          if (!zone || zone.status !== 'active') { this.setState({ err: { addr: 'Cette adresse est hors de la zone couverte (Lorraine).' } }); return; }
+        }
+        if (step === 8) { this.remettre(); return; }
+        const err = this.validate(step); if (Object.keys(err).length) { this.setState({ err, worksTouched: step === 5 || this.state.worksTouched }); return; }
+        this.goStep(step + 1);
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Design system v2 — JungleRenov</title>
+  <link rel="stylesheet" href="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/styles.css">
+  <link rel="stylesheet" href="lib/components.css">
+  <script src="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/_ds_bundle.js"></script>
+  <script src="lib/jr-v2.js"></script>
+</helmet>
+<div class="jr2" style="background: var(--jr-surface-page); min-height: 100vh; padding: var(--jr-s-8) var(--jr-margin);">
+  <div style="max-width: var(--jr-container); margin: 0 auto; display: flex; flex-direction: column; gap: var(--jr-s-8);">
+    <header style="display: flex; flex-direction: column; gap: var(--jr-s-3); max-width: var(--jr-measure);">
+      <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">JungleRenov — design system v2 · octobre 2026</p>
+      <h1 style="margin: 0; font: var(--jr-type-h1);">Fondations et composants</h1>
+      <p style="margin: 0; font: var(--jr-type-lead);">Tokens dans <code>lib/components.css</code>, composants dans <code>lib/jr-v2.js</code> (<code>window.JRv2</code>). Aucune valeur en dur dans le code des composants. À intégrer au design system.</p>
+    </header>
+
+    <section style="display: flex; flex-direction: column; gap: var(--jr-s-5);">
+      <x-import component-from-global-scope="JRv2.SectionHeader" index="01" label="Fondations" title="Couleur" lead="Palette fermée, nuances d’encre en aplats calculés. Le texte secondaire n’utilise que ink-70." hint-size="100%,160px"></x-import>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: var(--jr-gutter);">
+        <sc-for list="{{ swatches }}" as="c" hint-placeholder-count="12">
+          <div style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); overflow: hidden;">
+            <div style="{{ c.chip }}"></div>
+            <div style="padding: var(--jr-s-3) var(--jr-s-4); display: flex; flex-direction: column; gap: var(--jr-s-1);">
+              <span style="font: var(--jr-type-label-strong);">{{ c.name }}</span>
+              <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">{{ c.hex }} · {{ c.use }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <x-import component-from-global-scope="JRv2.Table" columns="{{ contrastCols }}" rows="{{ contrastRows }}" caption="Contrastes vérifiés (WCAG 2.1)" hint-size="100%,360px"></x-import>
+      <x-import component-from-global-scope="JRv2.Notice" tone="info" title="Règles par surface" hint-size="100%,96px">Sur encre, le texte est ivoire ou pousse, jamais feuille. Sur feuille, le texte est blanc. La pousse ne touche jamais l’ivoire. ink-60 et ink-40 ne portent jamais de texte. Sur ivoire profond, le texte secondaire passe en encre pleine.</x-import>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: var(--jr-s-5);">
+      <x-import component-from-global-scope="JRv2.SectionHeader" index="02" label="Fondations" title="Typographie" lead="Arsenica pour le hero, le H1 et les chiffres ; Komet pour le texte ; JetBrains Mono 13 px pour les micro-labels uniquement." hint-size="100%,160px"></x-import>
+      <div style="display: flex; flex-direction: column; background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m);">
+        <sc-for list="{{ types }}" as="t" hint-placeholder-count="11">
+          <div style="display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: var(--jr-s-4); align-items: baseline; padding: var(--jr-s-4) var(--jr-s-5); border-bottom: var(--jr-border) solid var(--jr-line);">
+            <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">{{ t.token }}</span>
+            <span style="{{ t.style }}">{{ t.sample }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <p style="margin: 0; font: var(--jr-type-label); color: var(--jr-ink-70);">Polices réellement rendues dans cet aperçu : {{ fontsReport }}</p>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: var(--jr-s-5);">
+      <x-import component-from-global-scope="JRv2.SectionHeader" index="03" label="Fondations" title="Espace, formes, mouvement, focus" hint-size="100%,120px"></x-import>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--jr-s-4); align-items: flex-end;">
+        <sc-for list="{{ spaces }}" as="s" hint-placeholder-count="9">
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); align-items: flex-start;">
+            <span style="{{ s.box }}"></span>
+            <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">{{ s.name }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <x-import component-from-global-scope="JRv2.Table" columns="{{ tokCols }}" rows="{{ tokRows }}" hint-size="100%,320px"></x-import>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: var(--jr-s-5);">
+      <x-import component-from-global-scope="JRv2.SectionHeader" index="03 bis" label="Marque" title="Logo : deux usages" lead="Couleur à l’écran, encre seule pour l’imprimé et partout où la couleur ne tiendrait pas." hint-size="100%,160px"></x-import>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: var(--jr-gutter);">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-3); padding: var(--jr-s-5); background: var(--jr-paper); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m);">
+          <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Écran · sur ivoire · en-tête</span>
+          <x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Logo" tone="principal" height="{{ 38 }}" auto="{{ false }}" hint-size="240px,38px"></x-import>
+          <p style="margin: 0; font: var(--jr-type-label); font-weight: 400;">Symbole « progression » : hachures encre puis feuille vers le bas à droite. Mot en encre. Symbole de 32 px.</p>
+        </div>
+        <div data-surface="dark" style="display: flex; flex-direction: column; gap: var(--jr-s-3); padding: var(--jr-s-5); background: var(--jr-ink); color: var(--jr-paper); border-radius: var(--jr-radius-m);">
+          <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking);">Écran · sur encre · pied, bandeaux</span>
+          <x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Logo" tone="inverse" height="{{ 38 }}" auto="{{ false }}" hint-size="240px,38px"></x-import>
+          <p style="margin: 0; font: var(--jr-type-label); font-weight: 400;">Symbole inversé : feuille, pousse, ivoire. Mot en ivoire.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-3); padding: var(--jr-s-5); background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m);">
+          <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Référence · imprimé, e-mail, petites tailles</span>
+          <x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Logo" tone="mono-encre" height="{{ 38 }}" auto="{{ false }}" hint-size="240px,38px"></x-import>
+          <p style="margin: 0; font: var(--jr-type-label); font-weight: 400;">Encre seule : imprimé, signatures d’e-mail, fonds chargés, et tout symbole sous 28 px (en-tête mobile : 24 px). Sous ce seuil, les hachures encre et feuille ne se distinguent plus.</p>
+        </div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--jr-s-5); align-items: center;">
+        <img src="assets/favicon-couleur-32.svg" width="32" height="32" alt="Favicon couleur 32 px">
+        <img src="assets/apple-touch-icon-couleur-180.svg" width="90" height="90" alt="Icône d’écran d’accueil">
+        <img src="assets/avatar-couleur-ivoire-400.svg" width="120" height="120" alt="Avatar couleur sur ivoire">
+        <span style="font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);">Favicon, icône et avatar : version colorée sur ivoire, carré plein.</span>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: var(--jr-s-6);">
+      <x-import component-from-global-scope="JRv2.SectionHeader" index="04" label="Composants" title="Inventaire v2" lead="Chaque composant : variantes et états affichés, puis quand l’utiliser, à faire, à ne pas faire. Survol et focus : interagir avec l’exemple." hint-size="100%,160px"></x-import>
+      <sc-for list="{{ comps }}" as="c" hint-placeholder-count="6">
+        <article style="display: grid; grid-template-columns: {{ docCols }}; gap: var(--jr-s-6); padding-top: var(--jr-s-6); border-top: var(--jr-border) solid var(--jr-line);">
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-3);">
+            <h3 style="margin: 0; font: var(--jr-type-h2);">{{ c.name }}</h3>
+            <p style="margin: 0; font: var(--jr-type-body);">{{ c.when }}</p>
+            <p style="margin: 0; font: var(--jr-type-label); color: var(--jr-ok);"><strong>À faire.</strong> {{ c.dos }}</p>
+            <p style="margin: 0; font: var(--jr-type-label); color: var(--jr-ko);"><strong>À ne pas faire.</strong> {{ c.donts }}</p>
+            <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">{{ c.a11y }}</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-4); min-width: 0;">
+            <sc-for list="{{ c.demos }}" as="d" hint-placeholder-count="2">
+              <div style="{{ d.frame }}">
+                <span style="{{ d.capStyle }}">{{ d.label }}</span>
+                <x-import component-from-global-scope="{{ d.comp }}" dc-props="{{ d.props }}" hint-size="100%,56px"></x-import>
+              </div>
+            </sc-for>
+          </div>
+        </article>
+      </sc-for>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { w: window.innerWidth, fonts: '…', tab: 'aides', page: 2, modal: false, choice: 'occupant', multi: ['combles'] };
+  componentDidMount() {
+    this.onR = () => this.setState({ w: window.innerWidth }); window.addEventListener('resize', this.onR);
+    document.fonts.ready.then(() => {
+      const l = [...document.fonts].filter(f => f.status === 'loaded').map(f => f.family.replace(/"/g, ''));
+      const u = [...new Set(l)];
+      const ok = n => u.some(x => x === n);
+      this.setState({ fonts: 'Arsenica ' + (ok('Arsenica Display') ? 'chargée' : 'absente (secours : Abril Fatface)') + ' · Komet ' + (ok('Komet') ? 'chargée' : 'absente (secours : Red Hat Display)') + ' · JetBrains Mono ' + (ok('JetBrains Mono') ? 'chargée' : 'en attente') });
+    });
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); }
+  renderVals() {
+    const S = this.state, set = (k) => (v) => this.setState({ [k]: v });
+    const sw = (name, v, hex, use, dark) => ({ name, hex, use, chip: { height: 'var(--jr-s-8)', background: 'var(' + v + ')', borderBottom: 'var(--jr-border) solid var(--jr-line)' } });
+    const swatches = [
+      sw('Encre', '--jr-ink', '#123A2E', 'texte, fonds pleins'), sw('Ivoire', '--jr-paper', '#F4F1E8', 'fond de page'), sw('Ivoire profond', '--jr-paper-deep', '#E9E3D3', 'fonds secondaires'),
+      sw('Blanc', '--jr-white', '#FFFFFF', 'cartes, champs'), sw('Feuille', '--jr-leaf', '#1F6B3F', 'action'), sw('Feuille lavé', '--jr-leaf-wash', '#E6F2EA', 'sélection, pastilles'),
+      sw('Pousse', '--jr-sprout', '#8FD14F', 'accent sur encre'), sw('Encre 70', '--jr-ink-70', '#567166', 'texte secondaire'), sw('Encre 60', '--jr-ink-60', '#6C8378', 'filets, pictos'),
+      sw('Encre 40', '--jr-ink-40', '#9AA89E', 'filets, pictos'), sw('Encre 10', '--jr-ink-10', '#DDDFD5', 'filets, bordures'), sw('Encre 05', '--jr-ink-05', '#E9E8DF', 'survol de ligne'),
+      sw('Validé', '--jr-ok', '#065F46', 'état'), sw('Bloqué', '--jr-ko', '#991B1B', 'état'),
+    ];
+    const contrastCols = [{ key: 'pair', label: 'Couple', sortable: true }, { key: 'ratio', label: 'Ratio', align: 'right', sortable: true }, { key: 'use', label: 'Usage autorisé' }];
+    const contrastRows = [
+      { pair: 'Encre sur ivoire', ratio: '11,1:1', use: 'tout texte (AAA)' }, { pair: 'Encre sur blanc', ratio: '12,6:1', use: 'tout texte (AAA)' },
+      { pair: 'Encre 70 sur ivoire', ratio: '4,71:1', use: 'texte secondaire, labels (AA)' }, { pair: 'Encre 70 sur blanc', ratio: '5,32:1', use: 'texte secondaire, labels (AA)' },
+      { pair: 'Encre 70 sur feuille lavé', ratio: '4,62:1', use: 'légendes de pastilles (AA)' }, { pair: 'Encre 70 sur ivoire profond', ratio: '4,15:1', use: 'interdit : texte en encre pleine' }, { pair: 'Encre 60 sur ivoire', ratio: '3,61:1', use: 'filets, pictogrammes uniquement' }, { pair: 'Encre 40 sur ivoire', ratio: '2,20:1', use: 'filets, pictogrammes uniquement' },
+      { pair: 'Blanc sur feuille', ratio: '6,5:1', use: 'boutons principaux (AA)' }, { pair: 'Feuille sur feuille lavé', ratio: '5,6:1', use: 'texte ≥ 18 px (AA)' },
+      { pair: 'Ivoire sur encre', ratio: '11,1:1', use: 'tout texte sur encre' }, { pair: 'Pousse sur encre', ratio: '6,8:1', use: 'accent, chiffres sur encre' },
+    ];
+    const ty = (token, sample, extra) => ({ token, sample, style: Object.assign({ font: 'var(' + token + ')', color: 'var(--jr-ink)' }, extra) });
+    const types = [
+      ty('--jr-type-hero', 'Rénovez votre logement'), ty('--jr-type-h1', 'Quel est votre projet ?'), ty('--jr-type-h2', 'Vos aides estimées'), ty('--jr-type-h3', 'Isolation des combles'),
+      ty('--jr-type-lead', 'Le site constitue votre dossier et le remet complet au partenaire habilité.'), ty('--jr-type-body', 'Le revenu fiscal de référence figure en page 1 de votre avis d’imposition.'),
+      ty('--jr-type-label', 'Revenu fiscal de référence'), ty('--jr-type-label-strong', 'Constituer mon dossier'),
+      ty('--jr-type-micro', '04 — Les aides cumulables · barème 2026', { letterSpacing: 'var(--jr-micro-tracking)', color: 'var(--jr-ink-70)' }),
+      ty('--jr-type-amount-s', '1\u202f950\u202f€'), ty('--jr-type-amount-m', '16\u202f450\u202f€'), ty('--jr-type-amount-l', '16\u202f450\u202f€'),
+    ];
+    const spaces = ['1', '2', '3', '4', '5', '6', '7', '8', '9'].map(n => ({ name: '--jr-s-' + n, box: { display: 'block', width: 'var(--jr-s-' + n + ')', height: 'var(--jr-s-' + n + ')', background: 'var(--jr-leaf)', borderRadius: 'var(--jr-radius-s)' } }));
+    const tokCols = [{ key: 't', label: 'Token' }, { key: 'v', label: 'Valeur' }, { key: 'u', label: 'Usage' }];
+    const tokRows = [
+      { t: '--jr-container / --jr-gutter / --jr-margin', v: '1200 / 24 / 32 px', u: 'grille 12 colonnes' }, { t: '--jr-section / -mobile', v: '96 / 64 px', u: 'entre sections' },
+      { t: '--jr-measure', v: '44 rem', u: 'longueur de ligne maximale' }, { t: '--jr-radius-s / m / l', v: '4 / 6 / 8 px', u: 'champs, cartes, scènes' },
+      { t: '--jr-hit / --jr-choice-h', v: '48 / 56 px', u: 'zones cliquables, cartes de choix' }, { t: '--jr-icon-stroke / s / m', v: '1,5 / 24 / 32 px', u: 'pictogrammes' },
+      { t: '--jr-duration-fast / --jr-duration', v: '120 / 200 ms', u: 'couleur, bordure, opacité uniquement' }, { t: '--jr-ease', v: 'cubic-bezier(0.2, 0, 0, 1)', u: 'courbe standard' },
+      { t: '--jr-focus-width / -offset', v: '3 / 2 px', u: 'encre ; ivoire sur encre' },
+    ];
+    const J = n => 'JRv2.' + n;
+    const plain = { display: 'flex', flexDirection: 'column', gap: 'var(--jr-s-2)' };
+    const dark = { display: 'flex', flexDirection: 'column', gap: 'var(--jr-s-2)', background: 'var(--jr-ink)', padding: 'var(--jr-s-4)', borderRadius: 'var(--jr-radius-m)' };
+    const cap = { font: 'var(--jr-type-micro)', letterSpacing: 'var(--jr-micro-tracking)', color: 'var(--jr-ink-70)' };
+    const capD = Object.assign({}, cap, { color: 'var(--jr-paper)' });
+    const NARROW = { Button: 'flex-start', Toast: 'flex-start', Tooltip: 'flex-start', FloatingCard: 'flex-start' };
+    const MAXW = { Sidebar: 'calc(var(--jr-s-9) * 3)', ReassuranceTile: 'calc(var(--jr-s-9) * 3)', ProjectCard: 'calc(var(--jr-s-9) * 4)', StepNumber: 'calc(var(--jr-s-9) * 3)' };
+    const d = (label, comp, props, onDark) => ({ label, comp: J(comp), props, frame: Object.assign({}, onDark ? dark : plain, { alignItems: NARROW[comp] || 'stretch', maxWidth: MAXW[comp] || 'none' }), capStyle: onDark ? capD : cap });
+    const opts = [{ value: 'occupant', label: 'Ma résidence principale', description: 'J’habite ce logement' }, { value: 'bailleur', label: 'Un logement que je loue' }, { value: 'x', label: 'Résidence secondaire', disabled: true }];
+    const works = [{ value: 'combles', label: 'Isolation des combles', icon: 'combles' }, { value: 'pac', label: 'Pompe à chaleur air/eau', icon: 'pompe-a-chaleur' }];
+    const comps = [
+      { name: 'IconBadge', when: 'En tête d’un bloc d’argument, d’une étape, d’une carte flottante, d’une ligne de document.', dos: 'Feuille sur ivoire et blanc ; encre (picto pousse) sur surfaces encre ; lavé dans les listes denses. Toujours accompagné d’un mot.', donts: 'Deux variantes dans un même bloc ; utilisé comme bouton ; ombre, contour, dégradé.', a11y: 'aria-hidden par défaut · aria-label s’il porte seul le sens',
+        demos: [d('Feuille · S, M, L', 'Card', { children: ['s', 'm', 'l'].map(s => React.createElement(window.JRv2 ? window.JRv2.IconBadge : 'span', { key: s, size: s, name: 'valide' })) }),
+          d('Lavé · S, M, L', 'Card', { children: ['s', 'm', 'l'].map(s => React.createElement(window.JRv2 ? window.JRv2.IconBadge : 'span', { key: s, size: s, variant: 'lave', name: 'document' })) }),
+          d('Encre · S, M, L (sur encre)', 'Card', { style: {}, children: ['s', 'm', 'l'].map(s => React.createElement(window.JRv2 ? window.JRv2.IconBadge : 'span', { key: s, size: s, variant: 'encre', name: 'revenus' })) }, true)] },
+      { name: 'Button', when: 'Toute action. Un seul principal par vue.', dos: 'Infinitif ou possessif : « Constituer mon dossier ».', donts: 'Flèche décorative, deux principaux côte à côte, feuille sur encre.', a11y: '48 px · focus 3 px · aria-busy en chargement',
+        demos: [d('Principal', 'Button', { children: 'Estimer mes aides' }), d('Secondaire', 'Button', { variant: 'secondary', children: 'Voir un exemple' }), d('Tertiaire', 'Button', { variant: 'tertiary', children: 'Voir le glossaire' }),
+          d('Destructif', 'Button', { variant: 'destructive', icon: 'fermer', children: 'Retirer mon consentement' }), d('Avec pictogramme', 'Button', { icon: 'televerser', variant: 'secondary', children: 'Ajouter mes pièces' }),
+          d('Chargement', 'Button', { loading: true, loadingLabel: 'Transmission en cours…' }), d('Désactivé', 'Button', { disabled: true, children: 'Constituer mon dossier' }),
+          d('Sur encre', 'Button', { variant: 'on-dark', children: 'Estimer mes aides' }, true), d('Sur encre, secondaire', 'Button', { variant: 'on-dark-secondary', children: 'Comment ça marche' }, true)] },
+      { name: 'TextField', when: 'Saisie libre, nombre avec unité.', dos: 'Label = nom de la donnée ; aide = où la trouver ; erreur = quoi faire.', donts: 'Placeholder à la place du label.', a11y: 'label for · aria-describedby · aria-invalid',
+        demos: [d('Normal, avec aide', 'TextField', { label: 'Revenu fiscal de référence', hint: 'Il figure en page 1 de votre avis d’imposition.', unit: '€', defaultValue: '32 000' }),
+          d('Erreur', 'TextField', { label: 'Nombre de personnes au foyer', defaultValue: '0', error: 'Indiquez un nombre entre 1 et 12.' }), d('Désactivé', 'TextField', { label: 'Département', defaultValue: '54 — Meurthe-et-Moselle', disabled: true })] },
+      { name: 'Select', when: 'Choix dans une liste de plus de 6 valeurs.', dos: 'Moins de 6 valeurs : préférer ChoiceGroup.', donts: 'Liste sans option vide initiale.', a11y: 'select natif · chevron décoratif',
+        demos: [d('Normal', 'Select', { label: 'Département', options: [{ value: '54', label: '54 — Meurthe-et-Moselle' }, { value: '55', label: '55 — Meuse' }, { value: '57', label: '57 — Moselle' }, { value: '88', label: '88 — Vosges' }] }),
+          d('Erreur', 'Select', { label: 'Département', error: 'Choisissez votre département.', options: [{ value: '54', label: '54 — Meurthe-et-Moselle' }] })] },
+      { name: 'ChoiceCard / ChoiceGroup', when: 'Une question, 2 à 6 réponses ; cases multiples pour les travaux.', dos: 'Cartes de 56 px espacées de 8 px ; sélection = feuille lavé + filet feuille 2 px.', donts: 'Case à cocher nue, plus de 8 cartes.', a11y: 'input natif masqué · fieldset/legend',
+        demos: [d('Choix unique', 'ChoiceGroup', { legend: 'Vous faites ces travaux pour', name: 'own', options: opts, value: S.choice, onChange: set('choice') }),
+          d('Choix multiple', 'ChoiceGroup', { type: 'checkbox', name: 'w', options: works, value: S.multi, onChange: set('multi') }),
+          d('Erreur', 'ChoiceGroup', { legend: 'Type de logement', name: 'e', options: [{ value: 'm', label: 'Maison' }, { value: 'a', label: 'Appartement' }], error: 'Choisissez une réponse pour continuer.' })] },
+      { name: 'FileDrop', when: 'Dépôt d’une pièce justificative.', dos: 'Toujours un état nommé : manquant, reçu, validé, refusé.', donts: 'Couleur seule pour l’état.', a11y: 'input file · bouton explicite',
+        demos: [d('Manquant', 'FileDrop', { title: 'Dernier avis d’imposition', status: 'manquant' }), d('Reçu', 'FileDrop', { title: 'Devis RGE', status: 'recu', fileName: 'devis-isolation.pdf · 1,2 Mo' }),
+          d('Validé', 'FileDrop', { title: 'Justificatif de domicile', status: 'valide', fileName: 'facture-edf.pdf' }), d('Refusé', 'FileDrop', { title: 'Avis d’imposition', status: 'bloque', fileName: 'Illisible : déposez une version nette.' })] },
+      { name: 'Notice / Toast', when: 'Information contextuelle (Notice) ; confirmation brève (Toast).', dos: 'Pictogramme + mot, phrase courte.', donts: 'Empiler plusieurs notices.', a11y: 'role status / alert · aria-live',
+        demos: [d('Info', 'Notice', { title: 'Pourquoi cette question ?', children: 'Elle détermine le plafond de ressources Anah.' }), d('Validé', 'Notice', { tone: 'valide', title: 'Dossier remis', children: 'Le partenaire habilité vous contactera.' }),
+          d('Bloqué', 'Notice', { tone: 'bloque', title: 'Pièce refusée', children: 'Déposez une version lisible.' }), d('Toast', 'Toast', { tone: 'valide', children: 'Pièce enregistrée.', onClose: () => {} })] },
+      { name: 'StatusTag', when: 'État d’une étape ou d’une pièce.', dos: 'Pictogramme + mot.', donts: 'Pastille colorée sans mot.', a11y: 'texte lisible par les lecteurs d’écran',
+        demos: [d('Tous les états', 'Stack', null)] },
+      { name: 'AidAmount', when: 'Chiffre d’aide : résultat, tableau de bord.', dos: 'Toujours source et date ; « Montant indicatif, non contractuel ».', donts: '« Touchez jusqu’à… », montant inventé.', a11y: 'chiffres tabulaires',
+        demos: [d('Clair', 'AidAmount', { amount: '16\u202f450\u202f€', source: 'Anah, ATEE, Service Public', date: 'février 2026' }), d('Sur encre', 'AidAmount', { surface: 'dark', size: 'l', amount: '16\u202f450\u202f€', source: 'Anah', date: 'février 2026' }, true)] },
+      { name: 'Card', when: 'Regrouper un contenu ; lien ou sélection.', dos: 'Blanc sur ivoire, filet encre 10 %, rayon 6.', donts: 'Carte sans fonction, carte colorée décorative, filet coloré à gauche.', a11y: 'lien ou bouton entier · aria-pressed',
+        demos: [d('Simple', 'Card', { title: 'Isolation des combles', children: 'Jusqu’à 25 €/m² selon vos revenus.' }), d('En-tête + action', 'Card', { variant: 'header', title: 'Documents à préparer', children: '3 pièces sur 4 déposées.', footer: 'Pied de carte en ivoire' }),
+          d('Lien', 'Card', { variant: 'link', href: '#', title: 'Mes aides', children: 'Le détail de chaque aide.' }), d('Sélectionnable', 'Card', { variant: 'selectable', selected: true, title: 'Bouquet recommandé', children: 'Combles + pompe à chaleur.' })] },
+      { name: 'Table', when: 'Données comparables : aides, dossiers, administration.', dos: 'Tri sur les colonnes utiles ; état vide explicite.', donts: 'Lignes zébrées, plus de 7 colonnes.', a11y: 'th scope · aria-sort',
+        demos: [d('Tri', 'Table', { columns: [{ key: 'a', label: 'Aide', sortable: true }, { key: 'o', label: 'Organisme' }, { key: 'm', label: 'Montant', align: 'right', sortable: true }], rows: [{ a: "MaPrimeRénov'", o: 'Anah', m: '13\u202f500\u202f€' }, { a: 'Climaxion', o: 'Région Grand Est', m: '1\u202f000\u202f€' }] }),
+          d('Vide', 'Table', { columns: [{ key: 'a', label: 'Dossier' }, { key: 's', label: 'État' }], rows: [], emptyTitle: 'Aucun dossier', emptyText: 'Les dossiers remis apparaîtront ici.' })] },
+      { name: 'Tabs / Breadcrumb / Pagination', when: 'Navigation locale, position, listes longues.', dos: 'Libellés courts ; page courante nommée.', donts: 'Onglets pour des étapes (utiliser Stepper).', a11y: 'role tablist · aria-current',
+        demos: [d('Tabs', 'Tabs', { tabs: [{ id: 'aides', label: 'Aides' }, { id: 'docs', label: 'Documents' }, { id: 'suivi', label: 'Suivi' }], value: S.tab, onChange: set('tab') }),
+          d('Breadcrumb', 'Breadcrumb', { items: [{ label: 'Accueil', href: '#' }, { label: 'Mon dossier', href: '#' }, { label: 'Mes aides' }] }), d('Pagination', 'Pagination', { page: S.page, total: 8, onChange: set('page') })] },
+      { name: 'Modal / Tooltip', when: 'Confirmation bloquante ; définition d’un terme.', dos: 'Modal : titre, une action principale, Échap ferme.', donts: 'Modal pour du contenu long ; tooltip pour une information indispensable.', a11y: 'role dialog · focus piégé et restauré · tooltip au focus',
+        demos: [d('Modal', 'Button', { variant: 'secondary', children: 'Ouvrir la confirmation', onClick: () => this.setState({ modal: true }) }), d('Modal (ouverte)', 'Modal', { open: S.modal, title: 'Retirer votre consentement ?', children: 'Le partenaire habilité ne recevra plus votre dossier.', onClose: () => this.setState({ modal: false }), actions: [React.createElement(window.JRv2 ? window.JRv2.Button : 'span', { key: 'a', variant: 'secondary', onClick: () => this.setState({ modal: false }) }, 'Annuler'), React.createElement(window.JRv2 ? window.JRv2.Button : 'span', { key: 'b', variant: 'destructive', onClick: () => this.setState({ modal: false }) }, 'Retirer')] }),
+          d('Tooltip', 'Tooltip', { label: 'Revenu fiscal de référence : figure sur votre avis d’imposition.', children: React.createElement('button', { type: 'button', style: { all: 'unset', cursor: 'help', textDecoration: 'underline dotted', font: 'var(--jr-type-label)' } }, 'RFR') })] },
+      { name: 'EmptyState / Skeleton', when: 'Liste vide ; chargement.', dos: 'Dire quoi faire ; squelette à la forme du contenu.', donts: 'Illustration décorative, spinner plein écran.', a11y: 'aria-busy',
+        demos: [d('Vide', 'EmptyState', { icon: 'document', title: 'Aucune pièce déposée', children: 'Ajoutez votre avis d’imposition pour commencer.' }), d('Chargement', 'Skeleton', { lines: 3 })] },
+      { name: 'Sidebar', when: 'Espace particulier : trois groupes.', dos: 'Ivoire profond ; widget aides sur encre ; utilisateur en pied ; menu replié sous 880 px.', donts: 'Plus de 3 groupes.', a11y: 'nav · aria-current · aria-expanded',
+        demos: [d('Desktop', 'Sidebar', { widget: { label: 'Aides estimées', amount: '16\u202f450\u202f€', caption: '1 dossier actif' }, user: { initials: 'SM', name: 'Sophie Marin', email: 'sophie@exemple.fr' },
+          sections: [{ title: 'Mon parcours', items: [{ label: 'Mon projet', href: '#', icon: 'dossier', current: true }, { label: 'Mes aides', href: '#', icon: 'revenus' }, { label: 'Mes documents', href: '#', icon: 'document' }] }, { title: 'Outils', items: [{ label: 'Annuaire artisans', href: '#', icon: 'devis' }] }, { title: 'Compte', items: [{ label: 'Mon profil', href: '#', icon: 'proprietaire' }] }] }),
+          d('Mobile (replié)', 'Sidebar', { mobile: true, sections: [{ title: 'Mon parcours', items: [{ label: 'Mon projet', href: '#', current: true }] }] })] },
+      { name: 'SectionHeader / StepNumber', when: 'En-tête de section numérotée ; étape de « Comment ça marche ».', dos: 'Label mono numéroté + titre + chapeau ≤ 44 rem.', donts: 'Section sans nom dans le label.', a11y: 'h2 · numéro décoratif',
+        demos: [d('SectionHeader', 'SectionHeader', { index: '03', label: 'Comment ça marche', title: 'De la simulation à la remise du dossier', lead: 'Quatre étapes, à votre rythme.' }), d('StepNumber', 'StepNumber', { n: '01', title: 'Simulation', children: 'Adresse, logement, revenus, travaux : cinq minutes.' })] },
+      { name: 'FloatingCard / ReassuranceTile / ProjectCard', when: 'Hero et accueil uniquement.', dos: 'Le chiffre ou le mot-clé est l’objet ; pastilles par dispositif.', donts: 'Plus de trois cartes flottantes ; montants sans « exemple ».', a11y: 'carte entière cliquable pour ProjectCard',
+        demos: [d('FloatingCard', 'FloatingCard', { icon: 'revenus', label: 'Aides totales · exemple', value: '16\u202f450\u202f€', big: true, caption: 'barème 2026 · indicatif' }), d('FloatingCard sur encre', 'FloatingCard', { dark: true, icon: 'valide', label: 'Aides cumulées', value: '3 dispositifs cumulés' }),
+          d('ReassuranceTile', 'ReassuranceTile', { icon: 'rendez-vous', keyword: '5 minutes', caption: 'pour une simulation complète' }),
+          d('ProjectCard', 'ProjectCard', { href: '#', icon: 'isolation', title: 'Rénovation énergétique', description: 'Isolation, chauffage, ventilation, solaire.', aides: ["MaPrimeRénov'", 'CEE', 'Éco-PTZ', 'TVA 5,5\u202f%'] })] },
+      { name: 'Stepper', when: 'Parcours en étapes.', dos: 'Libellés complets ; défilant sur mobile ; étapes faites cliquables.', donts: 'Plus de 9 étapes.', a11y: 'aria-current step · « Étape n sur N » en clair',
+        demos: [d('Sur ivoire', 'Stepper', { steps: ['Adresse', 'Logement', 'Situation', 'Revenus', 'Travaux', 'Calcul', 'Résultats', 'Transmission'], current: 4, surface: 'light' }), d('Sur encre', 'Stepper', { steps: ['Adresse', 'Logement', 'Situation', 'Revenus', 'Travaux', 'Calcul', 'Résultats', 'Transmission'], current: 4, surface: 'dark' }, true)] },
+    ];
+    // StatusTag : une rangée
+    comps.forEach(c => c.demos.forEach(x => { if (x.comp === 'JRv2.Stack') { x.comp = 'JRv2.Card'; x.props = { children: ['valide', 'recu', 'manquant', 'en-cours', 'a-venir', 'bloque'].map(s => React.createElement(window.JRv2 ? window.JRv2.StatusTag : 'span', { key: s, status: s })) }; } }));
+    return { swatches, contrastCols, contrastRows, types, spaces, tokCols, tokRows, comps, fontsReport: S.fonts, docCols: S.w >= 960 ? 'minmax(0, 4fr) minmax(0, 8fr)' : 'minmax(0, 1fr)' };
+  }
+}
+</script>
+</body>
+</html>

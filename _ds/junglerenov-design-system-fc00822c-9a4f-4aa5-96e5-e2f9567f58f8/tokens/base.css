@@ -1,0 +1,8 @@
+/* Socle minimal partagé : fond ivoire, texte Komet, focus, liens. */
+html{background:var(--surface-page);color:var(--text-body)}
+body{margin:0;font:var(--type-body);-webkit-font-smoothing:antialiased;text-align:left}
+a{color:var(--text-link);text-decoration:underline;text-underline-offset:3px}
+a:hover{color:var(--ink)}
+:focus-visible{outline:var(--focus-width) solid var(--focus-ring);outline-offset:var(--focus-offset)}
+.jr-on-dark :focus-visible,[data-surface="dark"] :focus-visible{outline-color:var(--focus-ring-on-dark)}
+.jr-num{font-variant-numeric:tabular-nums}

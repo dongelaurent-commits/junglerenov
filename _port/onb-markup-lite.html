@@ -1,0 +1,894 @@
+<body data-tunnel="ENERGETIQUE">
+<header class="simple">
+<div class="row">
+<a class="brand" href="index.html">
+<span class="brand-mark">[svg]</span>
+<span class="brand-name">Réno<span class="accent">Facile</span></span>
+</a>
+<div class="help"><a href="choix-parcours.html" style="color:var(--slate-500);text-decoration:none;display:inline-flex;align-items:center;gap:6px">[svg]Changer de projet</a></div>
+</div>
+</header>
+<div class="stepper">
+<div class="row" id="stepper-row"></div>
+</div>
+<main>
+<!-- ÉTAPE 1 : Adresse -->
+<section class="screen active" data-screen-label="01 Adresse" id="step-1">
+<div class="step-eyebrow">Étape 1 sur 8</div>
+<h1 class="q-title">Où se situe le logement ?</h1>
+<p class="q-sub">L'adresse nous permet d'identifier les aides locales applicables à votre commune et de calculer les plafonds régionaux.</p>
+<div class="card">
+<div class="field">
+<label class="field-label" for="addr">Adresse complète</label>
+<div class="input-icon">
+<span class="ico">[svg]</span>
+<input class="input" id="addr" autocomplete="off" placeholder="Ex : 12 rue Saint-Georges, Nancy" aria-controls="addr-suggest" aria-autocomplete="list" />
+</div>
+<span class="field-help">Saisissez au moins 5 caractères pour voir les suggestions. Source officielle : Base Adresse Nationale (IGN, La Poste, Etalab).</span>
+</div>
+<div class="suggest" id="addr-suggest" role="listbox" aria-label="Suggestions" hidden></div>
+</div>
+</section>
+<!-- ÉTAPE 2 : Type & caractéristiques -->
+<section class="screen" data-screen-label="02 Type" id="step-2">
+<div class="step-eyebrow">Étape 2 sur 8</div>
+<h1 class="q-title">Parlez-nous du logement.</h1>
+<p class="q-sub">Ces informations conditionnent l'éligibilité et le montant de la plupart des aides.</p>
+<div class="card">
+<div class="field">
+<label class="field-label" id="lbl-type">Type de logement</label>
+<div class="tiles" role="radiogroup" aria-labelledby="lbl-type">
+<button class="tile selected" data-radio="type" role="radio" aria-checked="true">
+<span class="icn">[svg]</span>
+<div><span class="nm">Maison individuelle</span><span class="ds">Pavillon, fermette, longère…</span></div>
+</button>
+<button class="tile" data-radio="type" role="radio" aria-checked="false">
+<span class="icn">[svg]</span>
+<div><span class="nm">Appartement</span><span class="ds">En copropriété ou monopropriété.</span></div>
+</button>
+</div>
+</div>
+<div class="row-2">
+<div class="field">
+<label class="field-label">Surface habitable
+<span style="display:inline-flex;align-items:center;gap:6px;margin-left:6px">
+<input type="number" class="input" id="surf-num" min="20" max="300" step="1" value="110" style="width:78px;padding:6px 8px;font:600 15px var(--font-mono);text-align:center" />
+<span style="font:500 13px var(--font-mono);color:var(--slate-500)">m²</span>
+</span>
+</label>
+<input type="range" class="slider" id="surf" min="20" max="300" step="1" value="110" aria-label="Surface habitable en m²" />
+<div class="slider-row"><span>20 m²</span><span>300 m²</span></div>
+<span class="field-help">Les pièces à vivre, chauffées. Les combles non aménagés, la cave et le garage ne comptent pas.</span>
+</div>
+<div class="field">
+<label class="field-label" for="year">Année de construction</label>
+<input class="input" id="year" type="number" min="1800" value="1972" inputmode="numeric" />
+<span class="field-help" id="year-help">Une approximation suffit. Le logement doit avoir plus de 15 ans pour MaPrimeRénov'.</span>
+</div>
+</div>
+<div class="field" style="margin-top:8px">
+<label class="field-label" id="lbl-heat">Énergie principale de chauffage</label>
+<div class="tiles" role="radiogroup" aria-labelledby="lbl-heat">
+<button class="tile selected" data-radio="heat" role="radio" aria-checked="true"><span class="icn">[svg]</span><div><span class="nm">Gaz</span><span class="ds">Chaudière individuelle</span></div></button>
+<button class="tile" data-radio="heat" role="radio" aria-checked="false"><span class="icn">[svg]</span><div><span class="nm">Fioul</span><span class="ds">Cuve à remplacer</span></div></button>
+<button class="tile" data-radio="heat" role="radio" aria-checked="false"><span class="icn">[svg]</span><div><span class="nm">Électrique</span><span class="ds">Convecteurs, accumulateurs</span></div></button>
+<button class="tile" data-radio="heat" role="radio" aria-checked="false"><span class="icn">[svg]</span><div><span class="nm">Bois</span><span class="ds">Poêle ou chaudière</span></div></button>
+</div>
+</div>
+<div class="row-2" style="margin-top:8px">
+<div class="field">
+<label class="field-label" for="dept">Département <span class="rf-required">*</span></label>
+<select class="select" id="dept" required aria-required="true" aria-describedby="dept-err">
+<option value="">— Choisir —</option>
+<optgroup label="Grand Est (V1)">
+<option value="08">08 — Ardennes</option>
+<option value="10">10 — Aube</option>
+<option value="51">51 — Marne</option>
+<option value="52">52 — Haute-Marne</option>
+<option value="54">54 — Meurthe-et-Moselle</option>
+<option value="55">55 — Meuse</option>
+<option value="57">57 — Moselle</option>
+<option value="67">67 — Bas-Rhin</option>
+<option value="68">68 — Haut-Rhin</option>
+<option value="88">88 — Vosges</option>
+</optgroup>
+<optgroup label="Autres régions (couverture partielle)">
+<option value="autre">Autre département</option>
+</optgroup>
+</select>
+<p class="field-err" id="dept-err" role="alert" hidden></p>
+<span class="field-help">Détecté à partir du code postal de l'adresse. Vous pouvez corriger.</span>
+</div>
+<div class="field" id="epci-field" style="display:none">
+<label class="field-label" for="epci">Intercommunalité / EPCI</label>
+<select class="select" id="epci">
+<option value="">— Choisir votre EPCI —</option>
+</select>
+<span class="field-help">Certaines aides sont réservées à des EPCI précis.</span>
+</div>
+</div>
+<div class="field" style="margin-top:8px">
+<label class="field-label" id="lbl-oldwood">Avez-vous un appareil de chauffage au bois installé AVANT 2005 ?</label>
+<div class="tiles" role="radiogroup" aria-labelledby="lbl-oldwood" style="grid-template-columns:repeat(3,1fr);gap:8px">
+<button type="button" class="tile" data-radio="oldwood" data-oldwood="yes" style="padding:12px;justify-content:center" role="radio" aria-checked="false"><div style="text-align:center"><span class="nm">Oui</span><span class="ds">Ouvre droit à la Prime Air Bois</span></div></button>
+<button type="button" class="tile selected" data-radio="oldwood" data-oldwood="no" style="padding:12px;justify-content:center" role="radio" aria-checked="true"><div style="text-align:center"><span class="nm">Non</span><span class="ds">Pas d'appareil ancien</span></div></button>
+<button type="button" class="tile" data-radio="oldwood" data-oldwood="unknown" style="padding:12px;justify-content:center" role="radio" aria-checked="false"><div style="text-align:center"><span class="nm">Je ne sais pas</span></div></button>
+</div>
+</div>
+<div class="field" style="margin-top:8px">
+<label class="field-label" id="lbl-dpe">Classe énergétique actuelle (DPE)</label>
+<div class="dpe-tiles" role="radiogroup" aria-labelledby="lbl-dpe">
+<button class="dpe-tile" data-radio="dpe" data-dpe="A" role="radio" aria-checked="false"><span class="dpe-l" style="background:#00A651;color:#1E293B">A</span><span class="dpe-r">≤ 70 kWh/m²/an</span></button>
+<button class="dpe-tile" data-radio="dpe" data-dpe="B" role="radio" aria-checked="false"><span class="dpe-l" style="background:#52B847;color:#1E293B">B</span><span class="dpe-r">71–110</span></button>
+<button class="dpe-tile" data-radio="dpe" data-dpe="C" role="radio" aria-checked="false"><span class="dpe-l" style="background:#C8D400;color:#1E293B">C</span><span class="dpe-r">111–180</span></button>
+<button class="dpe-tile" data-radio="dpe" data-dpe="D" role="radio" aria-checked="false"><span class="dpe-l" style="background:#FFED00;color:#1E293B">D</span><span class="dpe-r">181–250</span></button>
+<button class="dpe-tile selected" data-radio="dpe" data-dpe="E" role="radio" aria-checked="true"><span class="dpe-l" style="background:#FFB400;color:#1E293B">E</span><span class="dpe-r">251–330</span></button>
+<button class="dpe-tile" data-radio="dpe" data-dpe="F" role="radio" aria-checked="false"><span class="dpe-l" style="background:#FF6900;color:#1E293B">F</span><span class="dpe-r">331–420<em>location interdite 2028 (bailleurs)</em></span></button>
+<button class="dpe-tile" data-radio="dpe" data-dpe="G" role="radio" aria-checked="false"><span class="dpe-l" style="background:#E20613;color:#FFFFFF">G</span><span class="dpe-r">&gt; 420<em>location interdite depuis 2025 (bailleurs)</em></span></button>
+<button class="dpe-tile" data-radio="dpe" data-dpe="" role="radio" aria-checked="false"><span class="dpe-l" style="background:#94A3B8;color:#1E293B">?</span><span class="dpe-r">Je ne sais pas</span></button>
+</div>
+<span class="field-help" id="dpe-help">Information indiquée sur votre DPE (page 1). Si vous ne l'avez pas, sélectionnez « Je ne sais pas » — nous l'estimerons à partir de votre logement et énergie de chauffage.</span>
+</div>
+</div>
+</section>
+<!-- ÉTAPE 3 : Situation -->
+<section class="screen" data-screen-label="03 Situation" id="step-3">
+<div class="step-eyebrow">Étape 3 sur 8</div>
+<h1 class="q-title">Quelle est votre situation et votre objectif ?</h1>
+<p class="q-sub">Le statut d'occupant ou bailleur change l'éligibilité aux aides. La priorité oriente les travaux que nous vous conseillerons.</p>
+<div class="card">
+<fieldset class="rf-profile-choice">
+<legend class="rf-profile-choice__legend">Vous faites ces travaux pour&nbsp;:</legend>
+<div class="rf-profile-choice__grid">
+<label class="rf-profile-choice__card">
+<input type="radio" name="rf-owner-type" value="occupant" required />
+<span class="rf-profile-choice__icon" aria-hidden="true">🏠</span>
+<span class="rf-profile-choice__title">Ma résidence principale</span>
+<span class="rf-profile-choice__desc">Je suis propriétaire et j'habite ce logement, ou je vais y habiter après les travaux.</span>
+</label>
+<label class="rf-profile-choice__card">
+<input type="radio" name="rf-owner-type" value="bailleur" required />
+<span class="rf-profile-choice__icon" aria-hidden="true">🔑</span>
+<span class="rf-profile-choice__title">Un logement que je loue ou vais louer</span>
+<span class="rf-profile-choice__desc">Je suis propriétaire bailleur. Le logement est loué (ou le sera après travaux) en résidence principale.</span>
+</label>
+</div>
+</fieldset>
+<!-- Travaux collectifs de copropriété — appartements uniquement -->
+<fieldset class="rf-copro-collectifs" id="rf-copro-collectifs" hidden>
+<legend class="rf-copro-collectifs__legend">Votre copropriété prévoit-elle des travaux collectifs&nbsp;?</legend>
+<p class="rf-copro-collectifs__lede">Isolation façade, ravalement thermique, changement de chaudière commune, VMC collective… Ces travaux, votés en AG, ouvrent droit à <strong>MaPrimeRénov' Copropriété</strong>. Votre part personnelle est calculée au prorata de vos tantièmes.</p>
+<div class="rf-radio-group">
+<label><input type="radio" name="rf-copro-collectifs" value="yes" /><span><strong>Oui</strong> — un projet est voté ou envisagé prochainement</span></label>
+<label><input type="radio" name="rf-copro-collectifs" value="unknown" /><span><strong>Je ne sais pas</strong> — on m'explique à l'étape suivante</span></label>
+<label><input type="radio" name="rf-copro-collectifs" value="no" /><span><strong>Non</strong> — je fais uniquement des travaux privatifs dans mon logement</span></label>
+</div>
+</fieldset>
+<fieldset class="rf-bailleur-filters" id="rf-bailleur-filters" hidden>
+<legend class="rf-bailleur-filters__legend">Précisions sur votre bien locatif</legend>
+<div class="rf-bailleur-filters__row">
+<label>Type de location&nbsp;:
+<select name="rf-bailleur-rental-type" required>
+<option value="">— sélectionnez —</option>
+<option value="nu-principale">Nu, en résidence principale</option>
+<option value="meuble">Meublé (LMNP / LMP)</option>
+<option value="saisonnier">Saisonnier / touristique</option>
+</select>
+</label>
+<label>Structure juridique&nbsp;:
+<select name="rf-bailleur-legal" required>
+<option value="">— sélectionnez —</option>
+<option value="particulier">Particulier</option>
+<option value="indivision">Indivision</option>
+<option value="sci-ir">SCI à l'IR (familiale ou patrimoniale)</option>
+<option value="sci-is">SCI à l'IS</option>
+<option value="copro-communes">Copropriété — travaux sur parties communes</option>
+</select>
+</label>
+</div>
+<div class="rf-bailleur-block rf-bailleur-block--rental rf-bailleur-block--info" hidden>
+<p class="rf-bailleur-block__title">
+<span class="rf-bailleur-block__icon" aria-hidden="true">💡</span>
+<span data-block-msg="meuble"><strong>Location meublée (LMNP/LMP)</strong> — aides partielles applicables</span>
+<span data-block-msg="saisonnier" hidden><strong>Location saisonnière / touristique</strong> — aides très limitées</span>
+</p>
+<p data-block-msg="meuble">MaPrimeRénov' Bailleur et Loc'Avantages exigent une location nue en résidence principale — donc <strong>non applicables</strong> à votre bien. En revanche, vous bénéficiez pleinement de <strong>CEE, éco-PTZ et TVA 5,5&nbsp;%</strong>. Nous calculons votre estimation sur cette base.</p>
+<p data-block-msg="saisonnier" hidden>La location saisonnière est assimilée à une activité économique : ni MPR Bailleur, ni Loc'Avantages, ni TVA 5,5&nbsp;%, ni éco-PTZ résidence principale ne s'appliquent. Vous restez éligible aux <strong>CEE</strong>. Notre estimation sera limitée à ce dispositif.</p>
+</div>
+<div class="rf-bailleur-block rf-bailleur-block--sci rf-bailleur-block--info" hidden>
+<p class="rf-bailleur-block__title">
+<span class="rf-bailleur-block__icon" aria-hidden="true">🏢</span>
+<span data-block-msg="sci-ir"><strong>SCI à l'IR</strong> — parcours bailleur complet</span>
+<span data-block-msg="sci-is" hidden><strong>SCI à l'IS</strong> — aides partielles applicables</span>
+</p>
+<p data-block-msg="sci-ir">Votre SCI est fiscalement transparente : les revenus locatifs sont imposés au niveau des associés personnes physiques. Vous êtes donc éligible à <strong>toutes les aides bailleur</strong> (MPR Bailleur, Loc'Avantages, CEE, éco-PTZ, TVA 5,5&nbsp;%). Le calcul suppose que vous êtes le seul associé bénéficiaire — en cas de pluralité, les aides seront réparties au prorata des parts, que nous validerons ensemble.</p>
+<p data-block-msg="sci-is" hidden>Les SCI soumises à l'IS ne sont éligibles ni à MaPrimeRénov' Bailleur ni à Loc'Avantages (règle Anah : réservées aux personnes physiques). En revanche, <strong>CEE, éco-PTZ et TVA 5,5&nbsp;% restent applicables</strong>. Notre estimation se base sur ces dispositifs.</p>
+</div>
+<div class="rf-bailleur-block rf-bailleur-block--copro rf-bailleur-block--info" hidden>
+<p class="rf-bailleur-block__title">
+<span class="rf-bailleur-block__icon" aria-hidden="true">🏗️</span>
+<strong>Copropriété — travaux sur parties communes</strong> — parcours dédié
+</p>
+<p>Les travaux collectifs (isolation façade/toiture, chaudière commune, VMC…) passent par <strong>MaPrimeRénov' Copropriété</strong>, avec vote en Assemblée Générale et accompagnateur MAR (Mon Accompagnateur Rénov') obligatoire, en plus du syndic. Nous vous demanderons quelques informations supplémentaires à l'étape suivante pour estimer votre part personnelle.</p>
+<p class="rf-bailleur-block__note"><em>Pour les travaux privatifs dans votre appartement (fenêtres, chauffage individuel…), choisissez plutôt « Particulier » ou « SCI à l'IR » à la place.</em></p>
+</div>
+</fieldset>
+<div class="rf-eligibility-matrix" id="rf-eligibility-matrix" hidden>
+<h4 class="rf-eligibility-matrix__title">Aides applicables à votre cas</h4>
+<ul class="rf-eligibility-matrix__list">
+<li data-aide="mpr"><span class="rf-aide-name">MaPrimeRénov'</span><span class="rf-aide-status" data-status=""></span></li>
+<li data-aide="mpr-bailleur"><span class="rf-aide-name">MaPrimeRénov' Bailleur</span><span class="rf-aide-status" data-status=""></span></li>
+<li data-aide="mpr-copro"><span class="rf-aide-name">MaPrimeRénov' Copropriété</span><span class="rf-aide-status" data-status=""></span></li>
+<li data-aide="loc-avantages"><span class="rf-aide-name">Loc'Avantages (Anah + réduction d'impôt)</span><span class="rf-aide-status" data-status=""></span></li>
+<li data-aide="cee"><span class="rf-aide-name">CEE (Certificats d'Économies d'Énergie)</span><span class="rf-aide-status" data-status=""></span></li>
+<li data-aide="eco-ptz"><span class="rf-aide-name">Éco-PTZ (prêt à taux zéro)</span><span class="rf-aide-status" data-status=""></span></li>
+<li data-aide="tva"><span class="rf-aide-name">TVA réduite à 5,5 %</span><span class="rf-aide-status" data-status=""></span></li>
+<li data-aide="lpe"><span class="rf-aide-name">Louer pour l'Emploi (Métropole du Grand Nancy)</span><span class="rf-aide-status" data-status=""></span></li>
+</ul>
+<p class="rf-eligibility-matrix__note">✅ Applicable · ❌ Non applicable · ⚠️ Sous conditions</p>
+</div>
+<div class="field" id="legacy-status-field" hidden aria-hidden="true">
+<label class="field-label" id="lbl-status">Vous êtes…</label>
+<div class="tiles" role="radiogroup" aria-labelledby="lbl-status">
+<button class="tile" data-radio="status" role="radio" aria-checked="false"><span class="icn">[svg]</span><div><span class="nm">Occupant</span><span class="ds">Vous habitez ce logement</span></div></button>
+<button class="tile" data-radio="status" role="radio" aria-checked="false"><span class="icn">[svg]</span><div><span class="nm">Bailleur</span><span class="ds">Vous le mettez en location</span></div></button>
+</div>
+</div>
+<div class="field">
+<label class="field-label" id="lbl-budget">Budget envisagé pour les travaux</label>
+<div class="tiles" role="radiogroup" aria-labelledby="lbl-budget">
+<button class="tile" data-radio="budget" role="radio" aria-checked="false"><div><span class="nm">Moins de 10 000 €</span><span class="ds">Geste ciblé</span></div></button>
+<button class="tile selected" data-radio="budget" role="radio" aria-checked="true"><div><span class="nm">10 000 — 30 000 €</span><span class="ds">Bouquet de travaux</span></div></button>
+<button class="tile" data-radio="budget" role="radio" aria-checked="false"><div><span class="nm">30 000 — 60 000 €</span><span class="ds">Rénovation d'ampleur</span></div></button>
+<button class="tile" data-radio="budget" role="radio" aria-checked="false"><div><span class="nm">+ de 60 000 €</span><span class="ds">Rénovation globale</span></div></button>
+</div>
+</div>
+<div class="field">
+<label class="field-label" id="lbl-prio">Votre priorité</label>
+<div class="tiles" role="radiogroup" aria-labelledby="lbl-prio">
+<button class="tile selected" data-radio="prio" role="radio" aria-checked="true"><span class="icn">[svg]</span><div><span class="nm">Économies</span><span class="ds">Réduire la facture</span></div></button>
+<button class="tile" data-radio="prio" role="radio" aria-checked="false"><span class="icn">[svg]</span><div><span class="nm">Confort</span><span class="ds">Plus chaud, moins humide</span></div></button>
+<button class="tile" data-radio="prio" role="radio" aria-checked="false"><span class="icn">[svg]</span><div><span class="nm">Écologie</span><span class="ds">Sortir des énergies fossiles</span></div></button>
+</div>
+</div>
+</div>
+</section>
+<!-- ÉTAPE 4 : Revenus -->
+<section class="screen" data-screen-label="04 Revenus" id="step-4">
+<div class="step-eyebrow">Étape 4 sur 8</div>
+<h2 class="rf-step-title"><span class="rf-step-title--occupant">Vos revenus et votre foyer</span><span class="rf-step-title--bailleur" hidden>Votre projet de location</span></h2>
+<p class="rf-step-lede"><span class="rf-step-lede--occupant">Ces informations servent à calculer votre catégorie MaPrimeRénov' (barèmes Anah 2026).</span><span class="rf-step-lede--bailleur" hidden>Pour un bailleur, <strong>MaPrimeRénov' Bailleur</strong> est un forfait par geste, indépendant de vos revenus. Ce sont <strong>Loc'Avantages</strong> et sa réduction d'impôt qui dépendent du loyer pratiqué et de la durée d'engagement.</span></p>
+<div class="card">
+<div class="field">
+<label class="field-label" for="region-select">Région du logement</label>
+<div id="region-auto" class="prefill" style="margin:0 0 8px;display:none">
+<span class="ico">[svg]</span>
+<div>Région détectée : <strong id="region-auto-name">—</strong> <span style="opacity:.7">· à partir du code postal de l'adresse saisie en étape 1.</span></div>
+</div>
+<select class="select" id="region-select">
+<option value="">— Renseignez l'adresse en étape 1 pour détection automatique —</option>
+<option value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</option>
+<option value="Bourgogne-Franche-Comté">Bourgogne-Franche-Comté</option>
+<option value="Bretagne">Bretagne</option>
+<option value="Centre-Val de Loire">Centre-Val de Loire</option>
+<option value="Corse">Corse</option>
+<option value="Grand Est">Grand Est</option>
+<option value="Hauts-de-France">Hauts-de-France</option>
+<option value="Île-de-France">Île-de-France</option>
+<option value="Normandie">Normandie</option>
+<option value="Nouvelle-Aquitaine">Nouvelle-Aquitaine</option>
+<option value="Occitanie">Occitanie</option>
+<option value="Pays de la Loire">Pays de la Loire</option>
+<option value="Provence-Alpes-Côte d'Azur">Provence-Alpes-Côte d'Azur</option>
+<option value="DROM-COM">DROM-COM (Outre-mer)</option>
+</select>
+<span class="field-help" id="region-help">Détermine le plafond Anah (Île-de-France ou autres régions) et les aides locales applicables. Vous pouvez corriger manuellement si nécessaire.</span>
+</div>
+<div id="step4-occupant" class="rf-step4-block">
+<div class="prefill">
+<span class="ico">[svg]</span>
+<div>Vos réponses restent dans votre navigateur, sur cet appareil. Elles ne sont transmises qu'au professionnel agréé que vous aurez accepté, et <strong>seulement après votre accord explicite</strong>. Vous pouvez les effacer à tout moment depuis votre profil.</div>
+</div>
+<div class="row-2">
+<div class="field">
+<label class="field-label" for="rfr">Revenu fiscal de référence</label>
+<div class="input-icon">
+<span class="ico">[svg]</span>
+<input class="input" id="rfr" placeholder="Ex : 32 000 €" inputmode="numeric" />
+</div>
+<span class="field-help">Montant en euros, sans espace ni virgule. Il figure sur votre dernier avis d'imposition, cadre « Vos références ». <a href="https://www.impots.gouv.fr" target="_blank" rel="noopener" style="color:var(--teal-700);text-decoration:underline">Récupérer sur impots.gouv.fr →</a></span>
+<div id="rfr-badge" style="display:none;margin-top:10px;padding:10px 14px;border-radius:10px;font:500 13.5px var(--font-sans);align-items:center;gap:10px">
+<span id="rfr-badge-dot" style="width:10px;height:10px;border-radius:50%;flex:0 0 auto"></span>
+<span id="rfr-badge-text"></span>
+</div>
+<div id="step-4-warn" style="display:none;margin-top:10px;padding:10px 14px;background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;border-radius:8px;font-size:13px;font-weight:500"></div>
+</div>
+<div class="field">
+<label class="field-label" id="lbl-parts">Nombre de personnes au foyer</label>
+<div class="tiles" role="radiogroup" aria-labelledby="lbl-parts" style="grid-template-columns:repeat(6,1fr);gap:8px" id="parts-tiles">
+<button type="button" class="tile parts-tile" data-radio="parts" data-parts="1" style="padding:12px 6px;justify-content:center" role="radio" aria-checked="false"><div style="text-align:center;width:100%"><span class="nm" style="font:700 20px var(--font-mono);color:var(--slate-800)">1</span><span class="ds" style="font-size:11px">pers.</span></div></button>
+<button type="button" class="tile parts-tile" data-radio="parts" data-parts="2" style="padding:12px 6px;justify-content:center" role="radio" aria-checked="false"><div style="text-align:center;width:100%"><span class="nm" style="font:700 20px var(--font-mono);color:var(--slate-800)">2</span><span class="ds" style="font-size:11px">pers.</span></div></button>
+<button type="button" class="tile parts-tile" data-radio="parts" data-parts="3" style="padding:12px 6px;justify-content:center" role="radio" aria-checked="false"><div style="text-align:center;width:100%"><span class="nm" style="font:700 20px var(--font-mono);color:var(--slate-800)">3</span><span class="ds" style="font-size:11px">pers.</span></div></button>
+<button type="button" class="tile parts-tile selected" data-radio="parts" data-parts="4" style="padding:12px 6px;justify-content:center" role="radio" aria-checked="true"><div style="text-align:center;width:100%"><span class="nm" style="font:700 20px var(--font-mono);color:var(--slate-800)">4</span><span class="ds" style="font-size:11px">pers.</span></div></button>
+<button type="button" class="tile parts-tile" data-radio="parts" data-parts="5" style="padding:12px 6px;justify-content:center" role="radio" aria-checked="false"><div style="text-align:center;width:100%"><span class="nm" style="font:700 20px var(--font-mono);color:var(--slate-800)">5</span><span class="ds" style="font-size:11px">pers.</span></div></button>
+<button type="button" class="tile parts-tile" data-radio="parts" data-parts="6" style="padding:12px 6px;justify-content:center" role="radio" aria-checked="false"><div style="text-align:center;width:100%"><span class="nm" style="font:700 20px var(--font-mono);color:var(--slate-800)">6+</span><span class="ds" style="font-size:11px">pers.</span></div></button>
+</div>
+<select class="select" id="parts" style="display:none">
+<option>1 personne</option>
+<option>2 personnes</option>
+<option>3 personnes</option>
+<option selected>4 personnes</option>
+<option>5 personnes</option>
+<option>6 personnes ou plus</option>
+</select>
+</div>
+</div>
+</div>
+<div id="step4-bailleur" class="rf-step4-block" hidden>
+<div class="rf-field">
+<label for="rf-nb-logements">Combien de logements mettez-vous en location dans ce projet&nbsp;?</label>
+<input type="number" id="rf-nb-logements" name="rf-nb-logements" min="1" max="50" step="1" value="1">
+<small>Un bailleur peut être aidé pour trois logements au plus.</small>
+</div>
+<div class="rf-field">
+<label for="rf-rent-amount">Loyer mensuel envisagé (hors charges) <span class="rf-required">*</span></label>
+<div class="rf-input-suffix">
+<input type="number" id="rf-rent-amount" name="rf-rent-amount" min="0" step="10" placeholder="Ex : 850" required>
+<span>€ / mois</span>
+</div>
+<small>Estimation raisonnable, marché local. On l'utilise pour comparer avec les plafonds Loc'Avantages.</small>
+</div>
+<div class="rf-field">
+<label>Zone géographique du logement <span class="rf-required">*</span>
+<select name="rf-zone" required>
+<option value="">— sélectionnez —</option>
+<option value="A-bis">A bis (Paris et proche couronne)</option>
+<option value="A">A (grande couronne + zones tendues)</option>
+<option value="B1">B1 (agglomérations 250k+ hab)</option>
+<option value="B2">B2 (autres agglomérations 50k+)</option>
+<option value="C">C (reste du territoire)</option>
+</select>
+</label>
+<small>Nancy est en zone B1. Les zones déterminent les plafonds de loyer Loc'Avantages. <a href="https://www.service-public.fr/particuliers/vosdroits/F1041" target="_blank" rel="noopener" style="color:#0d6b52">Vérifier ma zone</a></small>
+</div>
+<div class="rf-field" data-show-if="particulier-nu,indivision-nu,sci-ir-nu">
+<label>Engagement Loc'Avantages envisagé <span class="rf-required">*</span></label>
+<div class="rf-radio-group">
+<label><input type="radio" name="rf-loc-level" value="none" required /><span><strong>Aucun engagement Loc'Avantages</strong> — je loue au prix du marché</span></label>
+<label><input type="radio" name="rf-loc-level" value="loc1" /><span><strong>Loc1 (loyer −15&nbsp;%)</strong> — réduction d'impôt 20&nbsp;%</span></label>
+<label><input type="radio" name="rf-loc-level" value="loc2" /><span><strong>Loc2 (loyer −30&nbsp;%)</strong> — réduction d'impôt 40&nbsp;%</span></label>
+<label><input type="radio" name="rf-loc-level" value="loc3" /><span><strong>Loc3 (loyer −45&nbsp;%)</strong> — réduction d'impôt 65&nbsp;% (obligatoirement via intermédiation locative)</span></label>
+</div>
+<small>Loc'Avantages est un dispositif Anah cumulable avec MaPrimeRénov' Bailleur. Plus la décote sur le loyer est forte, plus la réduction d'impôt et la prime Anah sont élevées.</small>
+</div>
+<div class="rf-field" data-show-if="particulier-nu,indivision-nu,sci-ir-nu">
+<label>Durée d'engagement de location <span class="rf-required">*</span>
+<select name="rf-loc-duration" required>
+<option value="">— sélectionnez —</option>
+<option value="6">6 ans (minimum)</option>
+<option value="9">9 ans</option>
+</select>
+</label>
+</div>
+<div class="rf-field" data-show-if="particulier-nu,indivision-nu,sci-ir-nu">
+<label>Intention d'utiliser un dispositif « Louer pour l'Emploi » (Métropole du Grand Nancy)&nbsp;?</label>
+<div class="rf-radio-group">
+<label><input type="radio" name="rf-lpe" value="yes" /><span>Oui, je souhaite l'étudier</span></label>
+<label><input type="radio" name="rf-lpe" value="no" checked /><span>Non / je ne suis pas sur la Métropole</span></label>
+</div>
+<small>Aide complémentaire pour les bailleurs sur la Métropole du Grand Nancy, cumulable avec Loc'Avantages.</small>
+</div>
+</div>
+<div id="step4-copro" class="rf-step4-block" hidden>
+<div class="rf-copro-intro">
+<p class="rf-copro-intro__supplement" hidden><strong>💡 Complément à votre parcours :</strong> vous avez indiqué que votre copropriété prévoit des travaux collectifs. Ces informations servent à estimer votre part MaPrimeRénov' Copropriété, <strong>en supplément</strong> des aides individuelles calculées pour vos travaux privatifs.</p>
+<p><strong>MaPrimeRénov' Copropriété</strong> aide la copropriété dans son ensemble ; votre part personnelle est calculée au prorata de vos millièmes (ou tantièmes) de copropriété.</p>
+<p>Ces informations sont indicatives — le montant définitif dépendra du vote en AG et du diagnostic global de la copropriété (audit énergétique + MAR agréé).</p>
+</div>
+<div class="rf-field">
+<label for="rf-copro-lots">Nombre total de logements dans la copropriété <span class="rf-required">*</span></label>
+<input type="number" id="rf-copro-lots" name="rf-copro-lots" min="2" step="1" placeholder="Ex : 24" required>
+<small>Ex : 24 pour un petit immeuble, 120+ pour une grande résidence.</small>
+</div>
+<div class="rf-field">
+<label for="rf-copro-tantiemes">Vos millièmes ou tantièmes de copropriété <span class="rf-required">*</span></label>
+<div class="rf-input-suffix">
+<input type="number" id="rf-copro-tantiemes" name="rf-copro-tantiemes" min="1" max="10000" step="1" placeholder="Ex : 430" required>
+<span>/ 10 000</span>
+</div>
+<small>Figure sur votre règlement de copropriété ou vos appels de fonds. Si vous avez le pourcentage, multipliez par 100 (ex : 4,3 % → 430).</small>
+</div>
+<div class="rf-field">
+<label for="rf-copro-cout">Montant total des travaux pour l'immeuble</label>
+<div class="rf-input-suffix">
+<input type="number" id="rf-copro-cout" name="rf-copro-cout" min="0" step="1000" placeholder="Estimé à partir de votre logement si vide">
+<span>€ HT</span>
+</div>
+<small>Si le montant a été voté ou devisé, saisissez-le : à défaut, l'estimation est calculée à partir de votre seul logement, et signalée comme telle.</small>
+</div>
+<fieldset class="rf-field rf-fieldset">
+<legend>Gain énergétique visé pour l'immeuble</legend>
+<label class="rf-radio"><input type="radio" name="rf-copro-gain" value="g35"> Au moins 35&nbsp;%</label>
+<label class="rf-radio"><input type="radio" name="rf-copro-gain" value="g50"> Au moins 50&nbsp;%</label>
+<label class="rf-radio"><input type="radio" name="rf-copro-gain" value="nd" checked> Pas encore défini</label>
+<small>Ce sont les deux seuils de MaPrimeRénov' Copropriété. Sans réponse, nous retenons 35&nbsp;%, et nous le signalons.</small>
+</fieldset>
+<fieldset class="rf-field rf-fieldset" id="rf-copro-sortie-wrap" hidden>
+<legend>Après travaux, l'immeuble sortira-t-il de l'étiquette F ou G&nbsp;?</legend>
+<label class="rf-radio"><input type="radio" name="rf-copro-sortie" value="oui"> Oui</label>
+<label class="rf-radio"><input type="radio" name="rf-copro-sortie" value="non"> Non</label>
+<label class="rf-radio"><input type="radio" name="rf-copro-sortie" value="nd" checked> Pas encore défini</label>
+<small>Le bonus « sortie de passoire » n'est accordé que si la sortie est prévue.</small>
+</fieldset>
+<div class="rf-field">
+<label>DPE moyen actuel de la copropriété <span class="rf-required">*</span>
+<select name="rf-copro-dpe" required>
+<option value="">— sélectionnez —</option>
+<option value="A">A (≤ 70 kWh/m²/an)</option>
+<option value="B">B (71–110)</option>
+<option value="C">C (111–180)</option>
+<option value="D">D (181–250)</option>
+<option value="E">E (251–330) — logement énergivore</option>
+<option value="F">F (331–420) — passoire énergétique</option>
+<option value="G">G (&gt; 420) — passoire énergétique</option>
+<option value="unknown">Je ne sais pas / pas encore de DPE collectif</option>
+</select>
+</label>
+<small>Le gain énergétique visé détermine le taux d'aide MaPrimeRénov' Copropriété (35 % → aide 30 %, 50 % → aide 45 %).</small>
+</div>
+<div class="rf-field">
+<label>Année de construction du bâtiment
+<select name="rf-copro-annee">
+<option value="">— sélectionnez —</option>
+<option value="avant-1948">Avant 1948</option>
+<option value="1948-1974">1948 – 1974 (avant 1ʳᵉ RT)</option>
+<option value="1975-1989">1975 – 1989</option>
+<option value="1990-2004">1990 – 2004</option>
+<option value="2005-2012">2005 – 2012 (RT 2005)</option>
+<option value="apres-2013">Après 2013 (RT 2012 / RE 2020)</option>
+</select>
+</label>
+<small>Les copropriétés d'avant 1948 ont souvent droit à un bonus « patrimoine ».</small>
+</div>
+<div class="rf-field">
+<label>Copropriété considérée comme <strong>fragile</strong> par l'Anah ?</label>
+<div class="rf-radio-group">
+<label><input type="radio" name="rf-copro-fragile" value="yes" /><span>Oui</span></label>
+<label><input type="radio" name="rf-copro-fragile" value="no" checked /><span>Non</span></label>
+<label><input type="radio" name="rf-copro-fragile" value="unknown" /><span>Je ne sais pas</span></label>
+</div>
+<small>Critères Anah : ≥ 8 % d'impayés (25 % pour copros ≥ 200 lots) ou situation identifiée par un opérateur agréé. Bonification de +20 % sur MaPrimeRénov' Copropriété.</small>
+</div>
+<div class="rf-field">
+<label>Un syndic ou accompagnateur MAR (Mon Accompagnateur Rénov') est-il déjà identifié ?</label>
+<div class="rf-radio-group">
+<label><input type="radio" name="rf-copro-mar" value="yes" /><span>Oui</span></label>
+<label><input type="radio" name="rf-copro-mar" value="no" checked /><span>Non / je cherche</span></label>
+</div>
+<small>Obligatoire pour MPR Copropriété. Si non, nous vous orientons vers un accompagnateur agréé.</small>
+</div>
+<div class="rf-copro-note">
+<p><strong>⚠️ Important</strong> — le montant estimé est une <strong>projection indicative</strong>. Le versement effectif dépend :</p>
+<ul>
+<li>Du vote en Assemblée Générale (majorité de l'article 25 loi 1965)</li>
+<li>Du résultat de l'audit énergétique collectif</li>
+<li>De la sélection d'un MAR agréé par la copropriété</li>
+<li>De l'ordre de dépôt (les enveloppes annuelles Anah peuvent s'épuiser)</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- ÉTAPE 5 : Travaux envisagés -->
+<section class="screen" data-screen-label="05 Travaux" id="step-5">
+<div class="step-eyebrow">Étape 5 sur 8</div>
+<h1 class="q-title">Quels travaux envisagez-vous ?</h1>
+<p class="q-sub">Cochez les postes qui vous intéressent. Vos aides seront calculées uniquement sur ces travaux. Vous pourrez modifier cette sélection à tout moment depuis votre profil.</p>
+<div id="step5-tip" style="display:none;margin:0 0 14px;padding:12px 16px;background:var(--teal-50);border:1px solid var(--teal-100);border-radius:10px;font-size:13.5px;color:var(--teal-900);line-height:1.5;align-items:flex-start;gap:10px">
+[svg]
+<span id="step5-tip-text"></span>
+</div>
+<div class="card">
+<div style="margin-bottom:10px">
+<label class="field-label" style="font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--slate-500);font-weight:600">Isolation thermique</label>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:20px">
+<button type="button" class="tile" data-work="combles"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">Isolation des combles</div><div class="sub">25 €/m² MPR bleus · amortissement rapide</div></div></button>
+<button type="button" class="tile" data-work="toiture_terrasse"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">Isolation toiture-terrasse</div><div class="sub">75 €/m² MPR bleus</div></div></button>
+<button type="button" class="tile" data-work="ite"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">Isolation des murs (ITE)</div><div class="sub" style="color:var(--amber-600);font-weight:500">Uniquement en rénovation d'ampleur</div></div></button>
+<button type="button" class="tile" data-work="menuiseries"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">Fenêtres / Menuiseries</div><div class="sub">Remplacement simple → double vitrage</div></div></button>
+</div>
+<div style="margin-bottom:10px">
+<label class="field-label" style="font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--slate-500);font-weight:600">Chauffage &amp; Eau chaude (énergies renouvelables)</label>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:20px">
+<button type="button" class="tile" data-work="pac_aireau"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">Pompe à chaleur air/eau</div><div class="sub">Jusqu'à 5 000 € MPR</div></div></button>
+<button type="button" class="tile" data-work="pac_geothermique"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">PAC géothermique</div><div class="sub">Jusqu'à 11 000 € MPR</div></div></button>
+<button type="button" class="tile" data-work="chauffe_eau_thermo"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">Chauffe-eau thermodynamique</div><div class="sub">Jusqu'à 1 200 € MPR</div></div></button>
+<button type="button" class="tile" data-work="chauffe_eau_solaire"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">Chauffe-eau solaire</div><div class="sub">Jusqu'à 4 000 € MPR</div></div></button>
+<button type="button" class="tile" data-work="chauffage_solaire_combine"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">Chauffage solaire combiné</div><div class="sub">Jusqu'à 10 000 € MPR</div></div></button>
+<button type="button" class="tile" data-work="pvt_eau"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">Panneau PVT (photo-thermique)</div><div class="sub">Jusqu'à 2 500 € MPR</div></div></button>
+<button type="button" class="tile" data-work="raccordement_reseau"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">Raccordement réseau de chaleur</div><div class="sub">Jusqu'à 1 200 € MPR</div></div></button>
+<button type="button" class="tile" data-work="poele_granules"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">Poêle à granulés</div><div class="sub">Jusqu'à 1 250 € MPR</div></div></button>
+<button type="button" class="tile" data-work="poele_buches"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">Poêle à bûches</div><div class="sub">Jusqu'à 1 250 € MPR</div></div></button>
+<button type="button" class="tile" data-work="insert_foyer"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">Insert / foyer fermé</div><div class="sub">Jusqu'à 1 250 € MPR</div></div></button>
+<button type="button" class="tile" data-work="biomasse"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">Chaudière biomasse</div><div class="sub" style="color:var(--amber-600);font-weight:500">CEE Coup de pouce ou rénovation d'ampleur</div></div></button>
+</div>
+<div style="margin-bottom:10px">
+<label class="field-label" style="font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--slate-500);font-weight:600">Autres travaux</label>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
+<button type="button" class="tile" data-work="vmc_df"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">VMC double flux</div><div class="sub">Conditionnée à un geste d'isolation</div></div></button>
+<button type="button" class="tile" data-work="audit_energetique"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">Audit énergétique</div><div class="sub">Jusqu'à 500 € MPR · obligatoire ampleur</div></div></button>
+<button type="button" class="tile" data-work="depose_cuve_fioul"><div class="ico">[svg]</div><div class="tile-body"><div class="nm">Dépose de cuve à fioul</div><div class="sub">Jusqu'à 1 200 € MPR</div></div></button>
+</div>
+<div class="prefill" style="margin-top:14px">
+<span class="ico">[svg]</span>
+<div><strong>Au moins un poste requis.</strong> Pour rester éligible aux aides cumulables type MaPrimeRénov' + CEE, le bouquet doit inclure idéalement isolation + chauffage. Notre moteur d'éligibilité vérifie automatiquement.</div>
+</div>
+<div id="step-5-warn" style="display:none;margin-top:10px;padding:10px 14px;background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;border-radius:8px;font-size:13px;font-weight:500"></div>
+</div>
+</section>
+<!-- ÉTAPE 6 : Loading -->
+<section class="screen" data-screen-label="06 Calcul" id="step-6">
+<div class="step-eyebrow">Étape 6 sur 8</div>
+<h1 class="q-title">Nous calculons vos aides personnalisées…</h1>
+<p class="q-sub">Cette analyse croise vos données avec 6 bases de référence officielles. Compte une vingtaine de secondes.</p>
+<div class="card">
+<div class="loader-wrap">
+<div class="loader-circle" id="loader-circle" style="--p:0%">
+<div class="inner" id="loader-pct">0%</div>
+</div>
+<div id="loader-title" style="font-weight:500;color:var(--slate-800)">Connexion aux bases officielles…</div>
+<div id="loader-sub" style="font-size:13px;color:var(--slate-500);margin-top:4px">Quelques secondes, ne fermez pas la fenêtre.</div>
+<div class="loader-checks" id="loader-checks">
+<div class="lc-item" data-lbl="Vérification de vos données"><span class="ic">[svg]</span> Données du logement validées</div>
+<div class="lc-item" data-lbl="Interrogation ADEME"><span class="ic">[svg]</span> Récupération du DPE ADEME</div>
+<div class="lc-item" data-lbl="Croisement barème Anah"><span class="ic">[svg]</span> Calcul du barème MaPrimeRénov' selon vos revenus</div>
+<div class="lc-item" data-lbl="Croisement ATEE / CEE"><span class="ic">[svg]</span> Estimation des primes CEE applicables</div>
+<div class="lc-item" data-lbl="Aides territoriales"><span class="ic">[svg]</span> Recherche des aides régionales et communales</div>
+<div class="lc-item" data-lbl="Projection DPE"><span class="ic">[svg]</span> Projection du DPE après travaux</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ÉTAPE 6 : Résultats -->
+<section class="screen" data-screen-label="07 Résultats" id="step-7">
+<div class="step-eyebrow">Étape 7 sur 8 · Vos résultats</div>
+<h1 class="q-title">Voici ce que vous pouvez obtenir.</h1>
+<p class="q-sub">Estimation indicative basée sur les barèmes officiels en vigueur. Méthodologie détaillée dans le rapport PDF.</p>
+<div class="results-grid">
+<div class="total-card">
+<div class="lbl"><span class="rf-eyebrow--occupant">Aides directes perçues</span><span class="rf-eyebrow--bailleur" hidden>Aides directes + réduction d'impôt Loc'Avantages</span></div>
+<div class="val">17 640 €</div>
+<div class="sub">pour 29 540 € TTC de travaux · soit <b>60 % de prise en charge</b></div>
+<div class="breakdown">
+<div class="br-row"><span>MaPrimeRénov' <em style="font-style:normal;opacity:.65;font-size:11px">— générique violets, Anah</em></span><span>6 380 €</span></div>
+<div class="br-row"><span>CEE <em style="font-style:normal;opacity:.65;font-size:11px">— Coup de pouce 2026, ATEE</em></span><span>4 200 €</span></div>
+<div class="br-row"><span>Aide régionale <em style="font-style:normal;opacity:.65;font-size:11px">— voir détail selon votre territoire</em></span><span class="blur">—</span></div>
+<div class="br-row" data-aide="tva"><span>Économie TVA 5,5 % vs 10 % <em style="font-style:normal;opacity:.65;font-size:11px">— Service Public</em></span><span>4 060 €</span></div>
+<div class="br-row" data-aide="ecoptz"><span>Éco-PTZ mobilisable <em style="font-style:normal;opacity:.65;font-size:11px">— prêt 0 %, banque</em></span><span class="blur">jusqu'à 30 000 €</span></div>
+</div>
+</div>
+<div class="dpe-card">
+<div class="dpe-h">Performance énergétique projetée</div>
+<div class="dpe-bars">
+<div class="dpe-bar" data-classe="A"><span class="dpe-letter" style="background:#00A651;color:#1E293B">A</span><div class="lvl" style="width:18%;background:#00A651"></div><span class="kwh">≤ 70</span></div>
+<div class="dpe-bar" data-classe="B"><span class="dpe-letter" style="background:#52B847;color:#1E293B">B</span><div class="lvl" style="width:32%;background:#52B847"></div><span class="kwh">71–110</span></div>
+<div class="dpe-bar" data-classe="C"><span class="dpe-letter" style="background:#C8D400">C</span><div class="lvl" style="width:46%;background:#C8D400"></div><span class="kwh">111–180</span></div>
+<div class="dpe-bar" data-classe="D"><span class="dpe-letter" style="background:#FFED00;color:#1E293B">D</span><div class="lvl" style="width:60%;background:#FFED00"></div><span class="kwh">181–250</span></div>
+<div class="dpe-bar" data-classe="E"><span class="dpe-letter" style="background:#FFB400;color:#1E293B">E</span><div class="lvl" style="width:74%;background:#FFB400"></div><span class="kwh">251–330</span></div>
+<div class="dpe-bar" data-classe="F"><span class="dpe-letter" style="background:#FF6900;color:#1E293B">F</span><div class="lvl" style="width:88%;background:#FF6900"></div><span class="kwh">331–420</span></div>
+<div class="dpe-bar" data-classe="G"><span class="dpe-letter" style="background:#E20613">G</span><div class="lvl" style="width:100%;background:#E20613"></div><span class="kwh">&gt; 420</span></div>
+</div>
+<div class="dpe-arrow">
+[svg]
+<div>De <strong>E (278 kWh/m²/an)</strong> à <strong>B (102 kWh/m²/an)</strong> · économie estimée <strong>1 540 €/an</strong> (gaz + électricité, scénario ADEME).</div>
+</div>
+</div>
+</div>
+<!-- Lead magnet : capture email en échange d'un PDF récap.
+Caché par défaut ; révélé par updateLeadMagnetAmount() avec le montant injecté. -->
+<div id="lead-magnet" style="display:none;margin:24px 0;padding:24px;background:linear-gradient(135deg,#F0FDFA 0%,#CCFBF1 100%);border:1px solid var(--teal-200);border-radius:14px">
+<div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+<div style="width:48px;height:48px;border-radius:12px;background:#fff;color:var(--teal-700);display:grid;place-items:center;flex:0 0 auto;box-shadow:0 2px 8px rgba(15,118,110,.12)">
+[svg]
+</div>
+<div style="flex:1;min-width:260px">
+<h3 style="font-size:20px;font-weight:700;color:var(--teal-900);margin:0 0 6px;letter-spacing:-.01em">
+Vos <span id="lead-magnet-amount"></span> d'aides, dans votre boîte mail
+</h3>
+<p style="font-size:14px;color:var(--teal-800);margin:0 0 16px;opacity:.9">
+Un PDF détaillé, prêt à imprimer ou partager. On garde une trace, vous prenez votre temps pour décider.
+</p>
+<div id="lead-magnet-form" style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<input type="email" id="lead-magnet-email" placeholder="votre.email@exemple.fr" aria-label="Votre adresse email" style="flex:1;min-width:220px;padding:12px 14px;border:1px solid var(--teal-200);border-radius:10px;font:400 15px var(--font-sans);background:#fff;color:var(--slate-800)" />
+<button type="button" id="lead-magnet-submit" class="btn btn-primary" style="padding:12px 20px;font-weight:600;white-space:nowrap">Recevoir mon récap PDF →</button>
+</div>
+<label style="display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--slate-600);line-height:1.4;cursor:pointer">
+<input type="checkbox" id="lead-magnet-consent" style="margin-top:3px;flex:0 0 auto;accent-color:var(--teal-700)" />
+<span>J'accepte de recevoir mon récap PDF et des informations utiles de RénoFacile sur les aides à la rénovation. Vous pouvez vous désinscrire à tout moment. Voir notre <a href="page-info.html#confidentialite" style="color:var(--teal-700);text-decoration:underline">politique de confidentialité</a>.</span>
+</label>
+<div id="lead-magnet-error" style="display:none;font-size:13px;color:#DC2626;margin-top:4px">Email invalide ou consentement manquant.</div>
+</div>
+<div id="lead-magnet-success" style="display:none;padding:14px 16px;background:#fff;border:1px solid var(--teal-200);border-radius:10px">
+<div style="display:flex;gap:10px;align-items:flex-start">
+[svg]
+<div style="flex:1">
+<div style="font-weight:600;font-size:14.5px;color:var(--slate-900);margin-bottom:2px">PDF téléchargé — c'est parti !</div>
+<div style="font-size:13px;color:var(--slate-600)">Nous vous enverrons prochainement un email de suivi avec ce récap et des conseils personnalisés.</div>
+</div>
+</div>
+</div>
+<div style="font-size:11.5px;color:var(--slate-500);margin-top:10px">
+Aucune revente commerciale de vos données. Les traitements techniques (adresse BAN, DPE ADEME) sont assurés par des sous-traitants conformes RGPD. · Désinscription en 1 clic dans chaque email · Données stockées en France
+</div>
+</div>
+</div>
+</div>
+<div id="rf-alertes"></div>
+<div id="rf-mar-anchor"></div>
+<section class="projet-unique" id="rf-projet-unique">
+<div class="projet-eyebrow">Votre projet</div>
+<h2 class="projet-titre">Voici vos aides estimées</h2>
+<p class="projet-intro">Basé sur les travaux que vous avez sélectionnés à l'étape précédente. Vous pourrez ajuster votre projet à tout moment depuis votre tableau de bord.</p>
+<div class="projet-travaux">
+<div class="projet-travaux-titre">Travaux sélectionnés</div>
+<ul id="rf-liste-travaux"></ul>
+</div>
+<div class="projet-chiffres">
+<div class="projet-chiffre">
+<div class="projet-chiffre-label">Coût des travaux</div>
+<div class="projet-chiffre-valeur" id="rf-cout-travaux">—</div>
+<div class="projet-chiffre-sub">TTC · TVA 5,5 % ou 10 % selon travaux</div>
+</div>
+<div class="projet-chiffre projet-chiffre-highlight">
+<div class="projet-chiffre-label">Total des aides</div>
+<div class="projet-chiffre-valeur" id="rf-total-aides">—</div>
+<div class="projet-chiffre-sub">MPR · CEE · TVA · éco-PTZ · aides locales</div>
+</div>
+<div class="projet-chiffre">
+<div class="projet-chiffre-label">Reste à votre charge</div>
+<div class="projet-chiffre-valeur" id="rf-reste-charge">—</div>
+<div class="projet-chiffre-sub">Après déduction des aides</div>
+</div>
+</div>
+<div id="rf-mar-line-anchor"></div>
+<div class="projet-dpe">
+<div class="projet-dpe-avant">
+<span class="projet-dpe-label">DPE actuel</span>
+<span class="projet-dpe-badge" id="rf-dpe-avant">—</span>
+</div>
+<div class="projet-dpe-arrow" aria-hidden="true">→</div>
+<div class="projet-dpe-apres">
+<span class="projet-dpe-label">DPE projeté</span>
+<span class="projet-dpe-badge projet-dpe-badge-apres" id="rf-dpe-apres">—</span>
+</div>
+</div>
+</section>
+<div id="mao-partenaire-slot"></div>
+<!-- CTA compact — juste sous la carte projet (momentum optimal) -->
+<section class="rf-cta-scen" id="rf-cta-scen" aria-labelledby="rf-cta-scen-title">
+<div class="rf-cta-scen__inner">
+<p class="rf-cta-scen__eyebrow">Dernière étape</p>
+<h3 id="rf-cta-scen-title" class="rf-cta-scen__title">
+Prêt à obtenir vos <strong id="rf-cta-scen-amount">—</strong> d'aides&nbsp;?
+</h3>
+<p class="rf-cta-scen__sub">
+Dossiers pré-remplis, annuaire artisans RGE, suivi jusqu'au versement — puis transmission à un accompagnateur agréé de votre département.
+</p>
+<button type="button" class="rf-cta-scen__btn" id="rf-cta-scen-btn">
+Continuer mon dossier — gratuit
+<span aria-hidden="true">→</span>
+</button>
+<p class="rf-cta-scen__reassure">
+<span>Gratuit pour vous</span>
+<span aria-hidden="true">·</span>
+<span>Aucun paiement sur ce site</span>
+<span aria-hidden="true">·</span>
+<span>Sans engagement</span>
+</p>
+</div>
+</section>
+<div id="scen-sources-box" style="margin-top:12px;padding:12px 16px;background:var(--slate-50);border:1px solid var(--border);border-radius:10px;font-size:12.5px;color:var(--slate-600);display:flex;gap:10px;align-items:flex-start">
+[svg]
+<div id="scen-sources">
+Sources : <b>Anah</b> (Guide des aides financières 2026, édition février 2026), <b>ATEE</b> (Coup de pouce Économies d'énergie 2026), <b>Service Public</b> (TVA 5,5 %, éco-PTZ). Pour validation personnalisée : <b>France Rénov'</b>, <b>0 808 800 700</b> (gratuit).
+</div>
+</div>
+<div id="scen-bailleur-note" style="display:none;margin-top:12px;padding:14px 16px;background:#fff7ed;border-left:3px solid #d97706;border-radius:4px;font-size:13px;color:#4a5854;line-height:1.55">
+<strong>Parcours bailleur.</strong> MaPrimeRénov' Bailleur s'applique geste par geste, avec un plafond de 20 000 € HT par logement. Pour validation personnalisée : <b>France Rénov'</b>, <b>0 808 800 700</b> (gratuit).
+</div>
+<!-- ================================================================== -->
+<!-- BLOC RÉASSURANCE — version condensée (v2)                          -->
+<!-- ================================================================== -->
+<section class="rf-reassure" aria-labelledby="rf-reassure-title">
+<header class="rf-reassure__head">
+<h2 id="rf-reassure-title" class="rf-reassure__title">Toutes les aides nationales et régionales du Grand Est passées au crible. Une assistance par e-mail pendant toute la durée du dossier.</h2>
+<p class="rf-reassure__lede">RénoFacile compare toutes les aides mobilisables et vous accompagne jusqu'au versement — <strong>sans erreur, sans perdre vos week-ends</strong>.</p>
+</header>
+<ul class="rf-reassure__benefits">
+<li class="rf-reassure__benefit">
+<span class="rf-reassure__benefit-icon" aria-hidden="true">🎯</span>
+<div><strong>Le montant maximum</strong><span>Guide Anah 2026 + écrêtement calculé auto.</span></div>
+</li>
+<li class="rf-reassure__benefit">
+<span class="rf-reassure__benefit-icon" aria-hidden="true">⏱️</span>
+<div><strong>10 à 15 h de recherche évitées</strong><span>Diagnostic 5 min, dossier prêt en 1 h.</span></div>
+</li>
+<li class="rf-reassure__benefit">
+<span class="rf-reassure__benefit-icon" aria-hidden="true">🛡️</span>
+<div><strong>Dossiers construits pour maximiser vos chances</strong><span>Pièces vérifiées, devis relus, plafonds respectés.</span></div>
+</li>
+<li class="rf-reassure__benefit">
+<span class="rf-reassure__benefit-icon" aria-hidden="true">🤝</span>
+<div><strong>Un humain qui répond</strong><span>Support par email pendant tout le dossier.</span></div>
+</li>
+</ul>
+<details class="rf-aides">
+<summary>
+<span class="rf-aides__summary-text">Voir les aides que nous analysons pour vous</span>
+<span class="rf-aides__summary-hint" aria-hidden="true">(nationales + Grand Est)</span>
+</summary>
+<div class="rf-aides__body">
+<table class="rf-aides__table">
+<thead>
+<tr><th scope="col">Aide</th><th scope="col">Ce que c'est</th><th scope="col">Territoire</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>MaPrimeRénov'</strong></td><td>Par geste + Rénovation d'ampleur (barèmes Anah 2026)</td><td>France</td></tr>
+<tr><td><strong>CEE</strong></td><td>Certificats d'Économies d'Énergie — Coup de pouce + majorations locales</td><td>France</td></tr>
+<tr><td><strong>Éco-PTZ</strong></td><td>Prêt à taux zéro jusqu'à 50 000 €, remboursé sur 20 ans max</td><td>France</td></tr>
+<tr><td><strong>TVA 5,5&nbsp;%</strong></td><td>Au lieu de 10&nbsp;%, taux normal des travaux de rénovation</td><td>France</td></tr>
+<tr><td><strong>Chèque énergie</strong></td><td>Utilisable pour certains travaux énergétiques</td><td>France</td></tr>
+<tr><td><strong>Exonération taxe foncière</strong></td><td>Sous conditions, selon délibération de votre commune</td><td>Communal</td></tr>
+<tr class="rf-aides__row-region"><td colspan="3">Aides spécifiques Grand Est</td></tr>
+<tr><td><strong>Climaxion</strong></td><td>Aide au diagnostic et à l'audit énergétique (Région + ADEME)</td><td>Grand Est</td></tr>
+<tr><td><strong>Plan Climat MGN</strong></td><td>Subvention complémentaire isolation + systèmes performants</td><td>Métropole du Grand Nancy</td></tr>
+<tr><td><strong>CEE MGN</strong></td><td>Bonification territoriale des CEE</td><td>Métropole du Grand Nancy</td></tr>
+<tr><td><strong>Prime Air Bois</strong></td><td>Remplacement chauffage bois par équipement Flamme Verte</td><td>Grand Est</td></tr>
+<tr><td><strong>Loc'Avantages</strong></td><td>Pour propriétaires bailleurs sous plafond de loyer</td><td>France</td></tr>
+<tr><td><strong>Prime sortie de vacance</strong></td><td>5 000 € / logement pour les bailleurs remettant sur le marché un logement vacant depuis 2 ans ou plus. <strong>Nouveauté 2026</strong> : désormais accessible dans les 13 départements intégralement couverts par le zonage France Ruralité Revitalisation, dont la <strong>Haute-Marne (52)</strong> et la <strong>Meuse (55)</strong> en Grand Est. Cumulable avec MaPrimeRénov' bailleur et Loc'Avantages.</td><td>Zones OPAH/PIG + 13 depts FRR</td></tr>
+<tr><td><strong>Louer pour l'Emploi</strong></td><td>Aide complémentaire pour bailleurs</td><td>Métropole du Grand Nancy</td></tr>
+</tbody>
+</table>
+<p class="rf-services-obligatoires" style="margin-top:14px;padding:10px 14px;background:#f0f7f4;border-left:3px solid #0d6b52;border-radius:4px;font-size:12px;color:#4a5854;line-height:1.5"><strong>Services obligatoires (non comptés dans les aides) :</strong> pour la Rénovation d'ampleur, un accompagnateur MAR (Mon Accompagnateur Rénov') est obligatoire — c'est un professionnel indépendant agréé Anah. Nous vous orientons vers un MAR de votre territoire.</p>
+<p class="rf-aides__foot"><strong>+ Aides communales / départementales</strong> — nous vérifions au cas par cas si votre commune ou département a mis en place une subvention supplémentaire (variable, non garanti).</p>
+</div>
+</details>
+<div class="rf-reassure__faq">
+<details>
+<summary>Si c'est gratuit pour moi, comment RénoFacile gagne sa vie&nbsp;?</summary>
+<p>Nous sommes rémunérés par le professionnel agréé à qui votre dossier est transmis, dans le cadre d'un accord conclu avec lui — jamais par vous. Aucun lead n'est vendu, aucune commission n'est prise sur vos travaux. France Rénov' (0 808 800 700, gratuit) informe et oriente ; RénoFacile <strong>monte votre dossier</strong> : calcul ligne par ligne, pré-remplissage, vérification des devis, suivi jusqu'au versement.</p>
+</details>
+<details>
+<summary>Le montant estimé, c'est vraiment ce que je vais toucher&nbsp;?</summary>
+<p>C'est une <strong>estimation indicative</strong> basée sur les barèmes officiels 2026. Le montant réel dépend de la validation Anah. Notre rôle est de maximiser vos chances d'obtenir ce montant, en montant un dossier propre du premier coup.</p>
+</details>
+</div>
+<p class="rf-reassure__transparency-line">
+<strong>Transparence :</strong> nous ne sommes pas MAR agréé, ni guichet France Rénov', et ne créons pas votre compte MaPrimeRénov' à votre place (obligation Anah — nous vous guidons pas à pas).
+</p>
+</section>
+<div class="lock-cta" style="margin-top:32px">
+<span class="ic">[svg]</span>
+<div class="txt"><div class="h">Continuer mon dossier — gratuit</div><div class="s">Dernière étape : la transmission de votre dossier à un accompagnateur agréé de votre département, qui le déposera et le suivra jusqu'au versement.</div></div>
+<button class="btn btn-amber" id="unlock-cta-bottom" type="button">Continuer mon dossier →</button>
+</div>
+</section>
+<!-- ÉTAPE 8 : Transmission du dossier -->
+<section class="screen" data-screen-label="08 Transmission" id="step-8">
+<div class="step-eyebrow">Étape 8 sur 8 · dernière étape</div>
+<h1 class="q-title">Dernière étape : votre dossier.</h1>
+<p class="q-sub">Nous rassemblons votre diagnostic et votre estimation dans un dossier, conservé dans votre espace. Il sera transmis dès qu'un accompagnateur agréé sera désigné dans votre département. Vous n'avez rien à régler sur ce site.</p>
+<!-- HERO ROI — le montant des aides en majesté -->
+<section class="rf-hero-roi" id="rf-hero-roi" aria-labelledby="rf-hero-roi-title">
+<h2 id="rf-hero-roi-title" class="sr-only">Vos aides estimées</h2>
+<div class="rf-hero-roi__main">
+<div class="rf-hero-roi__label">Vos aides estimées</div>
+<div class="rf-hero-roi__amount" id="rf-hero-gains">—</div>
+<div class="rf-hero-roi__sub" id="rf-hero-sub">aides nationales + Grand Est calculées pour votre profil</div>
+</div>
+</section>
+<div class="rf-tx">
+<div class="rf-tx__card">
+<h3>Récapitulatif de votre dossier</h3>
+<dl class="rf-tx__rows">
+<div class="rf-tx__row"><dt>Parcours</dt><dd>Rénovation énergétique</dd></div>
+<div class="rf-tx__row"><dt>Logement</dt><dd id="tx-adresse">—</dd></div>
+<div class="rf-tx__row"><dt>Aides estimées</dt><dd id="tx-aides">—</dd></div>
+</dl>
+<p class="rf-tx__next"><strong>Prochaine étape</strong> — l'accompagnateur vous indiquera les pièces à fournir (avis d'imposition, justificatif de domicile, devis de l'artisan retenu). Vous les déposerez depuis votre espace, à votre rythme.</p>
+</div>
+<div class="rf-tx__pro" id="rf-tx-pro"></div>
+<div id="rf-referentiel-final"></div>
+<div class="rf-tx__free">
+<strong>Gratuit pour vous.</strong>
+<p>L'utilisation de RénoFacile ne vous coûte rien : aucun paiement, aucun abonnement, aucune carte bancaire. Nous sommes rémunérés par le professionnel agréé qui prend votre dossier en charge.</p>
+</div>
+<p class="rf-tx__aval">L'accompagnement de votre projet par ce professionnel peut faire l'objet d'une prestation à sa charge ou à la vôtre selon le dispositif. Son montant vous est indiqué par lui, par écrit, avant tout engagement de votre part. RénoFacile ne perçoit aucune commission sur vos travaux.</p>
+<!-- Compte personnel : il sert au suivi du dossier, jamais à facturer -->
+<div class="signup" id="signup">
+<h3>Créer mon compte et transmettre</h3>
+<p class="sub">Vos coordonnées servent à suivre l'avancement du dossier et à permettre à votre accompagnateur de vous joindre.</p>
+<div id="rf-mar-line-anchor"></div>
+<div class="signup-grid">
+<div class="field">
+<label class="field-label" for="su-firstname">Prénom</label>
+<input class="input" id="su-firstname" type="text" placeholder="Sophie" autocomplete="given-name" />
+</div>
+<div class="field">
+<label class="field-label" for="su-lastname">Nom</label>
+<input class="input" id="su-lastname" type="text" placeholder="Marin" autocomplete="family-name" />
+</div>
+<div class="field">
+<label class="field-label" for="su-email">Adresse e-mail</label>
+<input class="input" id="su-email" type="email" placeholder="sophie.marin@exemple.fr" autocomplete="email" />
+</div>
+<div class="field">
+<label class="field-label" for="su-tel">Téléphone</label>
+<input class="input" id="su-tel" type="tel" placeholder="06 12 34 56 78" autocomplete="tel" />
+<span class="field-help">Votre accompagnateur vous contactera dès qu'il aura pris votre dossier en charge.</span>
+</div>
+<div class="field">
+<label class="field-label" for="su-pwd">Mot de passe</label>
+<input class="input" id="su-pwd" type="password" placeholder="Minimum 10 caractères" autocomplete="new-password" aria-describedby="pwd-strength-help" />
+<div id="pwd-strength" style="display:none;margin-top:8px">
+<div style="display:flex;gap:3px;margin-bottom:6px">
+<div class="pwd-bar" data-bar="1" style="flex:1;height:4px;border-radius:2px;background:var(--slate-200);transition:background 200ms"></div>
+<div class="pwd-bar" data-bar="2" style="flex:1;height:4px;border-radius:2px;background:var(--slate-200);transition:background 200ms"></div>
+<div class="pwd-bar" data-bar="3" style="flex:1;height:4px;border-radius:2px;background:var(--slate-200);transition:background 200ms"></div>
+<div class="pwd-bar" data-bar="4" style="flex:1;height:4px;border-radius:2px;background:var(--slate-200);transition:background 200ms"></div>
+</div>
+<div id="pwd-strength-label" style="font-size:12.5px;font-weight:500" aria-live="polite"></div>
+<div id="pwd-strength-help" style="font-size:11.5px;color:var(--slate-500);margin-top:3px;line-height:1.45"></div>
+</div>
+</div>
+</div>
+<label class="rf-tx__consent" for="su-transmission">
+<input type="checkbox" id="su-transmission" />
+<span>J'accepte que RénoFacile transmette mon dossier et les données qu'il contient (identité, logement, revenus, travaux envisagés) à <strong id="tx-destinataire">l'accompagnateur agréé désigné pour mon département</strong>, aux seules fins du dépôt et du suivi de ma demande d'aides auprès de l'Anah.</span>
+</label>
+<label class="legal">
+<input type="checkbox" id="su-tos" />
+<span>J'ai lu et j'accepte les <a href="page-info.html?p=cgu" target="_blank">CGU</a> et la <a href="page-info.html?p=privacy" target="_blank">politique de confidentialité</a>. Je comprends que RénoFacile est un outil d'information — pour validation personnalisée : <b>France Rénov', 0 808 800 700, gratuit</b>.</span>
+</label>
+<div style="margin:16px 0;padding:12px 14px;background:#fef3c7;border-left:3px solid #f59e0b;border-radius:6px;font-size:13px;color:#78350f;line-height:1.5">
+<strong>Sécurisation MaPrimeRénov'</strong><br />
+Lors du dépôt de votre dossier MPR sur <code>maprimerenov.gouv.fr</code>, vous devrez vérifier votre identité via <strong>FranceConnect+</strong> ou recevoir un code par courrier à votre adresse fiscale. Cette étape est obligatoire depuis 2026 (source : Guide Anah éd. février 2026, p.14 &amp; p.20).
+</div>
+<div id="rf-mar-consent-anchor"></div>
+<button class="btn btn-amber btn-lg rf-tx__submit" id="su-submit" type="button" disabled style="opacity:.55;cursor:not-allowed">Créer mon dossier →</button>
+<p class="rf-tx__foot">Gratuit · aucun paiement sur ce site · vous pouvez retirer votre consentement à tout moment depuis votre espace</p>
+</div>
+<div class="rf-dossier__human">
+<p>
+<strong>Une question avant de transmettre&nbsp;?</strong>
+Écrivez-nous par email —
+<a href="mailto:hello@renofacile.fr">hello@renofacile.fr</a>.
+</p>
+</div>
+</div>
+<!-- Confirmation de transmission -->
+<div class="rf-tx-success" id="signup-success">
+<div class="check">[svg]</div>
+<h3>Dossier créé.</h3>
+<p><span id="succ-partenaire" hidden></span>Il sera transmis dès qu'un accompagnateur agréé sera désigné dans votre département ; il vous contactera et vous serez prévenu par e-mail. Suivez l'avancement depuis votre tableau de bord.</p>
+<p class="cd" id="succ-cd">Redirection vers votre dossier dans 4…</p>
+</div>
+</section>
+<!-- Footer nav -->
+<div class="footer-nav">
+<div class="top-line">
+<span id="prog-txt">Étape 1 sur 8</span>
+<span class="pct" id="prog-pct">13 %</span>
+</div>
+<div class="bar"><i id="prog-bar" style="width:12.5%"></i></div>
+<div class="btn-row">
+<button class="btn btn-secondary" id="prev">← Précédent</button>
+<button class="btn btn-primary" id="next">Continuer →</button>
+</div>
+</div>
+</main>
+<p class="rf-glossaire-lien"><a href="glossaire-aides.html#vocabulaire" target="_blank" rel="noopener">Un mot vous échappe&nbsp;? Le vocabulaire des aides, expliqué</a></p>

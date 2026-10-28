@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Page introuvable — JungleRenov</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/styles.css">
+  <script src="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/_ds_bundle.js"></script>
+  <style>*{box-sizing:border-box}</style>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon-couleur-32.svg">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon-couleur-180.svg">
+</helmet>
+<div style="background: var(--paper); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column;">
+  <dc-import name="site-header" mode="tunnel" hint-size="100%,73px"></dc-import>
+  <main data-screen-label="404" style="flex: 1; width: 100%; max-width: var(--content-max); margin: 0 auto; padding: var(--space-9) var(--space-5);">
+    <div style="max-width: var(--measure); display: flex; flex-direction: column; gap: var(--space-4);">
+      <p style="margin: 0; font: var(--type-label);">Erreur 404</p>
+      <h1 style="margin: 0; font: var(--type-hero); font-size: clamp(40px, 8vw, 56px); line-height: 1.08;">Cette page n'existe pas.</h1>
+      <p style="margin: 0; font: var(--type-lead); text-wrap: pretty;">Le lien que vous avez suivi est peut-être obsolète, ou l'adresse comporte une erreur de frappe.</p>
+      <div style="padding-top: var(--space-3);"><x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Button" size="lg" href="index.dc.html" hint-size="auto,56px">Retour à l'accueil</x-import></div>
+      <p style="margin: 0; font: var(--type-caption);">Besoin d'aide&nbsp;? <a href="mailto:hello@junglerenov.fr">hello@junglerenov.fr</a></p>
+    </div>
+  </main>
+  <dc-import name="site-footer" compact="{{ true }}" hint-size="100%,200px"></dc-import>
+</div>
+</x-dc>
+</body>
+</html>

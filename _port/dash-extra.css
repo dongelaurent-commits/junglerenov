@@ -1,0 +1,19 @@
+
+/* ── Tableau de bord recomposé (lib/jr-dashboard.js) ── */
+.jr-legacy main{padding:var(--space-6) var(--space-6) var(--space-8)!important;max-width:1040px}
+.jr-legacy main > section,.jr-legacy main > #mao-partenaire-slot{display:none!important}
+.jr-legacy .sidebar{background:var(--paper-deep)!important;border-right:0!important}
+.jr-legacy .nav a:hover{background:var(--paper)!important}
+.jr-legacy .nav a.active{background:var(--card)!important}
+.jr-legacy .jr-menu-btn{display:none}
+@media (max-width:880px){
+ .jr-legacy main{padding:var(--space-5) var(--space-4) var(--space-7)!important}
+ .jr-legacy .sidebar{flex-direction:row!important;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--space-3)!important;padding:var(--space-3) var(--space-4)!important}
+ .jr-legacy .jr-menu-btn{display:inline-flex;align-items:center;gap:var(--space-2);min-height:var(--hit-min);padding:0 var(--space-4);border:1px solid var(--ink);border-radius:var(--radius-sm);background:var(--card);color:var(--ink);font:var(--fw-bold) var(--fs-body)/1 var(--font-text);cursor:pointer}
+ .jr-legacy .sidebar .total-widget,.jr-legacy .sidebar .nav,.jr-legacy .sidebar .me{display:none!important;width:100%}
+ .jr-legacy .sidebar.jr-open .total-widget,.jr-legacy .sidebar.jr-open .me{display:flex!important}
+ .jr-legacy .sidebar.jr-open .total-widget{display:block!important}
+ .jr-legacy .sidebar.jr-open .nav{display:flex!important;flex-direction:column!important}
+ .jr-legacy .sidebar.jr-open .nav-section,.jr-legacy .sidebar.jr-open .exit{display:block!important}
+ .jr-legacy .nav a{border:0!important}
+}

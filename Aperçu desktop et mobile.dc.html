@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Aperçu desktop et mobile — JungleRenov</title>
+  <link rel="stylesheet" href="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/styles.css">
+  <script src="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/_ds_bundle.js"></script>
+  <style>*{box-sizing:border-box}</style>
+</helmet>
+<div style="background: var(--paper-deep); color: var(--ink); min-height: 100vh; padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-5);">
+  <div style="display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3);">
+    <h1 style="margin: 0 var(--space-4) 0 0; font: var(--type-h2);">Aperçu</h1>
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+      <x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Button" variant="{{ t.variant }}" on-click="{{ t.pick }}" dc-props="{{ t.btnProps }}" hint-size="auto,48px">{{ t.label }}</x-import>
+    </sc-for>
+    <a href="{{ src }}" target="_blank" style="font: var(--type-label);">Ouvrir la page</a>
+  </div>
+  <div style="display: flex; flex-wrap: wrap; gap: var(--space-5); align-items: flex-start;">
+    <figure style="margin: 0; display: flex; flex-direction: column; gap: var(--space-2);">
+      <figcaption style="font: var(--type-label);">Desktop · 1280 px</figcaption>
+      <div style="width: 794px; height: 558px; overflow: hidden; background: var(--card); border: 1px solid var(--line-strong); border-radius: var(--radius-sm);">
+        <iframe key="{{ keyD }}" src="{{ src }}" title="Desktop" onLoad="{{ onLoad }}" style="width: 1280px; height: 900px; border: 0; transform: scale(0.62); transform-origin: 0 0;"></iframe>
+      </div>
+    </figure>
+    <figure style="margin: 0; display: flex; flex-direction: column; gap: var(--space-2);">
+      <figcaption style="font: var(--type-label);">Mobile · 375 px</figcaption>
+      <iframe key="{{ keyM }}" src="{{ src }}" title="Mobile" onLoad="{{ onLoad }}" style="width: 375px; height: 760px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); background: var(--card);"></iframe>
+    </figure>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { tab: 0 };
+  renderVals() {
+    const T = [
+      { label: 'Accueil', src: 'index.dc.html' },
+      { label: 'Tunnel énergétique', src: 'tunnel-energetique.dc.html' },
+      { label: 'Tunnel autonomie', src: 'tunnel-autonomie.dc.html' },
+      { label: 'Tunnel logement dégradé', src: 'tunnel-degrade.dc.html' },
+      { label: 'Tableau de bord', src: 'dashboard.dc.html' },
+    ];
+    const cur = T[this.state.tab];
+    return {
+      src: cur.src, keyD: 'd' + this.state.tab, keyM: 'm' + this.state.tab,
+      tabs: T.map((t, i) => ({ label: t.label, variant: i === this.state.tab ? 'primary' : 'secondary', btnProps: { style: { whiteSpace: 'nowrap' } }, pick: () => this.setState({ tab: i }) })),
+      onLoad: (e) => {
+        if (!cur.step) return;
+        const w = e.target.contentWindow;
+        try { w.localStorage.setItem('junglerenov.currentStep', String(cur.step)); } catch (_) {}
+        const apply = () => {
+          try {
+            const d = w.document, s = d.getElementById('step-' + cur.step);
+            if (!s || s.classList.contains('active')) return;
+            d.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
+            s.classList.add('active');
+            const t = d.getElementById('prog-txt'); if (t) t.textContent = 'Étape ' + cur.step + ' sur 8';
+          } catch (_) {}
+        };
+        const bind = (n) => {
+          try {
+            const r = w.document.getElementById('jr-legacy-root');
+            if (!r) { if (n < 60) setTimeout(() => bind(n + 1), 100); return; }
+            r.addEventListener('jr:ready', () => setTimeout(apply, 300));
+          } catch (_) {}
+        };
+        bind(0);
+        let k = 0; const iv = setInterval(() => { apply(); if (++k > 40) clearInterval(iv); }, 250);
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

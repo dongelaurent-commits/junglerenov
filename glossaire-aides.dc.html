@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Le glossaire des aides — JungleRenov</title>
+  <meta name="description" content="Toutes les aides à la rénovation en Lorraine : éligibilité, montants, cumuls et démarches, barèmes au 1er septembre 2026.">
+  <link rel="stylesheet" href="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/styles.css">
+  <link rel="stylesheet" href="lib/components.css">
+  <script src="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/_ds_bundle.js"></script>
+  <script src="lib/jr-v2.js"></script>
+  <script src="lib/glossaire-data.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon-couleur-32.svg">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon-couleur-180.svg">
+  <style>*{box-sizing:border-box} .jr2 a{color:var(--jr-leaf);text-underline-offset:3px} .jr2 a:hover{color:var(--jr-ink)}</style>
+</helmet>
+<div class="jr2" style="background: var(--jr-surface-page); color: var(--jr-ink); min-height: 100vh; display: flex; flex-direction: column;">
+  <dc-import name="site-header" mode="public" current="glossaire-aides" hint-size="100%,72px"></dc-import>
+  <div style="flex: 1; background: var(--jr-white);"><main data-screen-label="Glossaire des aides" style="width: 100%; max-width: var(--jr-container); margin: 0 auto; padding: var(--jr-page-top, 48px) {{ pad }} var(--jr-s-9); display: flex; flex-direction: column; gap: var(--jr-s-6);">
+    <div style="display: flex; flex-direction: column; gap: var(--jr-s-5);">
+      <x-import component-from-global-scope="JRv2.SectionHeader" bare="{{ true }}" as="h1" label="Glossaire des aides" title="Les aides à la rénovation, expliquées" lead="Toutes les aides mobilisables pour votre projet, nationales et régionales, en Lorraine (54, 55, 57, 88) : éligibilité, montants, cumuls et démarches. Barèmes au 1er septembre 2026." hint-size="100%,200px"></x-import>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: var(--jr-s-3) var(--jr-s-4);">
+        <x-import component-from-global-scope="JRv2.Button" href="choix-parcours.dc.html" hint-size="auto,48px">Estimer mes aides</x-import>
+        <x-import component-from-global-scope="JRv2.Button" variant="tertiary" on-click="{{ toggleAll }}" hint-size="auto,48px">{{ toggleLabel }}</x-import>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: {{ cols }}; gap: var(--jr-s-6) var(--jr-s-7); align-items: start;">
+      <aside aria-label="Sommaire" style="position: sticky; top: {{ tocTop }}; z-index: 2; min-width: 0; background: {{ tocBg }}; padding: {{ tocPad }};">
+        <x-import component-from-global-scope="JRv2.Tabs" orientation="{{ tocOrient }}" label="Sommaire" tabs="{{ toc }}" value="{{ active }}" on-change="{{ goTo }}" hint-size="100%,288px"></x-import>
+      </aside>
+
+      <div style="min-width: 0; max-width: 44rem; display: flex; flex-direction: column; gap: var(--jr-s-7);">
+        <div style="display: flex; align-items: flex-end; gap: var(--jr-s-3);">
+          <div style="flex: 1; min-width: 0;"><x-import component-from-global-scope="JRv2.TextField" id="q" type="search" label="Rechercher une aide" placeholder="Pompe à chaleur, bailleur, PCH…" value="{{ q }}" on-change="{{ onQ }}" optional="{{ true }}" hint-size="100%,88px"></x-import></div>
+          <x-import component-from-global-scope="JRv2.Button" variant="tertiary" on-click="{{ clearQ }}" disabled="{{ noQ }}" hint-size="auto,48px">Effacer</x-import>
+        </div>
+        <sc-if value="{{ none }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="JRv2.Notice" tone="info" title="Aucune aide ne correspond à votre recherche." hint-size="100%,80px">Essayez un mot plus court, ou <a href="page-info.dc.html?p=contact">écrivez-nous</a>.</x-import>
+        </sc-if>
+
+        <sc-for list="{{ sections }}" as="s" hint-placeholder-count="3">
+          <section id="{{ s.id }}" aria-labelledby="{{ s.hid }}" style="scroll-margin-top: var(--jr-s-7); display: flex; flex-direction: column; gap: var(--jr-s-4);">
+            <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">{{ s.label }}</p>
+            <h2 id="{{ s.hid }}" style="margin: 0; font: var(--jr-type-h2); color: var(--jr-ink);">{{ s.title }}</h2>
+            <p style="margin: 0; font: var(--jr-type-body); color: var(--jr-ink); text-wrap: pretty;">{{ s.lede }}</p>
+            <x-import component-from-global-scope="JRv2.Accordion" variant="tiles" tile-surface="ivoire" sections="{{ s.tiles }}" open-indices="{{ s.openIdx }}" on-toggle-index="{{ s.toggle }}" hint-size="100%,400px"></x-import>
+          </section>
+        </sc-for>
+
+        <sc-if value="{{ showRef }}" hint-placeholder-val="{{ true }}">
+          <section id="vocabulaire" aria-labelledby="voc-t" style="scroll-margin-top: var(--jr-s-7); display: flex; flex-direction: column; gap: var(--jr-s-4);">
+            <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">04 — Vocabulaire</p>
+            <h2 id="voc-t" style="margin: 0; font: var(--jr-type-h2);">Le vocabulaire des aides</h2>
+            <p style="margin: 0; font: var(--jr-type-body); text-wrap: pretty;">{{ vocLede }}</p>
+            <dl style="margin: 0; display: grid; grid-template-columns: {{ dlCols }}; background: var(--jr-paper); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m);">
+              <sc-for list="{{ voc }}" as="v" hint-placeholder-count="6">
+                <dt style="margin: 0; padding: var(--jr-s-3) var(--jr-s-4) {{ dtPadB }}; font: var(--jr-type-label-strong); border-top: {{ v.line }};">{{ v.t }}</dt>
+                <dd style="margin: 0; padding: {{ ddPad }}; font: var(--jr-type-label); font-weight: 400; border-top: {{ v.ddLine }};">{{ v.d }}</dd>
+              </sc-for>
+            </dl>
+          </section>
+
+          <section id="contacts" aria-labelledby="ct-t" style="scroll-margin-top: var(--jr-s-7); display: flex; flex-direction: column; gap: var(--jr-s-4);">
+            <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">05 — Contacts</p>
+            <h2 id="ct-t" style="margin: 0; font: var(--jr-type-h2);">Contacts utiles</h2>
+            <div style="display: grid; grid-template-columns: {{ ctCols }}; gap: var(--jr-s-3);">
+              <sc-for list="{{ contacts }}" as="c" hint-placeholder-count="4">
+                <div style="background: var(--jr-paper); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: var(--jr-s-4); display: flex; flex-direction: column; gap: var(--jr-s-2);">
+                  <h3 style="margin: 0; font: var(--jr-type-label-strong);">{{ c.t }}</h3>
+                  {{ c.body }}
+                </div>
+              </sc-for>
+            </div>
+          </section>
+
+          <section id="sources" aria-labelledby="src-t" style="scroll-margin-top: var(--jr-s-7); display: flex; flex-direction: column; gap: var(--jr-s-4); padding-top: var(--jr-s-5); border-top: var(--jr-border) solid var(--jr-line);">
+            <h2 id="src-t" style="margin: 0; font: var(--jr-type-h3, 700 22px/28px var(--jr-font-text));">Sources officielles</h2>
+            {{ sourcesList }}
+            {{ disclaimer }}
+          </section>
+        </sc-if>
+      </div>
+    </div>
+  </main></div>
+  <dc-import name="site-footer" hint-size="100%,320px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { w: window.innerWidth, q: '', open: {}, active: 'energetique', ready: !!window.JR_GLOSSAIRE };
+  componentDidMount() {
+    this.onR = () => this.setState({ w: window.innerWidth });
+    window.addEventListener('resize', this.onR);
+    this.onS = () => {
+      const ids = ['energetique', 'autonomie', 'lhi', 'vocabulaire', 'contacts', 'sources'];
+      let cur = ids[0];
+      ids.forEach(id => { const el = document.getElementById(id); if (el && el.getBoundingClientRect().top < 160) cur = id; });
+      if (cur !== this.state.active) this.setState({ active: cur });
+    };
+    window.addEventListener('scroll', this.onS, { passive: true });
+    const wait = () => { if (!window.JR_GLOSSAIRE) return setTimeout(wait, 40); this.setState({ ready: true }, () => {
+      const id = location.hash.slice(1); if (!id) return;
+      this.setState(s => ({ open: Object.assign({}, s.open, { [id]: true }) }), () => setTimeout(() => this.scrollToId(id), 80));
+    }); };
+    wait();
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); window.removeEventListener('scroll', this.onS); }
+  scrollToId(id) { const el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 24, behavior: 'smooth' }); }
+  blocks(list, narrow) {
+    const h = React.createElement, J = window.JRv2 || {};
+    const html = (tag, s, style) => h(tag, { style, dangerouslySetInnerHTML: { __html: s } });
+    const P = { margin: 0, font: 'var(--jr-type-label)', fontWeight: 400, color: 'var(--jr-ink)', textWrap: 'pretty' };
+    return h('div', { style: { display: 'flex', flexDirection: 'column', gap: 'var(--jr-s-4)' } }, list.map((b, i) => {
+      if (b.t === 'p') return html('p', b.html, Object.assign({ key: i }, P));
+      if (b.t === 'note') return h('p', { key: i, style: Object.assign({}, P, { color: 'var(--jr-ink-70)' }), dangerouslySetInnerHTML: { __html: b.html } });
+      if (b.t === 'warn') return J.Notice ? h(J.Notice, { key: i, tone: 'action' }, h('span', { dangerouslySetInnerHTML: { __html: b.html } })) : null;
+      if (b.t === 'dl') return h('dl', { key: i, style: { margin: 0, display: 'grid', gridTemplateColumns: narrow ? 'minmax(0,1fr)' : 'minmax(0, 11rem) minmax(0, 1fr)', columnGap: 'var(--jr-s-4)', rowGap: narrow ? 0 : 'var(--jr-s-2)' } },
+        b.rows.reduce((a, r, k) => a.concat([
+          h('dt', { key: 't' + k, style: { margin: narrow && k ? 'var(--jr-s-3) 0 0' : 0, font: 'var(--jr-type-label-strong)' } }, r[0]),
+          html('dd', r[1], { key: 'd' + k, margin: 0, font: 'var(--jr-type-label)', fontWeight: 400, textWrap: 'pretty' })]), []));
+      if (b.t === 'table' && J.Table) return h(J.Table, { key: i,
+        columns: b.head.map((l, k) => ({ key: 'c' + k, label: l, render: r => h('span', { dangerouslySetInnerHTML: { __html: r['c' + k] } }) })),
+        rows: b.rows.map(r => r.reduce((o, c, k) => (o['c' + k] = c, o), {})) });
+      return null;
+    }));
+  }
+  renderVals() {
+    const G = window.JR_GLOSSAIRE, w = this.state.w, narrow = w < 640, wide = w >= 1024;
+    const h = React.createElement;
+    const norm = s => (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const strip = s => s.replace(/<[^>]+>/g, ' ');
+    const q = norm(this.state.q.trim());
+    const labels = { energetique: '01 — Énergie', autonomie: '02 — Autonomie', lhi: '03 — Habitat dégradé' };
+    let hits = 0;
+    const sections = G ? G.sections.map(s => {
+      const aides = s.aides.filter(a => !q || norm(a.title + ' ' + a.badges.join(' ') + ' ' + a.blocks.map(b => b.html || (b.rows || []).flat().join(' ') + (b.head || []).join(' ')).map(strip).join(' ')).indexOf(q) !== -1);
+      hits += aides.length;
+      return { id: s.id, hid: s.id + '-t', label: labels[s.id], title: s.title, lede: strip(s.lede).replace(/\s+/g, ' ').trim(), aides };
+    }).filter(s => !q || s.aides.length).map(s => ({
+      ...s,
+      tiles: s.aides.map(a => ({ id: a.id, title: a.title, preview: a.badges.join(' · '), content: this.blocks(a.blocks, narrow) })),
+      openIdx: s.aides.map((a, i) => (q || this.state.open[a.id]) ? i : -1).filter(i => i >= 0),
+      toggle: i => { const id = s.aides[i].id; this.setState(st => ({ open: Object.assign({}, st.open, { [id]: !(q || st.open[id]) }) })); },
+    })) : [];
+    const allIds = G ? G.sections.flatMap(s => s.aides.map(a => a.id)) : [];
+    const allOpen = allIds.length && allIds.every(id => this.state.open[id]);
+    const P = { margin: 0, font: 'var(--jr-type-label)', fontWeight: 400, textWrap: 'pretty' };
+    return {
+      pad: narrow ? '20px' : '32px', cols: wide ? 'minmax(0, 15rem) minmax(0, 1fr)' : 'minmax(0, 1fr)',
+      tocOrient: wide ? 'vertical' : 'horizontal', tocTop: wide ? 'var(--jr-s-5)' : '0', tocBg: wide ? 'transparent' : 'var(--jr-white)', tocPad: wide ? '0' : 'var(--jr-s-2) 0 0',
+      toc: G ? [
+        ...G.sections.map(s => ({ id: s.id, label: s.title, count: s.aides.length })),
+        { id: 'vocabulaire', label: 'Vocabulaire' }, { id: 'contacts', label: 'Contacts utiles' }, { id: 'sources', label: 'Sources officielles' },
+      ] : [],
+      active: this.state.active, goTo: id => { this.setState({ active: id }); this.scrollToId(id); },
+      q: this.state.q, noQ: !this.state.q, onQ: e => this.setState({ q: e.target.value }), clearQ: () => { this.setState({ q: '' }); const el = document.getElementById('q'); if (el) el.focus(); },
+      none: !!q && hits === 0, sections, showRef: !q,
+      toggleLabel: allOpen ? 'Tout replier' : 'Tout déplier',
+      toggleAll: () => this.setState({ open: allOpen ? {} : allIds.reduce((o, id) => (o[id] = true, o), {}) }),
+      vocLede: G ? strip(G.vocLede) : '',
+      dlCols: narrow ? 'minmax(0, 1fr)' : 'minmax(0, 11rem) minmax(0, 1fr)', dtPadB: narrow ? '0' : 'var(--jr-s-3)', ddPad: narrow ? 'var(--jr-s-1) var(--jr-s-4) var(--jr-s-3)' : 'var(--jr-s-3) var(--jr-s-4)',
+      voc: G ? G.voc.map((v, i) => ({ t: v[0], d: strip(v[1]).replace(/\s+/g, ' ').trim(), line: i ? 'var(--jr-border) solid var(--jr-line)' : '0', ddLine: i && !narrow ? 'var(--jr-border) solid var(--jr-line)' : '0' })) : [],
+      ctCols: narrow ? 'minmax(0, 1fr)' : 'repeat(2, minmax(0, 1fr))',
+      contacts: G ? G.contacts.map(c => ({ t: c[0], body: h('p', { style: P, dangerouslySetInnerHTML: { __html: c[1] } }) })) : [],
+      sourcesList: G ? h('ul', { style: { margin: 0, paddingLeft: 'var(--jr-s-5)', display: 'flex', flexDirection: 'column', gap: 'var(--jr-s-2)', font: 'var(--jr-type-label)', fontWeight: 400 } }, G.sources.map((s, i) => h('li', { key: i, dangerouslySetInnerHTML: { __html: s } }))) : null,
+      disclaimer: G ? h('p', { style: Object.assign({}, P, { color: 'var(--jr-ink-70)' }), dangerouslySetInnerHTML: { __html: G.disclaimer } }) : null,
+    };
+  }
+}
+</script>
+</body>
+</html>

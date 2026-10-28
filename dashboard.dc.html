@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Mon projet — JungleRenov</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/styles.css">
+  <link rel="stylesheet" href="lib/components.css">
+  <script src="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/_ds_bundle.js"></script>
+  <script src="lib/jr-v2.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon-couleur-32.svg">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon-couleur-180.svg">
+  <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#123A2E"></rect><text x="100" y="128" text-anchor="middle" font-family="Georgia, serif" font-size="72" font-weight="800" fill="#8FD14F">JR</text></svg></template>
+</helmet>
+<div class="jr2" style="background: var(--jr-surface-page); min-height: 100vh; display: flex; flex-direction: column;">
+  <dc-import name="site-header" mode="espace" current="dashboard" hint-size="100%,72px"></dc-import>
+  <div style="flex: 1; display: grid; grid-template-columns: {{ layoutCols }};">
+    <div style="min-width: 0;">
+      <x-import component-from-global-scope="JRv2.Sidebar" sections="{{ nav }}" widget="{{ widget }}" dossiers="{{ dossiers }}" dossier-id="{{ dossierId }}" on-dossier="{{ onDossier }}" on-delete="{{ onDelete }}" user="{{ user }}" mobile="{{ narrow }}" hint-size="100%,480px"></x-import>
+    </div>
+    <main data-screen-label="Tableau de bord" style="min-width: 0; padding: var(--jr-s-6) {{ pad }} var(--jr-s-8); display: flex; flex-direction: column; gap: var(--jr-s-7); max-width: calc(var(--jr-container) - var(--jr-s-9) * 2);">
+      <sc-if value="{{ loading }}" hint-placeholder-val="{{ true }}">
+        <x-import component-from-global-scope="JRv2.Skeleton" lines="{{ 6 }}" hint-size="100%,160px"></x-import>
+      </sc-if>
+      <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+        <h1 style="margin: 0; font: var(--jr-type-h1);">{{ greet }}</h1>
+        <x-import component-from-global-scope="JRv2.EmptyState" icon="dossier" title="Vous n’avez encore aucun dossier actif" action="{{ emptyAction }}" hint-size="100%,200px">La simulation prend cinq minutes et ne demande pas de compte.</x-import>
+      </sc-if>
+      <sc-if value="{{ has }}" hint-placeholder-val="{{ false }}">
+        <section data-surface="dark" aria-label="Votre parcours" style="background: var(--jr-surface-dark); color: var(--jr-text-on-dark); border-radius: var(--jr-radius-m); padding: {{ heroPad }}; display: flex; flex-direction: column; gap: var(--jr-s-5);">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--jr-s-5);">
+            <div style="display: flex; flex-direction: column; gap: var(--jr-s-3); min-width: 0;">
+              <h1 style="margin: 0; font: var(--jr-type-h1); line-height: 1.1; color: var(--jr-text-on-dark); text-wrap: balance;">{{ greet }}</h1>
+              <div style="display: flex; flex-wrap: wrap; gap: var(--jr-s-3); align-items: center;">
+                <span style="display: inline-flex; align-items: center; min-height: var(--jr-s-6); padding: 0 var(--jr-s-3); border-radius: var(--jr-radius-s); background: var(--jr-paper); color: var(--jr-ink); font: var(--jr-type-label-strong);">{{ parcours }}</span>
+                <span style="font: var(--jr-type-label); font-weight: 400;">{{ adresse }}</span>
+              </div>
+            </div>
+            <dl style="margin: 0; display: flex; flex-wrap: wrap; gap: var(--jr-s-6);">
+              <div><dt style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking);">{{ totalTitle }}</dt><dd style="margin: 0; font: var(--jr-type-amount-m); color: var(--jr-text-accent-on-dark);">{{ total }}</dd></div>
+              <div><dt style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking);">Étapes complétées</dt><dd style="margin: 0; font: var(--jr-type-amount-m);">{{ done }}</dd></div>
+            </dl>
+          </div>
+          <x-import component-from-global-scope="JRv2.Stepper" steps="{{ stepLabels }}" current="{{ idx }}" surface="dark" style="padding: 0;" hint-size="100%,96px"></x-import>
+        </section>
+
+        <x-import component-from-global-scope="JRv2.CurrentStepCard" step="{{ stepN }}" total="{{ stepTotal }}" title="{{ curTitle }}" description="{{ curDesc }}" delai="{{ curDelai }}" duree="{{ curDuree }}" items="{{ curTips }}" actions="{{ curActions }}" hint-size="100%,320px"></x-import>
+
+        <section id="devis" aria-labelledby="devis-t" style="scroll-margin-top: var(--jr-s-6); background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: var(--jr-s-5); display: flex; flex-direction: column; gap: var(--jr-s-4);">
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-1);">
+            <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Facultatif</p>
+            <h2 id="devis-t" style="margin: 0; font: var(--jr-type-h3, 700 22px/28px var(--jr-font-text));">Mes devis</h2>
+            <p style="margin: 0; font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink); text-wrap: pretty;">{{ devisIntro }}</p>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: var(--jr-s-2);">
+            <sc-for list="{{ devisModes }}" as="o" hint-placeholder-count="2">
+              <x-import component-from-global-scope="JRv2.Button" variant="{{ o.variant }}" on-click="{{ o.pick }}" hint-size="auto,48px">{{ o.label }}</x-import>
+            </sc-for>
+          </div>
+          <sc-if value="{{ devisGlobal }}" hint-placeholder-val="{{ true }}">
+            <div style="max-width: 20rem;"><x-import component-from-global-scope="JRv2.TextField" id="devis-ht" label="Montant total de vos devis" hint="Hors taxes, tous postes." unit="€ HT" input-mode="numeric" value="{{ devisHt }}" on-change="{{ onDevisHt }}" optional="{{ true }}" hint-size="100%,112px"></x-import></div>
+          </sc-if>
+          <sc-if value="{{ devisParPoste }}" hint-placeholder-val="{{ false }}">
+            <div style="display: grid; grid-template-columns: {{ devisCols }}; gap: var(--jr-s-3) var(--jr-s-4);">
+              <sc-for list="{{ devisPostes }}" as="q" hint-placeholder-count="3">
+                <x-import component-from-global-scope="JRv2.TextField" id="{{ q.id }}" label="{{ q.label }}" unit="€ HT" input-mode="numeric" value="{{ q.value }}" on-change="{{ q.on }}" optional="{{ true }}" hint-size="100%,88px"></x-import>
+              </sc-for>
+            </div>
+          </sc-if>
+          <x-import component-from-global-scope="JRv2.FileDrop" title="Joindre vos devis" file-name="{{ devisFileName }}" status="{{ devisFileStatus }}" on-select="{{ onDevisFiles }}" hint-size="100%,96px"></x-import>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: var(--jr-s-3);">
+            <x-import component-from-global-scope="JRv2.Button" on-click="{{ saveDevis }}" loading="{{ devisSaving }}" hint-size="auto,48px">Enregistrer et recalculer</x-import>
+            <sc-if value="{{ hasDevis }}" hint-placeholder-val="{{ false }}"><x-import component-from-global-scope="JRv2.Button" variant="tertiary" on-click="{{ clearDevis }}" hint-size="auto,48px">Retirer mes devis</x-import></sc-if>
+            <span style="font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);">{{ devisNote }}</span>
+          </div>
+        </section>
+
+        <section style="display: flex; flex-direction: column; gap: var(--jr-s-4);">
+          <x-import component-from-global-scope="JRv2.SectionHeader" label="Votre dossier" title="Les étapes" hint-size="100%,120px"></x-import>
+          <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+            <div style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: 0 var(--jr-s-4);">
+              <x-import component-from-global-scope="JRv2.Accordion" variant="dense" sections="{{ stepsAcc }}" hint-size="100%,56px"></x-import>
+            </div>
+          </sc-if>
+          <sc-if value="{{ notNarrow }}" hint-placeholder-val="{{ true }}">
+          <ol style="list-style: none; margin: 0; padding: 0; background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); overflow: hidden;">
+            <sc-for list="{{ steps }}" as="s" hint-placeholder-count="6">
+              <li style="{{ s.row }}" onMouseEnter="{{ s.enter }}" onMouseLeave="{{ s.leave }}" onFocus="{{ s.enter }}" onBlur="{{ s.leave }}">
+                <span style="font: var(--jr-type-label); font-variant-numeric: tabular-nums;">{{ s.label }}</span>
+                <span style="display: flex; align-items: center; gap: var(--jr-s-2);">
+                  <sc-if value="{{ s.undoable }}" hint-placeholder-val="{{ false }}">
+                    <span style="opacity: {{ s.linkOp }}; transition: opacity var(--jr-duration-fast) var(--jr-ease);"><x-import component-from-global-scope="JRv2.Button" variant="tertiary" on-click="{{ s.undo }}" hint-size="auto,48px">Marquer comme non faite</x-import></span>
+                  </sc-if>
+                  <x-import component-from-global-scope="JRv2.StatusTag" status="{{ s.status }}" hint-size="auto,32px">{{ s.word }}</x-import>
+                </span>
+              </li>
+            </sc-for>
+          </ol>
+          </sc-if>
+        </section>
+
+        <section style="display: flex; flex-direction: column; gap: var(--jr-s-4);">
+          <x-import component-from-global-scope="JRv2.SectionHeader" label="Pièces" title="Documents à préparer" hint-size="100%,120px"></x-import>
+          <div style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); overflow: hidden;">
+            <sc-for list="{{ docs }}" as="d" hint-placeholder-count="4">
+              <x-import component-from-global-scope="JRv2.DocumentRow" dc-props="{{ d }}" hint-size="100%,64px"></x-import>
+            </sc-for>
+          </div>
+          <div><x-import component-from-global-scope="JRv2.Button" variant="tertiary" href="mes-documents.dc.html" icon-after="chevron" hint-size="auto,48px">Voir mes documents</x-import></div>
+        </section>
+      </sc-if>
+    </main>
+  </div>
+  <dc-import name="site-footer" compact="{{ true }}" hint-size="100%,200px"></dc-import>
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; left: 50%; bottom: var(--jr-s-6); transform: translateX(-50%); z-index: 50; width: max-content; max-width: calc(100vw - 32px);"><x-import component-from-global-scope="JRv2.Toast" tone="valide" hint-size="320px,48px"><span style="display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--jr-s-2) var(--jr-s-3);"><span>{{ toast }}</span><sc-if value="{{ hasUndo }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ undoToast }}" style="all: unset; min-height: 44px; display: inline-flex; align-items: center; cursor: pointer; font: var(--jr-type-label-strong); color: var(--jr-sprout); text-decoration: underline; text-underline-offset: 4px;">Annuler</button></sc-if></span></x-import></div>
+  </sc-if>
+  <x-import component-from-global-scope="JRv2.Modal" open="{{ confirmOpen }}" title="Revenir en arrière ?" on-close="{{ confirmClose }}" actions="{{ confirmActions }}" hint-size="0,0">{{ confirmText }}</x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { w: window.innerWidth, ready: false, tick: 0, dv: null, dvFor: '', dvSaving: false, toast: '', undo: null, hover: -1, confirm: null };
+  componentDidMount() {
+    this.onR = () => this.setState({ w: window.innerWidth }); window.addEventListener('resize', this.onR);
+    this.onJ = () => this.setState(s => ({ tick: s.tick + 1 })); window.addEventListener('jr:dossier', this.onJ);
+    const seq = ['lib/_storage.js', 'lib/_dossiers.js', 'lib/_user.js', 'lib/_auth_guard.js', 'lib/_travaux_catalog.js', 'lib/_dossier_courant.js'];
+    const load = (l) => { if (!l.length) return this.setState({ ready: true });
+      if (document.querySelector('script[data-jr-src="' + l[0] + '"]')) return load(l.slice(1));
+      const s = document.createElement('script'); s.src = l[0]; s.async = false; s.setAttribute('data-jr-src', l[0]); s.onload = s.onerror = () => load(l.slice(1)); document.body.appendChild(s); };
+    load(seq);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); window.removeEventListener('jr:dossier', this.onJ); }
+  renderVals() {
+    const w = this.state.w, narrow = w < 880, D = window.RFDossiers, U = window.RFUser;
+    const eur = n => Math.round(n || 0).toLocaleString('fr-FR') + '\u202f€';
+    const E = this.state.ready && window.JR ? window.JR.espace('dashboard', () => this.setState(s => ({ tick: s.tick + 1 }))) : null;
+    const d = E ? E.dossier : null;
+    const greet = (U && U.getGreeting()) || 'Bonjour';
+    const total = d ? eur(E.totaux.aides) : '—';
+    /* Devis : brouillon local jusqu'à « Enregistrer et recalculer ». */
+    let dv = this.state.dv;
+    if (d && this.state.dvFor !== d.id) { const s = d.devis || {}; dv = { mode: s.postes && Object.keys(s.postes).length ? 'postes' : 'global', ht: s.ht && !(s.postes && Object.keys(s.postes).length) ? String(s.ht) : '', postes: Object.assign({}, s.postes || {}), fichiers: (s.fichiers || []).slice() }; setTimeout(() => this.setState({ dv, dvFor: d.id }), 0); }
+    dv = dv || { mode: 'global', ht: '', postes: {}, fichiers: [] };
+    const num = v => { const n = parseInt(String(v || '').replace(/\D/g, ''), 10); return Number.isFinite(n) ? n : 0; };
+    const setDv = o => this.setState(s => ({ dv: Object.assign({}, s.dv || dv, o) }));
+    const cat = window.RFTravauxCatalog, trav = d ? ((d.profile || {}).travaux || ((d.profile || {}).calcInput || {}).selection || []) : [];
+    const devisVals = d ? {
+      devisIntro: 'Sans devis, seules les aides forfaitaires sont chiffrées. Saisissez le montant hors taxes de vos devis : les aides en pourcentage et votre reste à charge seront calculés sur cette base.',
+      devisModes: [['global', 'Montant global'], ['postes', 'Par poste']].map(([k, l]) => ({ label: l, variant: dv.mode === k ? 'primary' : 'secondary', pick: () => setDv({ mode: k }) })),
+      devisGlobal: dv.mode === 'global', devisParPoste: dv.mode === 'postes', devisCols: narrow ? 'minmax(0, 1fr)' : 'repeat(2, minmax(0, 1fr))',
+      devisHt: dv.ht, onDevisHt: e => setDv({ ht: e.target.value }),
+      devisPostes: trav.map(k => ({ id: 'dv-' + k, label: cat && cat.label ? cat.label(k) : k, value: dv.postes[k] || '', on: e => setDv({ postes: Object.assign({}, dv.postes, { [k]: e.target.value }) }) })),
+      devisFileName: dv.fichiers.length ? dv.fichiers.join(', ') : 'PDF, JPG ou PNG, 10 Mo maximum.', devisFileStatus: dv.fichiers.length ? 'recu' : 'manquant', onDevisFiles: f => setDv({ fichiers: Array.from(f || []).map(x => x.name || String(x)) }),
+      hasDevis: !!(d.devis && d.devis.ht > 0), devisSaving: this.state.dvSaving,
+      devisNote: d.devis && d.devis.ht > 0 ? 'Base actuelle : ' + eur(d.devis.ht) + ' HT de devis' : 'Aucun devis saisi',
+      saveDevis: () => {
+        const postes = {}; let ht = 0;
+        if (dv.mode === 'postes') trav.forEach(k => { const v = num(dv.postes[k]); if (v > 0) { postes[k] = v; ht += v; } }); else ht = num(dv.ht);
+        const devis = ht > 0 ? { ht, postes: dv.mode === 'postes' ? postes : null, fichiers: dv.fichiers, saisiLe: new Date().toISOString() } : null;
+        this.setState({ dvSaving: true });
+        window.JR.enregistrerEtRecalculer(d.id, { __devis: devis }).then(t => { this.setState({ dvSaving: false, dvFor: '', toast: (devis ? 'Aides estimées sur vos devis : ' : 'Aides forfaitaires estimées : ') + eur(t.aides) }); clearTimeout(this.tT); this.tT = setTimeout(() => this.setState({ toast: '' }), 5000); })
+          .catch(x => this.setState({ dvSaving: false, toast: (x && x.message) || 'Le recalcul n’a pas abouti.' }));
+      },
+      clearDevis: () => { this.setState({ dvSaving: true }); window.JR.enregistrerEtRecalculer(d.id, { __devis: null }).then(t => this.setState({ dvSaving: false, dvFor: '', toast: 'Devis retirés · aides forfaitaires : ' + eur(t.aides) })).catch(() => this.setState({ dvSaving: false })); },
+    } : {};
+    const base = { nav: E ? E.nav : [], narrow, greet, layoutCols: narrow ? 'minmax(0, 1fr)' : 'calc(var(--jr-s-9) * 3) minmax(0, 1fr)', pad: narrow ? 'var(--jr-margin-mobile)' : 'var(--jr-s-7)',
+      heroPad: narrow ? 'var(--jr-s-5)' : 'var(--jr-s-6)',
+      widget: E ? E.widget : { label: 'Aides estimées', amount: '—', caption: '' }, dossiers: E ? E.dossiers : null, dossierId: E ? E.dossierId : '', onDossier: E ? E.onDossier : null, onDelete: E ? E.onDelete : null,
+      user: E ? E.user : { initials: 'JR', name: 'Mon compte', email: '' },
+      loading: !this.state.ready, empty: this.state.ready && !d, has: !!d, toast: this.state.toast, hasUndo: !!this.state.undo,
+      undoToast: () => { const u = this.state.undo; if (u) window.JR.restaurer(u.id, u.snap); clearTimeout(this.tT); this.setState({ toast: 'État précédent restauré', undo: null }); this.tT = setTimeout(() => this.setState({ toast: '' }), 3000); },
+      confirmOpen: !!this.state.confirm, confirmClose: () => this.setState({ confirm: null }),
+      confirmText: this.state.confirm ? this.state.confirm.n + ' étapes repasseront « À venir » et « ' + this.state.confirm.label + ' » redeviendra l’étape en cours.' : '',
+      confirmActions: window.JRv2 && this.state.confirm ? [React.createElement(window.JRv2.Button, { key: 'n', variant: 'secondary', onClick: () => this.setState({ confirm: null }) }, 'Annuler'), React.createElement(window.JRv2.Button, { key: 'y', onClick: () => this.state.confirm.run() }, 'Revenir en arrière')] : null, totalTitle: d ? E.totaux.titre : 'Aides estimées', ...devisVals,
+      emptyAction: window.JRv2 ? React.createElement(window.JRv2.Button, { href: 'choix-parcours.dc.html' }, 'Faire ma simulation') : null };
+    if (!d) return Object.assign(base, { notNarrow: !narrow, stepsAcc: [], steps: [], docs: [], stepLabels: [], curTips: [] });
+    const tl = D.getTimeline(d), idx = D.getCurrentStepIndex(d), cur = tl[idx], meta = D.meta(d.type), ET = window.JR.etapes(d);
+    const flash = (msg, snap) => { clearTimeout(this.tT); this.setState({ toast: msg, undo: snap ? { id: d.id, snap } : null }); this.tT = setTimeout(() => this.setState({ toast: '', undo: null }), 6000); };
+    const goBack = i => { const run = () => { try { const snap = window.JR.revenirA(d.id, i); this.setState({ confirm: null }); flash('« ' + tl[i].libelle + ' » est de nouveau en cours', snap); } catch (x) { this.setState({ confirm: null }); flash(x.message); } };
+      if (idx - i > 2) this.setState({ confirm: { n: idx - i, label: tl[i].libelle, run } }); else run(); };
+    const p = d.profile || {}, adresse = p.address || p.adresse || (p.logement && (p.logement.address || p.logement.adresse)) || d.adresseLogement || '';
+    const recus = (d.suivi && d.suivi.documents) || [];
+    const J = window.JRv2;
+    const actions = J ? React.createElement(React.Fragment, null,
+      cur.cta && cur.href ? React.createElement(J.Button, { key: 'a', href: cur.href }, cur.cta) : null,
+      idx < tl.length - 1 ? React.createElement(J.Button, { key: 'b', variant: cur.cta ? 'secondary' : 'primary', onClick: () => { const n = idx + 1, snap = window.JR.avancer(d.id); flash('Étape ' + n + ' validée', snap); } }, 'J’ai fait cette étape') : null,
+      ET.annulable(idx - 1) ? React.createElement(J.Button, { key: 'c', variant: 'tertiary', onClick: () => goBack(idx - 1) }, 'Revenir à l’étape précédente') : null) : null;
+    return Object.assign(base, {
+      parcours: meta.titre, adresse, total, done: idx + ' sur ' + tl.length, idx,
+      stepLabels: tl.map(s => s.court || s.libelle), stepN: idx + 1, stepTotal: tl.length,
+      curTitle: cur.libelle, curDesc: cur.description || '', curDelai: cur.delai || '', curDuree: cur.duree || '', curTips: cur.tips || [], curActions: actions,
+      notNarrow: !narrow, stepsAcc: [{ title: 'Les étapes', count: idx + ' sur ' + tl.length + ' faites', items: tl.map((s, i) => (i + 1) + '. ' + s.libelle + ' · ' + (i < idx ? 'Faite' : i === idx ? 'En cours' : 'À venir')) }],
+      steps: tl.map((s, i) => ({ undoable: ET.annulable(i), linkOp: this.state.hover === i ? 1 : 0, enter: () => this.setState({ hover: i }), leave: () => this.setState({ hover: -1 }), undo: () => goBack(i), label: (i + 1) + '. ' + s.libelle, status: i < idx ? 'valide' : i === idx ? 'en-cours' : 'a-venir', word: i < idx ? 'Faite' : i === idx ? 'En cours' : 'À venir',
+        row: { display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', alignItems: 'center', gap: 'var(--jr-s-3)', minHeight: 'var(--jr-s-8)', padding: 'var(--jr-s-3) var(--jr-s-5)', borderTop: i ? 'var(--jr-border) solid var(--jr-line)' : 0, borderLeft: i === idx ? 'var(--jr-border-strong) solid var(--jr-leaf)' : 'var(--jr-border-strong) solid transparent', background: i === idx ? 'var(--jr-leaf-wash)' : 'transparent' } })),
+      docs: (D.getDocumentsAttendus(d) || []).map((doc, i) => ({ first: i === 0, label: doc.libelle, caption: doc.obligatoire ? 'Obligatoire' : 'Selon votre projet',
+        icon: /imposition/.test(doc.key) ? 'avis-imposition' : /devis/.test(doc.key) ? 'devis' : 'document',
+        status: recus.some(r => r === doc.key || (r && r.key === doc.key)) ? 'valide' : 'manquant' })),
+    });
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Annuaire des artisans RGE — JungleRenov</title>
+  <link rel="stylesheet" href="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/styles.css">
+  <link rel="stylesheet" href="lib/css/annuaire-artisans.css">
+  <script src="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/_ds_bundle.js"></script>
+  <script src="lib/_jr_legacy.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon-couleur-32.svg">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon-couleur-180.svg">
+</helmet>
+<div style="background: var(--paper); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column;">
+  <dc-import name="site-header" mode="espace" current="annuaire-artisans" hint-size="100%,72px"></dc-import>
+  <div class="jr-legacy" id="jr-legacy-root" data-screen-label="Annuaire artisans" style="flex: 1;"></div>
+  <dc-import name="site-footer" compact="{{ true }}" hint-size="100%,200px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    const name = 'annuaire-artisans';
+    const go = () => {
+      if (!window.jrBoot) return setTimeout(go, 40);
+      fetch('pages/' + name + '/scripts.json').then(r => r.json()).then(m => {
+        const root = document.getElementById('jr-legacy-root');
+        (m.rootClass || '').split(/\s+/).filter(Boolean).forEach(c => root.classList.add(c));
+        if (m.tunnel) document.body.setAttribute('data-tunnel', m.tunnel);
+        window.jrBoot({ root, partial: 'partials/' + name + '.html', scripts: m.scripts || m });
+      });
+    };
+    go();
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+/* Arsenica Display (Zetafonts) et Komet (Jan Fromm) sont commerciales et non fournies.
+   On les appelle en local() ; à défaut, substitution de la charte : Abril Fatface (Arsenica), Red Hat Display (Komet). */
+@import url("https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Red+Hat+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,900&display=swap");
+@font-face{font-family:"Arsenica Display";src:local("Arsenica Display Extrabold"),local("ArsenicaDisplay-Extrabold"),local("Arsenica Display ExtraBold"),local("ArsenicaDisplay-ExtraBold");font-weight:800;font-style:normal;font-display:swap}
+@font-face{font-family:"Komet";src:local("Komet Regular"),local("Komet-Regular"),local("Komet");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Komet";src:local("Komet Medium"),local("Komet-Medium");font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:"Komet";src:local("Komet Bold"),local("Komet-Bold");font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:"Komet";src:local("Komet Heavy"),local("Komet-Heavy");font-weight:900;font-style:normal;font-display:swap}
+@font-face{font-family:"Komet";src:local("Komet Heavy Italic"),local("Komet-HeavyItalic");font-weight:900;font-style:italic;font-display:swap}
