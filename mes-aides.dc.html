@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Mes aides — JungleRenov</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/styles.css">
+  <link rel="stylesheet" href="lib/components.css">
+  <script src="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/_ds_bundle.js"></script>
+  <script src="lib/jr-v2.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon-couleur-32.svg">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon-couleur-180.svg">
+  <style>*{box-sizing:border-box} .jr2 a{color:var(--jr-leaf)} .jr2 a:hover{color:var(--jr-ink)}</style>
+</helmet>
+<div class="jr2" style="background: var(--jr-surface-page); min-height: 100vh; display: flex; flex-direction: column;">
+  <dc-import name="site-header" mode="espace" current="mes-aides" hint-size="100%,72px"></dc-import>
+  <div style="flex: 1; display: grid; grid-template-columns: {{ layoutCols }};">
+    <div style="min-width: 0;">
+      <x-import component-from-global-scope="JRv2.Sidebar" sections="{{ nav }}" widget="{{ widget }}" dossiers="{{ dossiers }}" dossier-id="{{ dossierId }}" on-dossier="{{ onDossier }}" on-delete="{{ onDelete }}" user="{{ user }}" mobile="{{ narrow }}" hint-size="100%,480px"></x-import>
+    </div>
+    <main data-screen-label="Mes aides" style="min-width: 0; width: 100%; max-width: 60rem; padding: var(--jr-s-6) {{ pad }} var(--jr-s-8); display: flex; flex-direction: column; gap: var(--jr-s-5);">
+      <sc-if value="{{ loading }}" hint-placeholder-val="{{ true }}">
+        <x-import component-from-global-scope="JRv2.Skeleton" lines="{{ 6 }}" hint-size="100%,160px"></x-import>
+      </sc-if>
+      <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+        <h1 style="margin: 0; font: var(--jr-type-h1);">Mes aides</h1>
+        <x-import component-from-global-scope="JRv2.EmptyState" icon="revenus" title="Aucune simulation pour l’instant" action="{{ emptyAction }}" hint-size="100%,200px">La simulation prend cinq minutes et ne demande pas de compte.</x-import>
+      </sc-if>
+      <sc-if value="{{ has }}" hint-placeholder-val="{{ false }}">
+        <header style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--jr-s-3) var(--jr-s-5);">
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); min-width: 0;">
+            <h1 style="margin: 0; font: var(--jr-type-h1);">Mes aides</h1>
+            <p style="margin: 0; font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70); text-wrap: pretty;">{{ subtitle }}</p>
+          </div>
+          <x-import component-from-global-scope="JRv2.Button" variant="tertiary" href="choix-parcours.dc.html" hint-size="auto,48px">Refaire une simulation</x-import>
+        </header>
+
+
+        <section data-surface="dark" aria-label="Aides estimées" style="background: var(--jr-ink); color: var(--jr-paper); border-radius: var(--jr-radius-m); padding: {{ heroPad }}; display: flex; flex-direction: column; gap: var(--jr-s-2);">
+          <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-paper);">{{ totalTitle }}</span>
+          <span style="font: 800 {{ bigSize }}/1 var(--font-display); letter-spacing: -0.02em; color: var(--jr-sprout); font-variant-numeric: tabular-nums; white-space: nowrap;">{{ total }}</span>
+          <sc-if value="{{ hasTotalLine }}" hint-placeholder-val="{{ true }}"><span style="font: var(--jr-type-label); font-weight: 400; color: var(--jr-paper); text-wrap: pretty;">{{ totalLine }}</span></sc-if>
+          <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-paper);">barème 2026 · montant indicatif</span>
+          <sc-if value="{{ noDevis }}" hint-placeholder-val="{{ false }}"><div style="margin-top: var(--jr-s-2);"><x-import component-from-global-scope="JRv2.Button" variant="on-dark-secondary" href="dashboard.dc.html#devis" hint-size="auto,48px">Saisir mes devis</x-import></div></sc-if>
+        </section>
+
+        <section aria-labelledby="detail-t" style="display: flex; flex-direction: column; gap: var(--jr-s-3);">
+          <h2 id="detail-t" style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Détail, dans l’ordre du calcul</h2>
+          <sc-for list="{{ cards }}" as="c" hint-placeholder-count="4">
+            <sc-if value="{{ c.sep }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; align-items: center; gap: var(--jr-s-3); margin-top: var(--jr-s-3);"><span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70); white-space: nowrap;">Hors total</span><span style="flex: 1; height: 1px; background: var(--jr-line);"></span></div>
+            </sc-if>
+            <article style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: var(--jr-s-4) var(--jr-s-5); display: grid; grid-template-columns: {{ cardCols }}; grid-template-areas: {{ cardAreas }}; column-gap: var(--jr-s-4); row-gap: var(--jr-s-1); align-items: start;">
+              <div style="grid-area: ic;"><x-import component-from-global-scope="JRv2.IconBadge" name="{{ c.icon }}" size="m" variant="lave" hint-size="40px,40px"></x-import></div>
+              <h3 style="grid-area: nom; margin: 0; font: var(--jr-type-label-strong); color: var(--jr-ink); text-wrap: pretty;">{{ c.nom }}</h3>
+              <span style="grid-area: amt; justify-self: {{ amtAlign }}; font: 700 20px/26px var(--jr-font-text); font-variant-numeric: tabular-nums; color: var(--jr-ink); white-space: nowrap;">{{ c.amt }}</span>
+              <p style="grid-area: cond; margin: 0; font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink); text-wrap: pretty;">{{ c.cond }}</p>
+              <div style="grid-area: tag; justify-self: {{ amtAlign }};"><x-import component-from-global-scope="JRv2.StatusTag" status="{{ c.tag }}" hint-size="auto,32px">{{ c.word }}</x-import></div>
+              <p style="grid-area: src; margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">{{ c.src }}</p>
+              <sc-if value="{{ c.hasAction }}" hint-placeholder-val="{{ false }}">
+                <div style="grid-area: act; margin-top: var(--jr-s-1);"><x-import component-from-global-scope="JRv2.Button" variant="tertiary" href="{{ c.actHref }}" icon-after="chevron" dc-props="{{ c.actProps }}" hint-size="auto,48px">{{ c.actLabel }}</x-import></div>
+              </sc-if>
+            </article>
+          </sc-for>
+        </section>
+
+        <div style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: 0 var(--jr-s-5);">
+          <x-import component-from-global-scope="JRv2.Accordion" variant="dense" sections="{{ notes }}" hint-size="100%,48px"></x-import>
+        </div>
+      </sc-if>
+    </main>
+  </div>
+  <dc-import name="site-footer" compact="{{ true }}" hint-size="100%,200px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { w: window.innerWidth, ready: false, simId: '' };
+  componentDidMount() {
+    this.onR = () => this.setState({ w: window.innerWidth }); window.addEventListener('resize', this.onR);
+    this.onJ = () => this.forceUpdate(); window.addEventListener('jr:dossier', this.onJ);
+    const seq = ['lib/_storage.js', 'lib/_dossiers.js', 'lib/_user.js', 'lib/_auth_guard.js', 'lib/_dossier_courant.js'];
+    const load = (l) => { if (!l.length) return this.setState({ ready: true });
+      if (document.querySelector('script[data-jr-src="' + l[0] + '"]')) return load(l.slice(1));
+      const s = document.createElement('script'); s.src = l[0]; s.async = false; s.setAttribute('data-jr-src', l[0]); s.onload = s.onerror = () => load(l.slice(1)); document.body.appendChild(s); };
+    load(seq);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); window.removeEventListener('jr:dossier', this.onJ); }
+  renderVals() {
+    const w = this.state.w, narrow = w < 880, small = w < 640, U = window.RFUser;
+    const eur = n => Math.round(n || 0).toLocaleString('fr-FR') + '\u202f€';
+    const fd = s => { const t = s ? new Date(s) : null; return t && !isNaN(t) ? t.toLocaleDateString('fr-FR') : ''; };
+    const E = this.state.ready && window.JR ? window.JR.espace('mes-aides', () => this.forceUpdate()) : null;
+    const dos = E ? E.dossier : null;
+    const sim = dos ? { id: dos.id, date: dos.createdAt, r: dos.result || {}, d: dos, p: dos.profile || {}, t: E.totaux } : null;
+    const base = { nav: E ? E.nav : [], narrow, layoutCols: narrow ? 'minmax(0, 1fr)' : 'calc(var(--jr-s-9) * 3) minmax(0, 1fr)', pad: small ? 'var(--jr-margin-mobile)' : 'var(--jr-s-7)',
+      widget: E ? E.widget : { label: 'Aides estimées', amount: '—', caption: '' }, dossiers: E ? E.dossiers : null, dossierId: E ? E.dossierId : '', onDossier: E ? E.onDossier : null, onDelete: E ? E.onDelete : null,
+      user: E ? E.user : { initials: 'JR', name: 'Mon compte', email: '' },
+      loading: !this.state.ready, empty: this.state.ready && !sim, has: !!sim,
+      emptyAction: window.JRv2 ? React.createElement(window.JRv2.Button, { href: 'choix-parcours.dc.html' }, 'Faire ma simulation') : null };
+    if (!sim) return Object.assign(base, { cards: [], notes: [] });
+
+    const r = sim.r, L = window.JR.lecture(sim.d);
+    const p = sim.p || {}, adresse = p.address || p.adresse || (p.logement && (p.logement.address || p.logement.adresse)) || (sim.d && sim.d.adresseLogement) || '';
+    const date = fd(sim.date) || new Date().toLocaleDateString('fr-FR');
+    /* Avancement par aide : suivi saisi s'il existe, sinon déduit de la remise du dossier. */
+    const suivi = (sim.d && sim.d.suivi && sim.d.suivi.aides) || {}, remis = !!(sim.d && sim.d.transmisLe);
+    const ST = { 'Estimée': 'a-venir', 'Demande à déposer': 'en-cours', 'Déposée': 'en-cours', 'Accordée': 'valide', 'Versée': 'valide' };
+    const word = k => suivi[k] || ((k === 'mpr' || k === 'mpa' || k === 'mpld') && remis ? 'Demande à déposer' : 'Estimée');
+    const act = (k, w) => (k === 'mpr' || k === 'mpa' || k === 'mpld') && w === 'Demande à déposer' ? ['Déposer sur monprojet.anah.gouv.fr', 'https://monprojet.anah.gouv.fr'] : k === 'cee' && w === 'Estimée' && L && !/inclus/.test((L.forfaits.find(x => x.k === 'cee') || {}).amt || '') ? ['Signer l’offre CEE', 'mes-documents.dc.html'] : null;
+    const C = L ? L.pourcentages.concat(L.forfaits).map(x => Object.assign({}, x, { src: x.micro ? x.micro + ' · ' + x.src : x.src, word: word(x.k), act: act(x.k, word(x.k)) })) : [];
+    const nIn = C.length;
+    (L ? L.horsTotal : []).forEach(x => C.push(Object.assign({}, x, { word: word(x.k), out: true })));
+    const en = r.energie || {};
+    const notes = [];
+    notes.push('Décret du 25 août 2026 : l’isolation des combles et le chauffage solaire combiné ne sont plus finançables seuls par geste depuis le 1er septembre 2026 ; ils restent finançables en rénovation d’ampleur.');
+    if (en.economieAn) notes.push('Économie d’énergie estimée : ' + eur(en.economieAn) + ' par an' + (en.hypothese ? ', à partir d’un prix moyen de l’énergie.' : ', d’après votre DPE.'));
+    notes.push('CEE : les offres des fournisseurs varient ; le total retient la borne basse de la fourchette. L’offre doit être signée avant le devis.');
+    notes.push('Les aides en pourcentage ne sont chiffrées qu’à partir de vos devis : saisissez-les dans Mon projet.');
+    notes.push('Tous les montants sont des estimations. Seuls l’Anah et les organismes compétents décident du montant attribué.');
+    return Object.assign(base, {
+      subtitle: sim.t.parcours + (adresse ? ' · ' + adresse : '') + ' · simulation du ' + date,
+      heroPad: small ? 'var(--jr-s-5)' : 'var(--jr-s-5) var(--jr-s-6)', bigSize: small ? '40px' : '56px',
+      totalTitle: L ? L.titre : 'Aides estimées', total: L ? L.montantTxt : '—', totalLine: L ? L.ligne : '', hasTotalLine: !!(L && L.ligne), noDevis: !!(L && L.base !== 'devis' && L.hasPct),
+      cardCols: small ? 'auto minmax(0, 1fr)' : 'auto minmax(0, 1fr) auto',
+      cardAreas: small ? '"ic nom" "ic amt" "ic cond" "ic tag" "ic src" "ic act"' : '"ic nom amt" "ic cond tag" "ic src src" "ic act act"',
+      amtAlign: small ? 'start' : 'end',
+      cards: C.map((c, i) => ({ ...c, sep: i === nIn && nIn < C.length, tag: ST[c.word] || 'a-venir', hasAction: !!c.act, actLabel: c.act ? c.act[0] : '', actHref: c.act ? c.act[1] : '', actProps: c.act && /^https?:/.test(c.act[1]) ? { target: '_blank', rel: 'noopener' } : {} })),
+      notes: [{ title: 'À savoir', count: notes.length + ' notes', items: notes }],
+    });
+  }
+}
+</script>
+</body>
+</html>

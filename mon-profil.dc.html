@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Mon profil — JungleRenov</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/styles.css">
+  <link rel="stylesheet" href="lib/components.css">
+  <script src="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/_ds_bundle.js"></script>
+  <script src="lib/jr-v2.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon-couleur-32.svg">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon-couleur-180.svg">
+  <style>*{box-sizing:border-box} .jr2 a{color:var(--jr-leaf)} .jr2 a:hover{color:var(--jr-ink)}</style>
+</helmet>
+<div class="jr2" style="background: var(--jr-surface-page); min-height: 100vh; display: flex; flex-direction: column;">
+  <dc-import name="site-header" mode="espace" current="mon-profil" hint-size="100%,72px"></dc-import>
+  <div style="flex: 1; display: grid; grid-template-columns: {{ layoutCols }};">
+    <div style="min-width: 0;">
+      <x-import component-from-global-scope="JRv2.Sidebar" sections="{{ nav }}" widget="{{ widget }}" dossiers="{{ dossiers }}" dossier-id="{{ dossierId }}" on-dossier="{{ onDossier }}" on-delete="{{ onDelete }}" user="{{ user }}" mobile="{{ narrow }}" hint-size="100%,480px"></x-import>
+    </div>
+    <main data-screen-label="Mon profil" style="min-width: 0; width: 100%; max-width: 52rem; padding: var(--jr-s-6) {{ pad }} var(--jr-s-8); display: flex; flex-direction: column; gap: var(--jr-s-6);">
+      <header style="display: flex; flex-direction: column; gap: var(--jr-s-2);">
+        <h1 style="margin: 0; font: var(--jr-type-h1);">Mon profil</h1>
+        <p style="margin: 0; font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70); text-wrap: pretty;">{{ subtitle }}</p>
+      </header>
+      <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+        <x-import component-from-global-scope="JRv2.EmptyState" icon="proprietaire" title="Aucun dossier pour l’instant" action="{{ emptyAction }}" hint-size="100%,200px">Votre profil se remplit avec votre première simulation.</x-import>
+      </sc-if>
+      <sc-if value="{{ has }}" hint-placeholder-val="{{ false }}">
+        <form onSubmit="{{ save }}" style="display: flex; flex-direction: column; gap: var(--jr-s-5);">
+          <section aria-labelledby="s-log" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: var(--jr-s-5); display: flex; flex-direction: column; gap: var(--jr-s-4);">
+            <h2 id="s-log" style="margin: 0; font: var(--jr-type-h3, 700 22px/28px var(--jr-font-text));">Mon logement</h2>
+            <x-import component-from-global-scope="JRv2.TextField" id="p-addr" label="Adresse complète" value="{{ f.address }}" on-change="{{ set.address }}" optional="{{ true }}" hint-size="100%,88px"></x-import>
+            <div style="display: grid; grid-template-columns: {{ cols2 }}; gap: var(--jr-s-4);">
+              <x-import component-from-global-scope="JRv2.Select" id="p-type" label="Type de logement" options="{{ optType }}" value="{{ f.type }}" on-change="{{ set.type }}" hint-size="100%,88px"></x-import>
+              <x-import component-from-global-scope="JRv2.TextField" id="p-surf" label="Surface habitable" unit="m²" value="{{ f.surface }}" on-change="{{ set.surface }}" optional="{{ true }}" hint-size="100%,88px"></x-import>
+              <x-import component-from-global-scope="JRv2.Select" id="p-dept" label="Département" options="{{ optDept }}" value="{{ f.dept }}" on-change="{{ set.dept }}" hint-size="100%,88px"></x-import>
+              <x-import component-from-global-scope="JRv2.Select" id="p-epci" label="Intercommunalité (EPCI)" options="{{ optEpci }}" value="{{ f.epci }}" on-change="{{ set.epci }}" hint-size="100%,88px"></x-import>
+              <x-import component-from-global-scope="JRv2.Select" id="p-dpe" label="Classe DPE actuelle" options="{{ optDpe }}" value="{{ f.dpe }}" on-change="{{ set.dpe }}" hint-size="100%,88px"></x-import>
+              <sc-if value="{{ isEnergie }}" hint-placeholder-val="{{ true }}">
+                <x-import component-from-global-scope="JRv2.Select" id="p-heat" label="Chauffage principal" options="{{ optHeat }}" value="{{ f.heat }}" on-change="{{ set.heat }}" hint-size="100%,88px"></x-import>
+              </sc-if>
+            </div>
+          </section>
+
+          <section aria-labelledby="s-foy" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: var(--jr-s-5); display: flex; flex-direction: column; gap: var(--jr-s-4);">
+            <h2 id="s-foy" style="margin: 0; font: var(--jr-type-h3, 700 22px/28px var(--jr-font-text));">Mon foyer</h2>
+            <div style="display: grid; grid-template-columns: {{ cols2 }}; gap: var(--jr-s-4);">
+              <x-import component-from-global-scope="JRv2.TextField" id="p-rfr" label="Revenu fiscal de référence" hint="Il figure en page 1 de votre avis d’imposition." unit="€" value="{{ f.rfr }}" on-change="{{ set.rfr }}" hint-size="100%,112px"></x-import>
+              <x-import component-from-global-scope="JRv2.Select" id="p-parts" label="Personnes au foyer" options="{{ optParts }}" value="{{ f.personnes }}" on-change="{{ set.personnes }}" hint-size="100%,88px"></x-import>
+            </div>
+          </section>
+
+          <sc-if value="{{ isEnergie }}" hint-placeholder-val="{{ true }}">
+            <section aria-labelledby="s-trav" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: var(--jr-s-5); display: flex; flex-direction: column; gap: var(--jr-s-3);">
+              <h2 id="s-trav" style="margin: 0; font: var(--jr-type-h3, 700 22px/28px var(--jr-font-text));">Mes travaux envisagés</h2>
+              <div style="display: grid; grid-template-columns: {{ cols2 }}; gap: 0 var(--jr-s-4);">
+                <sc-for list="{{ works }}" as="w" hint-placeholder-count="8">
+                  <label style="display: flex; align-items: center; gap: var(--jr-s-3); min-height: 44px; font: var(--jr-type-label); font-weight: 400; cursor: pointer;"><input type="checkbox" checked="{{ w.on }}" onChange="{{ w.toggle }}" style="width: 20px; height: 20px; accent-color: var(--jr-leaf); flex: none;"><span>{{ w.label }}</span></label>
+                </sc-for>
+              </div>
+            </section>
+          </sc-if>
+
+          <sc-if value="{{ hasErr }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="JRv2.Notice" tone="bloque" title="Recalcul non effectué" hint-size="100%,96px">{{ err }}</x-import>
+          </sc-if>
+          <div style="position: sticky; bottom: 0; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: var(--jr-s-3) var(--jr-s-4); padding: var(--jr-s-3) 0; background: var(--jr-surface-page); border-top: var(--jr-border) solid var(--jr-line);">
+            <x-import component-from-global-scope="JRv2.Button" type="submit" loading="{{ saving }}" disabled="{{ clean }}" hint-size="auto,48px">Enregistrer et recalculer</x-import>
+            <span style="font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);">{{ dirtyNote }}</span>
+          </div>
+        </form>
+
+        <section aria-labelledby="s-dos" style="display: flex; flex-direction: column; gap: var(--jr-s-3);">
+          <h2 id="s-dos" style="margin: 0; font: var(--jr-type-h3, 700 22px/28px var(--jr-font-text));">Mes dossiers</h2>
+          <div style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); overflow: hidden;">
+            <sc-for list="{{ dossierRows }}" as="d" hint-placeholder-count="2">
+              <div style="display: grid; grid-template-columns: {{ rowCols }}; align-items: center; gap: var(--jr-s-2) var(--jr-s-4); padding: var(--jr-s-3) var(--jr-s-5); border-top: {{ d.line }};">
+                <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+                  <span style="font: var(--jr-type-label-strong);">{{ d.label }}</span>
+                  <span style="font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);">{{ d.meta }}</span>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: var(--jr-s-2);">
+                  <sc-if value="{{ d.dup }}" hint-placeholder-val="{{ false }}"><x-import component-from-global-scope="JRv2.StatusTag" status="manquant" hint-size="auto,32px">Doublon probable</x-import></sc-if>
+                  <sc-if value="{{ d.cur }}" hint-placeholder-val="{{ false }}"><x-import component-from-global-scope="JRv2.StatusTag" status="valide" hint-size="auto,32px">Affiché</x-import></sc-if>
+                  <x-import component-from-global-scope="JRv2.Button" variant="tertiary" on-click="{{ d.ask }}" hint-size="auto,48px">Supprimer ce dossier</x-import>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <section aria-labelledby="s-acc" style="display: flex; flex-direction: column; gap: var(--jr-s-2);">
+          <h2 id="s-acc" style="margin: 0; font: var(--jr-type-h3, 700 22px/28px var(--jr-font-text));">Mon compte</h2>
+          <p style="margin: 0; font: var(--jr-type-label); font-weight: 400;">{{ account }}</p>
+        </section>
+      </sc-if>
+    </main>
+  </div>
+  <dc-import name="site-footer" compact="{{ true }}" hint-size="100%,200px"></dc-import>
+  <x-import component-from-global-scope="JRv2.Modal" open="{{ modalOpen }}" title="Supprimer ce dossier ?" on-close="{{ closeModal }}" actions="{{ modalActions }}" hint-size="0,0">{{ modalText }}</x-import>
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; left: 50%; bottom: var(--jr-s-6); transform: translateX(-50%); z-index: 50; width: max-content; max-width: calc(100vw - 32px);"><x-import component-from-global-scope="JRv2.Toast" tone="valide" hint-size="320px,48px">{{ toast }}</x-import></div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { w: window.innerWidth, ready: false, f: null, forId: '', dirty: false, changed: {}, err: '', saving: false, toast: '', del: null, tick: 0 };
+  componentDidMount() {
+    this.onR = () => this.setState({ w: window.innerWidth }); window.addEventListener('resize', this.onR);
+    this.onJ = () => this.setState(s => ({ tick: s.tick + 1 })); window.addEventListener('jr:dossier', this.onJ);
+    const seq = ['lib/_storage.js', 'lib/_dossiers.js', 'lib/_user.js', 'lib/_auth_guard.js', 'lib/_travaux_catalog.js', 'lib/_dossier_courant.js'];
+    const load = (l) => { if (!l.length) return this.setState({ ready: true });
+      if (document.querySelector('script[data-jr-src="' + l[0] + '"]')) return load(l.slice(1));
+      const s = document.createElement('script'); s.src = l[0]; s.async = false; s.setAttribute('data-jr-src', l[0]); s.onload = s.onerror = () => load(l.slice(1)); document.body.appendChild(s); };
+    load(seq);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); window.removeEventListener('jr:dossier', this.onJ); clearTimeout(this.tT); }
+  /* Champs pré-remplis depuis le dossier courant (profil, puis entrée du moteur, puis résultat). */
+  fromDossier(d) {
+    const p = d.profile || {}, L = p.logement || {}, F = p.foyer || {}, c = p.calcInput || {}, r = d.result || {}, pr = r.profile || {};
+    const dpe = L.dpe || c.dpeCurrent || (d.type === 'indigne' ? c.dpeAvant : '') || '';
+    return {
+      address: p.address || L.address || L.adresse || '',
+      type: L.type || c.typeLogement || 'maison', surface: String(L.surface || c.surface || ''),
+      dept: String(L.dept || c.dept || pr.dept || (String(p.address || '').match(/\b(\d{2})\d{3}\b/) || [])[1] || ''),
+      epci: L.epci || c.epci || pr.epci || '', dpe: dpe || '?',
+      heat: L.chauffage || ({ electrique: 'elec' })[c.heat] || c.heat || 'fioul',
+      rfr: String(F.rfr != null ? F.rfr : (c.rfr || '')), personnes: String(F.personnes || c.foyer || 1),
+      travaux: (p.travaux && p.travaux.length ? p.travaux : (c.selection || [])).slice(),
+    };
+  }
+  renderVals() {
+    const w = this.state.w, narrow = w < 880, small = w < 640, h = React.createElement, J = window.JRv2;
+    const E = this.state.ready && window.JR ? window.JR.espace('mon-profil', () => this.setState({ f: null, forId: '', dirty: false })) : null;
+    const d = E ? E.dossier : null;
+    let f = this.state.f;
+    if (d && (!f || this.state.forId !== d.id)) { f = this.fromDossier(d); setTimeout(() => this.setState({ f, forId: d.id, dirty: false, changed: {}, err: '' }), 0); }
+    const up = k => e => { const v = e && e.target ? e.target.value : e; this.setState(s => ({ f: Object.assign({}, s.f, { [k]: v }, k === 'dept' ? { epci: v === '54' ? 'metropole_grand_nancy' : v === '57' ? 'metz_metropole' : 'autre_grand_est' } : {}), dirty: true, changed: Object.assign({}, s.changed, { [k]: 1 }, k === 'dept' ? { epci: 1 } : {}) })); };
+    const set = {}; ['address', 'type', 'surface', 'dept', 'epci', 'dpe', 'heat', 'rfr', 'personnes'].forEach(k => set[k] = up(k));
+    const num = v => { const n = parseInt(String(v || '').replace(/\D/g, ''), 10); return Number.isFinite(n) ? n : 0; };
+    const cat = window.RFTravauxCatalog, items = cat && d ? cat.get('energetique') : [];
+    const dup = E ? window.JR.doublons() : {};
+    const base = { nav: E ? E.nav : [], narrow, layoutCols: narrow ? 'minmax(0, 1fr)' : 'calc(var(--jr-s-9) * 3) minmax(0, 1fr)', pad: small ? 'var(--jr-margin-mobile)' : 'var(--jr-s-7)',
+      widget: E ? E.widget : { label: 'Aides estimées', amount: '—', caption: '' }, dossiers: E ? E.dossiers : null, dossierId: E ? E.dossierId : '', onDossier: E ? E.onDossier : null, onDelete: E ? E.onDelete : null,
+      user: E ? E.user : { initials: 'JR', name: 'Mon compte', email: '' },
+      empty: this.state.ready && !d, has: !!(d && f), subtitle: d ? 'Les informations de votre dossier ' + E.totaux.parcours.toLowerCase() + '. Modifiez-les puis recalculez vos aides.' : '',
+      emptyAction: J ? h(J.Button, { href: 'choix-parcours.dc.html' }, 'Faire ma simulation') : null,
+      toast: this.state.toast, modalOpen: !!this.state.del, closeModal: () => this.setState({ del: null }),
+      modalText: this.state.del ? 'Le dossier « ' + this.state.del.label + ' » sera retiré de votre espace. Cette action ne peut pas être annulée.' : '',
+      modalActions: J && this.state.del ? [h(J.Button, { key: 'c', variant: 'secondary', onClick: () => this.setState({ del: null }) }, 'Annuler'), h(J.Button, { key: 'd', variant: 'destructive', onClick: () => { window.JR.supprimerDossier(this.state.del.id); this.setState({ del: null, f: null, forId: '', toast: 'Dossier supprimé' }); clearTimeout(this.tT); this.tT = setTimeout(() => this.setState({ toast: '' }), 4000); } }, 'Supprimer')] : null };
+    if (!d || !f) return Object.assign(base, { f: {}, set, works: [], dossierRows: [], optType: [], optDept: [], optDpe: [], optHeat: [], optParts: [] });
+    return Object.assign(base, {
+      f, set, isEnergie: d.type === 'energetique', cols2: small ? 'minmax(0, 1fr)' : 'repeat(2, minmax(0, 1fr))', rowCols: small ? 'minmax(0, 1fr)' : 'minmax(0, 1fr) auto',
+      optType: [{ value: 'maison', label: 'Maison' }, { value: 'appartement', label: 'Appartement' }],
+      optDept: [['54', 'Meurthe-et-Moselle'], ['55', 'Meuse'], ['57', 'Moselle'], ['88', 'Vosges']].map(x => ({ value: x[0], label: x[0] + ' — ' + x[1] })).concat(f.dept && !/^(54|55|57|88)$/.test(f.dept) ? [{ value: f.dept, label: f.dept }] : []),
+      optEpci: (({ '54': [['metropole_grand_nancy', 'Métropole du Grand Nancy'], ['cc_pays_sel_vermois', 'CC des Pays du Sel et du Vermois'], ['cc_seille_grand_couronne', 'CC Seille et Grand Couronné'], ['autre_grand_est', 'Autre intercommunalité (54)']], '57': [['metz_metropole', 'Metz Métropole'], ['autre_grand_est', 'Autre intercommunalité (57)']], '55': [['autre_grand_est', 'Intercommunalité de la Meuse']], '88': [['autre_grand_est', 'Intercommunalité des Vosges']] })[f.dept] || [['autre_grand_est', 'Autre intercommunalité']]).map(x => ({ value: x[0], label: x[1] })),
+      optDpe: ['A', 'B', 'C', 'D', 'E', 'F', 'G'].map(x => ({ value: x, label: 'Classe ' + x })).concat([{ value: '?', label: 'Je ne sais pas' }]),
+      optHeat: [['gaz', 'Gaz'], ['fioul', 'Fioul'], ['elec', 'Électricité'], ['bois', 'Bois']].map(x => ({ value: x[0], label: x[1] })),
+      optParts: [1, 2, 3, 4, 5, 6].map(n => ({ value: String(n), label: n === 6 ? '6 ou plus' : String(n) })),
+      works: items.map(t => ({ label: t.label, on: f.travaux.indexOf(t.id) !== -1, toggle: () => this.setState(s => { const tr = s.f.travaux.slice(), i = tr.indexOf(t.id); if (i >= 0) tr.splice(i, 1); else tr.push(t.id); return { f: Object.assign({}, s.f, { travaux: tr }), dirty: true, changed: Object.assign({}, s.changed, { travaux: 1 }) }; }) })),
+      err: this.state.err || '', hasErr: !!this.state.err, clean: !this.state.dirty, saving: this.state.saving, dirtyNote: this.state.dirty ? 'Modifications non enregistrées' : 'Aides calculées sur ces informations',
+      save: e => { if (e && e.preventDefault) e.preventDefault(); if (!this.state.dirty) return; this.setState({ saving: true });
+        /* Seuls les champs réellement modifiés partent au recalcul. */
+        const ch = this.state.changed || {}, L = {}, F = {}, patch = {};
+        if (ch.address) { patch.address = f.address; L.address = f.address; }
+        if (ch.type) L.type = f.type; if (ch.surface) L.surface = num(f.surface); if (ch.dept) L.dept = f.dept; if (ch.epci) L.epci = f.epci;
+        if (ch.dpe) L.dpe = f.dpe; if (ch.heat) L.chauffage = f.heat;
+        if (ch.rfr) F.rfr = num(f.rfr); if (ch.personnes) F.personnes = num(f.personnes) || 1;
+        if (Object.keys(L).length) patch.logement = L; if (Object.keys(F).length) patch.foyer = F;
+        if (ch.travaux && d.type === 'energetique') patch.travaux = f.travaux.slice();
+        window.JR.enregistrerEtRecalculer(d.id, patch).then(t => { this.setState({ saving: false, dirty: false, changed: {}, err: '', f: null, forId: '', toast: 'Aides recalculées : ' + E.eur(t.aides) }); clearTimeout(this.tT); this.tT = setTimeout(() => this.setState({ toast: '' }), 5000); })
+          .catch(x => this.setState({ saving: false, err: (x && x.message) || 'Le recalcul n’a pas abouti. Rien n’a été modifié.' })); },
+      dossierRows: E.liste.map((x, i) => ({ label: x.label, meta: (x.dossier.transmisLe ? 'Remis au partenaire' : 'Brouillon') + ((x.dossier.profile || {}).address ? ' · ' + x.dossier.profile.address : ''), dup: !!dup[x.id], cur: x.id === d.id, line: i ? 'var(--jr-border) solid var(--jr-line)' : '0', ask: () => this.setState({ del: { id: x.id, label: x.label } }) })),
+      account: [E.user.email, E.user.name].filter(Boolean).join(' · ') || 'Compte créé à la remise du dossier.',
+    });
+  }
+}
+</script>
+</body>
+</html>

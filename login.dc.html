@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Connexion — JungleRenov</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/styles.css">
+  <link rel="stylesheet" href="lib/components.css">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon-couleur-32.svg">
+  <script src="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/_ds_bundle.js"></script>
+  <script src="lib/jr-v2.js"></script>
+  <script src="lib/_storage.js"></script>
+  <style>*{box-sizing:border-box}</style>
+</helmet>
+<div class="jr2" style="background: var(--jr-surface-page); color: var(--jr-ink); min-height: 100vh; display: flex; flex-direction: column;">
+  <dc-import name="site-header" mode="tunnel" hint-size="100%,73px"></dc-import>
+  <main data-screen-label="Connexion" style="flex: 1; width: 100%; padding: var(--jr-page-top) var(--jr-page-x) var(--jr-section-gap);">
+    <div style="max-width: calc(var(--jr-s-9) * 4 + var(--jr-s-7) - var(--jr-s-1)); margin: 0 auto; background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: var(--jr-card-pad); display: flex; flex-direction: column; gap: var(--jr-s-5);">
+      <div style="display: flex; flex-direction: column; gap: var(--jr-title-gap);">
+        <h1 style="margin: 0; font: var(--jr-type-h1); white-space: nowrap;">Connexion</h1>
+        <p style="margin: 0; font: var(--jr-type-body); color: var(--jr-ink-70);">Retrouvez votre dossier, vos aides et vos documents.</p>
+      </div>
+      <sc-if value="{{ hasAlert }}" hint-placeholder-val="{{ false }}">
+        <x-import component-from-global-scope="JRv2.Notice" tone="{{ alertTone }}" hint-size="100%,72px">{{ alertMsg }}</x-import>
+      </sc-if>
+      <form novalidate="" onSubmit="{{ submit }}" style="display: flex; flex-direction: column; gap: var(--jr-s-5); margin: 0;">
+        <x-import component-from-global-scope="JRv2.TextField" id="email" label="E-mail" type="email" value="{{ email }}" on-change="{{ onEmail }}" error="{{ errEmail }}" hint-size="100%,84px"></x-import>
+        <x-import component-from-global-scope="JRv2.PasswordField" id="password" label="Mot de passe" hint=" " value="{{ password }}" on-change="{{ onPassword }}" hint-size="100%,84px"></x-import>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--jr-s-3);">
+          <label style="display: inline-flex; align-items: center; gap: var(--jr-s-2); min-height: var(--jr-hit); font: var(--jr-type-label); cursor: pointer;"><input type="checkbox" checked="{{ remember }}" onChange="{{ onRemember }}" style="width: var(--jr-s-5); height: var(--jr-s-5); margin: 0; accent-color: var(--jr-leaf);">Se souvenir de moi</label>
+          <x-import component-from-global-scope="JRv2.Button" variant="tertiary" on-click="{{ forgot }}" hint-size="auto,48px">Mot de passe oublié&#8239;?</x-import>
+        </div>
+        <x-import component-from-global-scope="JRv2.Button" type="submit" full-width="{{ true }}" loading="{{ loading }}" loading-label="Connexion en cours…" hint-size="100%,48px">Se connecter</x-import>
+      </form>
+      <p style="margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--jr-s-1); font: var(--jr-type-label); font-weight: 400;"><span>Pas encore de compte&#8239;?</span><x-import component-from-global-scope="JRv2.Button" variant="tertiary" href="choix-parcours.dc.html" hint-size="auto,48px">Estimer mes aides</x-import></p>
+    </div>
+  </main>
+  <dc-import name="site-footer" compact="{{ true }}" hint-size="100%,200px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { email: '', password: '', remember: true, alert: null, loading: false, errEmail: '' };
+  redirect(role) {
+    if (role === 'super_admin') { location.href = 'super-admin.dc.html'; return; }
+    if (role === 'admin') { location.href = 'admin.dc.html'; return; }
+    const ret = new URLSearchParams(location.search).get('return');
+    if (ret) { try { const d = decodeURIComponent(ret); if (/^[a-z0-9_-]+(\.dc)?\.html(\?|#|$)/i.test(d)) { location.href = d; return; } } catch (_) {} }
+    location.href = 'dashboard.dc.html';
+  }
+  renderVals() {
+    const a = this.state.alert;
+    return {
+      email: this.state.email, password: this.state.password, remember: this.state.remember, loading: this.state.loading, errEmail: this.state.errEmail,
+      hasAlert: !!a, alertTone: a ? a.tone : 'info', alertMsg: a ? a.msg : '',
+      onEmail: e => this.setState({ email: e.target.value, errEmail: '' }), onPassword: e => this.setState({ password: e.target.value }),
+      onRemember: () => this.setState(s => ({ remember: !s.remember })),
+      forgot: () => this.setState({ alert: { tone: 'info', msg: 'Écrivez-nous à contact@junglerenov.fr : nous vous renvoyons un lien de connexion.' } }),
+      submit: async (e) => {
+        e.preventDefault();
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(this.state.email.trim())) { this.setState({ errEmail: 'Indiquez une adresse e-mail valide, par exemple nom@exemple.fr.' }); return; }
+        if (!window.RFStore) return;
+        this.setState({ alert: null, loading: true });
+        try { const { role } = await RFStore.login(this.state.email, this.state.password); this.redirect(role); }
+        catch (err) { this.setState({ alert: { tone: 'bloque', msg: err.message || 'Connexion impossible.' }, loading: false }); }
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

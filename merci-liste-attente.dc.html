@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Inscription enregistrée — JungleRenov</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/styles.css">
+  <script src="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/_ds_bundle.js"></script>
+  <style>*{box-sizing:border-box}</style>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon-couleur-32.svg">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon-couleur-180.svg">
+</helmet>
+<div style="background: var(--paper); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column;">
+  <dc-import name="site-header" mode="tunnel" back-href="glossaire-aides.dc.html" back-label="Glossaire des aides" hint-size="100%,73px"></dc-import>
+  <section data-screen-label="Merci" style="padding: var(--space-5) var(--space-5) 0;">
+    <div data-surface="dark" class="jr-on-dark" style="max-width: var(--content-max); margin: 0 auto; background: var(--ink); color: var(--paper); border-radius: var(--radius-md); padding: clamp(32px, 6vw, 64px); display: flex; flex-direction: column; gap: var(--space-4);">
+      <x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Picto" name="valide" size="48" tone="ivoire" hint-size="48px,48px"></x-import>
+      <h1 style="margin: 0; font: var(--type-h1); font-size: clamp(30px, 6vw, 40px); max-width: 22ch; text-wrap: balance;">Votre inscription sur la liste d'attente est enregistrée</h1>
+      <p style="margin: 0; font: var(--type-lead); max-width: var(--measure);">Nous vous préviendrons par email dès l'ouverture du service dans votre région. Aucun paiement ne vous sera demandé d'ici là.</p>
+      <sc-if value="{{ hasRegion }}" hint-placeholder-val="{{ false }}">
+        <p style="margin: 0; font: var(--type-label);">Votre région : <span style="color: var(--accent-on-dark);">{{ region }}</span></p>
+      </sc-if>
+    </div>
+  </section>
+  <main style="flex: 1; width: 100%; max-width: var(--content-max); margin: 0 auto; padding: var(--space-8) var(--space-5) var(--space-9); display: flex; flex-direction: column; gap: var(--space-8);">
+    <section style="display: flex; flex-direction: column; gap: var(--space-5);">
+      <div style="display: flex; flex-direction: column; gap: var(--space-3); max-width: var(--measure);">
+        <h2 style="margin: 0; font: var(--type-h2);">Notre calendrier d'ouverture</h2>
+        <p style="margin: 0; font: var(--type-body); text-wrap: pretty;">JungleRenov démarre en Lorraine : Meurthe-et-Moselle, Meuse, Moselle, Vosges pour garantir un accompagnement réel : opérateurs AMO identifiés, artisans RGE référencés, aides locales à jour. L'ouverture se fait région par région, au même niveau d'exigence.</p>
+      </div>
+      <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-md);">
+        <li style="display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: var(--space-4); padding: var(--space-5); border-bottom: 1px solid var(--line);">
+          <span style="width: 34px; height: 34px; border-radius: 50%; background: var(--action); color: var(--card); display: grid; place-items: center; font: var(--fw-bold) 17px/1 var(--font-text);">1</span>
+          <div style="display: flex; flex-direction: column; gap: var(--space-1);">
+            <x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.StatusTag" status="valide" hint-size="auto,32px">Aujourd'hui · actif</x-import>
+            <h3 style="margin: var(--space-2) 0 0; font: var(--type-h3); font-weight: 700;">Lorraine</h3>
+            <p style="margin: 0; font: var(--type-body); text-wrap: pretty;">Les 4 départements sont couverts : 54 Meurthe-et-Moselle, 55 Meuse, 57 Moselle, 88 Vosges.</p>
+          </div>
+        </li>
+        <li style="display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: var(--space-4); padding: var(--space-5); border-bottom: 1px solid var(--line);">
+          <span style="width: 34px; height: 34px; border-radius: 50%; background: var(--paper-deep); color: var(--ink); display: grid; place-items: center; font: var(--fw-bold) 17px/1 var(--font-text);">2</span>
+          <div style="display: flex; flex-direction: column; gap: var(--space-1);">
+            <span style="font: var(--type-label);">T3 2026 · prochaine vague</span>
+            <h3 style="margin: 0; font: var(--type-h3); font-weight: 700;">Bourgogne-Franche-Comté, Hauts-de-France, Île-de-France</h3>
+            <p style="margin: 0; font: var(--type-body); text-wrap: pretty;">Trois régions ouvrent ensemble, avec leurs dispositifs locaux intégrés au calcul des aides. Les inscrits de la liste d'attente sont prévenus en priorité.</p>
+          </div>
+        </li>
+        <li style="display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: var(--space-4); padding: var(--space-5);">
+          <span style="width: 34px; height: 34px; border-radius: 50%; background: var(--card); border: 2px solid var(--ink); color: var(--ink); display: grid; place-items: center; font: var(--fw-bold) 17px/1 var(--font-text);">3</span>
+          <div style="display: flex; flex-direction: column; gap: var(--space-1);">
+            <span style="font: var(--type-label);">2027 · cible</span>
+            <h3 style="margin: 0; font: var(--type-h3); font-weight: 700;">Déploiement national</h3>
+            <p style="margin: 0; font: var(--type-body); text-wrap: pretty;">Métropole et territoires ultramarins, une fois le réseau d'opérateurs habilités constitué sur chaque département.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+    <section style="display: flex; flex-direction: column; gap: var(--space-5);">
+      <div style="display: flex; flex-direction: column; gap: var(--space-3); max-width: var(--measure);">
+        <h2 style="margin: 0; font: var(--type-h2);">En attendant l'ouverture</h2>
+        <p style="margin: 0; font: var(--type-body);">Votre estimation reste disponible dans votre navigateur, et rien ne vous empêche de préparer votre dossier dès maintenant.</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: var(--space-4);">
+        <article style="display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-5); background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-md);">
+          <h3 style="margin: 0; font: var(--type-h3); font-weight: 700;">Récupérer votre estimation en PDF</h3>
+          <p style="margin: 0; font: var(--type-body); flex: 1;">Reprenez votre estimation là où vous l'avez laissée et demandez le récapitulatif détaillé de vos aides par email.</p>
+          <div><x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Button" href="choix-parcours.dc.html" hint-size="auto,48px">Revenir à mon estimation</x-import></div>
+        </article>
+        <article style="display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-5); background: var(--card); border: 1px solid var(--line); border-radius: var(--radius-md);">
+          <h3 style="margin: 0; font: var(--type-h3); font-weight: 700;">Comprendre les aides mobilisables</h3>
+          <p style="margin: 0; font: var(--type-body); flex: 1;">Éligibilité, montants, cumuls et démarches, expliqués aide par aide — de MaPrimeRénov' à Ma Prime Logement Décent.</p>
+          <div><x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Button" variant="secondary" href="glossaire-aides.dc.html" hint-size="auto,48px">Consulter le glossaire</x-import></div>
+        </article>
+      </div>
+    </section>
+    <x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.Notice" tone="info" picto="email" hint-size="100%,96px">Votre email n'est utilisé que pour vous prévenir de l'ouverture du service dans votre région. Aucune revente, aucun envoi commercial, désinscription sur simple demande à hello@junglerenov.fr.</x-import>
+  </main>
+  <dc-import name="site-footer" hint-size="100%,320px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const region = new URLSearchParams(location.search).get('region');
+    return { region: region || '', hasRegion: !!region && region !== 'Hors zone active' };
+  }
+}
+</script>
+</body>
+</html>
