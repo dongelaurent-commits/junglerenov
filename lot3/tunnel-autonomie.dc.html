@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Simulation — adaptation à la perte d’autonomie — JungleRenov</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/styles.css">
+  <link rel="stylesheet" href="lib/components.css">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon-couleur-32.svg">
+  <script src="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/_ds_bundle.js"></script>
+  <script src="lib/jr-v2.js"></script>
+  <script src="lib/_lecture_aides.js"></script>
+  <script src="lib/_geo.js"></script>
+  <script src="lib/_baremes_sources.js"></script>
+  <script src="lib/_travaux_catalog.js"></script>
+  <script src="lib/_compute_aids.js"></script>
+  <script src="lib/_storage.js"></script>
+  <script src="lib/_dossiers.js"></script>
+  <script src="lib/_transmission.js"></script>
+</helmet>
+<div class="jr2" data-screen-label="Tunnel autonomie" style="background: var(--jr-surface-page); min-height: 100vh; display: flex; flex-direction: column;">
+  <dc-import name="site-header" mode="tunnel" back-href="choix-parcours.dc.html" back-label="Changer de projet" hint-size="100%,72px"></dc-import>
+  <div style="width: 100%; max-width: var(--jr-container); margin: 0 auto; padding: {{ vGap }} {{ gut }} 0; box-sizing: border-box; display: flex; flex-direction: column; gap: {{ vGap }};">
+    <x-import component-from-global-scope="JRv2.Stepper" steps="{{ steps }}" current="{{ stepIdx }}" surface="light" on-step-click="{{ jump }}" scroll="{{ notWide }}" min-width="0" hint-size="100%,104px"></x-import>
+  </div>
+
+  <main style="flex: 1; width: 100%; max-width: var(--jr-container); margin: 0 auto; padding: {{ titleTop }} {{ gut }} var(--jr-s-5); box-sizing: border-box; display: grid; grid-template-columns: {{ cols }}; column-gap: var(--jr-gutter); row-gap: var(--jr-s-5); align-items: start;">
+    <div ref="{{ formRef }}" style="grid-column: {{ formSpan }}; display: flex; flex-direction: column; gap: {{ blockGap }}; min-width: 0;">
+      <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); max-width: var(--jr-measure);">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 1 sur 9 · Logement</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Parlez-nous du logement.</h1>
+          <p style="margin: var(--jr-s-1) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">L’adresse détermine le partenaire habilité de votre secteur.</p>
+        </div>
+        <section aria-label="Adresse du logement" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-5);">
+          <sc-if value="{{ resumed }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="JRv2.Notice" tone="valide" title="Reprise de votre dernière simulation" action="{{ restartBtn }}" hint-size="100%,96px">Vos réponses enregistrées sur cet appareil sont reprises. Vous pouvez les modifier à chaque étape.</x-import>
+          </sc-if>
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-2);">
+            <x-import component-from-global-scope="JRv2.TextField" id="addr" label="Adresse complète" hint="Saisissez au moins 5 caractères pour voir les suggestions. Source : Base Adresse Nationale (IGN, La Poste, Etalab)." placeholder="Ex : 12 rue Saint-Georges, Nancy" value="{{ addrQuery }}" on-change="{{ onAddr }}" error="{{ err.addr }}" hint-size="100%,140px"></x-import>
+            <sc-if value="{{ hasSug }}" hint-placeholder-val="{{ false }}">
+              <ul role="listbox" aria-label="Suggestions d’adresse" style="list-style: none; margin: 0; padding: 0; background: var(--jr-white); border: var(--jr-border) solid var(--jr-line-field); border-radius: var(--jr-radius-s); overflow: hidden;">
+                <sc-for list="{{ sug }}" as="g" hint-placeholder-count="4">
+                  <li role="option" aria-selected="false" style="border-top: {{ g.sep }};">
+                    <button type="button" onClick="{{ g.pick }}" style="all: unset; box-sizing: border-box; width: 100%; min-height: var(--jr-hit); padding: var(--jr-s-2) var(--jr-s-4); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--jr-s-1) var(--jr-s-3); cursor: pointer; font: var(--jr-type-body); color: var(--jr-ink);" style-hover="background: var(--jr-leaf-wash);" style-focus="background: var(--jr-leaf-wash); outline: var(--jr-focus-width) solid var(--jr-focus); outline-offset: calc(-1 * var(--jr-focus-width));">
+                      <span>{{ g.label }}</span>
+                      <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">{{ g.ctx }}</span>
+                    </button>
+                  </li>
+                </sc-for>
+              </ul>
+            </sc-if>
+            <sc-if value="{{ sugMsg }}" hint-placeholder-val="{{ false }}">
+              <p role="status" style="margin: 0; font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);">{{ sugMsg }}</p>
+            </sc-if>
+          </div>
+          <sc-if value="{{ zoneOut }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="JRv2.Notice" tone="info" title="Service ouvert en Lorraine pour l’instant." hint-size="100%,72px">Laissez-nous votre e-mail, nous vous prévenons.</x-import>
+            <sc-if value="{{ wlForm }}" hint-placeholder-val="{{ true }}">
+              <div style="display: grid; grid-template-columns: {{ wlCols }}; gap: var(--jr-s-3) var(--jr-gutter); align-items: end;">
+                <x-import component-from-global-scope="JRv2.TextField" id="wl-email" label="E-mail" type="email" value="{{ wlEmail }}" on-change="{{ onWl }}" error="{{ err.wl }}" hint-size="100%,100px"></x-import>
+                <x-import component-from-global-scope="JRv2.Button" variant="secondary" on-click="{{ joinWl }}" full-width="{{ narrow }}" hint-size="auto,48px">Me prévenir</x-import>
+              </div>
+            </sc-if>
+            <sc-if value="{{ wlDone }}" hint-placeholder-val="{{ false }}">
+              <p role="status" style="margin: 0; font: var(--jr-type-label); color: var(--jr-ink);">C’est noté : nous vous écrirons à l’ouverture.</p>
+            </sc-if>
+          </sc-if>
+          <x-import component-from-global-scope="JRv2.QuestionBlock" group="{{ true }}" label="Type de logement" error="{{ err.type }}" hint-size="100%,140px">
+            <x-import component-from-global-scope="JRv2.ChoiceGrid" name="type" options="{{ optType }}" value="{{ s.type }}" on-change="{{ set.type }}" narrow="{{ narrow }}" narrow-cols="{{ 1 }}" cols="{{ optTypeCols }}" error="{{ err.type }}" aria-label="Type de logement" hint-size="100%,72px"></x-import>
+          </x-import>
+          <x-import component-from-global-scope="JRv2.QuestionBlock" group="{{ true }}" label="Vous êtes…" error="{{ err.occ }}" hint-size="100%,140px">
+            <x-import component-from-global-scope="JRv2.ChoiceGrid" name="occ" options="{{ optOcc }}" value="{{ s.occ }}" on-change="{{ set.occ }}" narrow="{{ narrow }}" narrow-cols="{{ 1 }}" cols="{{ optOccCols }}" error="{{ err.occ }}" aria-label="Vous êtes…" hint-size="100%,72px"></x-import>
+          </x-import>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); max-width: var(--jr-measure);">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 2 sur 9 · Personne</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Pour qui sont les aménagements&#8239;?</h1>
+          <p style="margin: var(--jr-s-1) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">L’aide est attribuée selon la situation de la personne qui vit dans le logement.</p>
+        </div>
+        <section aria-label="Personne concernée" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-6);">
+          <x-import component-from-global-scope="JRv2.QuestionBlock" first="{{ true }}" group="{{ true }}" label="La personne concernée est…" error="{{ err.who }}" hint-size="100%,140px">
+            <x-import component-from-global-scope="JRv2.ChoiceGrid" name="who" options="{{ optWho }}" value="{{ s.who }}" on-change="{{ set.who }}" narrow="{{ narrow }}" narrow-cols="{{ 1 }}" cols="{{ optWhoCols }}" error="{{ err.who }}" aria-label="La personne concernée est…" hint-size="100%,72px"></x-import>
+          </x-import>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); max-width: var(--jr-measure);">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 3 sur 9 · Âge</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Quel âge a cette personne&#8239;?</h1>
+          <p style="margin: var(--jr-s-1) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">À partir de 70 ans, seuls les revenus sont examinés.</p>
+        </div>
+        <section aria-label="Âge" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-6);">
+          <x-import component-from-global-scope="JRv2.QuestionBlock" first="{{ true }}" group="{{ true }}" label="Âge de la personne" error="{{ err.age }}" hint-size="100%,140px">
+            <x-import component-from-global-scope="JRv2.ChoiceGrid" name="age" options="{{ optAge }}" value="{{ s.age }}" on-change="{{ set.age }}" narrow="{{ narrow }}" narrow-cols="{{ 1 }}" cols="{{ optAgeCols }}" error="{{ err.age }}" aria-label="Âge de la personne" hint-size="100%,72px"></x-import>
+          </x-import>
+          <sc-if value="{{ needGir }}" hint-placeholder-val="{{ false }}">
+            <div style="display: grid; grid-template-columns: {{ twoCols }}; gap: var(--jr-gutter); padding-top: var(--jr-s-6); border-top: var(--jr-border) solid var(--jr-line);">
+              <x-import component-from-global-scope="JRv2.Select" id="gir" label="Niveau de perte d’autonomie (GIR)" hint="Il figure sur la notification APA ; sinon, choisissez « Je ne sais pas »." options="{{ optGir }}" value="{{ s.gir }}" on-change="{{ set.gir }}" placeholder="Choisir" error="{{ err.gir }}" hint-size="100%,140px"></x-import>
+            </div>
+          </sc-if>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep4 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); max-width: var(--jr-measure);">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 4 sur 9 · Handicap</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Situation de handicap&#8239;?</h1>
+          <p style="margin: var(--jr-s-1) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">Une reconnaissance de handicap ouvre l’aide sans condition d’âge.</p>
+        </div>
+        <section aria-label="Handicap" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-6);">
+          <x-import component-from-global-scope="JRv2.QuestionBlock" first="{{ true }}" group="{{ true }}" label="Situation de handicap" error="{{ err.hand }}" hint-size="100%,140px">
+            <x-import component-from-global-scope="JRv2.ChoiceGrid" name="hand" options="{{ optHand }}" value="{{ s.hand }}" on-change="{{ set.hand }}" narrow="{{ narrow }}" narrow-cols="{{ 1 }}" cols="{{ optHandCols }}" error="{{ err.hand }}" aria-label="Situation de handicap" hint-size="100%,72px"></x-import>
+          </x-import>
+          <sc-if value="{{ hasElig }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="JRv2.Notice" tone="{{ eligTone }}" title="{{ eligTitle }}" hint-size="100%,56px"></x-import>
+          </sc-if>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep5 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); max-width: var(--jr-measure);">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 5 sur 9 · Revenus</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Quels sont les revenus du foyer&#8239;?</h1>
+          <p style="margin: var(--jr-s-1) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">Ils fixent votre catégorie de ressources Anah, donc le taux de l’aide.</p>
+        </div>
+        <p style="margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--jr-s-2); font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);"><span>{{ zoneLine }}</span><x-import component-from-global-scope="JRv2.Button" variant="tertiary" on-click="{{ to1 }}" hint-size="auto,48px">modifier</x-import></p>
+        <section aria-label="Revenus" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-6);">
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-5);">
+            <div style="display: grid; grid-template-columns: {{ twoCols }}; gap: var(--jr-s-5) var(--jr-gutter); align-items: start;">
+              <x-import component-from-global-scope="JRv2.QuestionBlock" first="{{ true }}" group="{{ true }}" label="Personnes au foyer" error="{{ err.foyer }}" hint-size="100%,140px">
+                <x-import component-from-global-scope="JRv2.ChoiceGrid" name="foyer" options="{{ optFoyer }}" value="{{ s.foyer }}" on-change="{{ set.foyer }}" cols="{{ 3 }}" compact="{{ true }}" error="{{ err.foyer }}" aria-label="Personnes au foyer" hint-size="100%,120px"></x-import>
+              </x-import>
+              <x-import component-from-global-scope="JRv2.TextField" id="rfr" label="Revenu fiscal de référence" q-label="{{ true }}" hint-below="{{ true }}" hint="Il figure en page 1 de votre avis d’imposition." unit="€" input-mode="numeric" value="{{ s.rfr }}" on-change="{{ set.rfr }}" error="{{ err.rfr }}" hint-size="100%,140px"></x-import>
+            </div>
+            <sc-if value="{{ hasCat }}" hint-placeholder-val="{{ false }}">
+              <x-import component-from-global-scope="JRv2.Notice" tone="action" title="{{ catTitle }}" hint-size="100%,56px"></x-import>
+            </sc-if>
+          </div>
+        </section>
+        <p style="margin: 0; font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);">Vos réponses restent sur cet appareil et ne sont transmises qu’avec votre accord. <a href="page-info.dc.html?p=privacy">Confidentialité</a></p>
+      </sc-if>
+      <sc-if value="{{ isStep6 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); max-width: var(--jr-measure);">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 6 sur 9 · Aménagements</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Quels aménagements&#8239;?</h1>
+          <p style="margin: var(--jr-s-1) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">L’aide se calcule sur vos devis ; ici, nous vérifions les aménagements finançables.</p>
+        </div>
+        <x-import component-from-global-scope="JRv2.Notice" tone="action" title="Conseil : une douche de plain-pied et des barres d’appui couvrent la plupart des besoins ; l’opérateur AMO affinera avec vous." hint-size="100%,72px"></x-import>
+        <section aria-label="Aménagements" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-6);">
+          <sc-for list="{{ workGroups }}" as="g" hint-placeholder-count="3">
+            <div style="{{ g.wrap }}">
+              <h3 style="margin: 0; font: var(--jr-type-h3);">{{ g.title }}</h3>
+              <x-import component-from-global-scope="JRv2.ChoiceGrid" type="checkbox" name="{{ g.name }}" options="{{ g.options }}" value="{{ s.works }}" on-change="{{ set.works }}" cols="{{ worksCols }}" aria-label="{{ g.title }}" hint-size="100%,200px"></x-import>
+            </div>
+          </sc-for>
+          
+</section>
+        <sc-if value="{{ noWorks }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="JRv2.Notice" tone="bloque" title="Cochez au moins un aménagement" hint-size="100%,72px">Le calcul a besoin d’au moins un aménagement pour estimer l’aide.</x-import>
+        </sc-if>
+      </sc-if>
+      <sc-if value="{{ isStep7 }}" hint-placeholder-val="{{ false }}">
+        <section aria-label="Calcul en cours" aria-live="polite" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-6); align-items: center; text-align: center;">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 7 sur 9 · Calcul</p>
+          <svg viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="{{ ringLabel }}">
+            <circle cx="48" cy="48" r="42" fill="none" stroke="var(--jr-paper-deep)" stroke-width="8"></circle>
+            <circle cx="48" cy="48" r="42" fill="none" stroke="var(--jr-leaf)" stroke-width="8" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="{{ ringOffset }}" transform="rotate(-90 48 48)"></circle>
+            <text x="48" y="55" text-anchor="middle" font-family="Komet, system-ui, sans-serif" font-weight="700" font-size="20" fill="var(--jr-ink)">{{ ringPct }}</text>
+          </svg>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Calcul de votre aide</h1>
+          <ul style="list-style: none; margin: 0; padding: 0; width: 100%; max-width: var(--jr-measure); display: flex; flex-direction: column; text-align: left;">
+            <sc-for list="{{ checks }}" as="c" hint-placeholder-count="6">
+              <li style="{{ c.row }}"><span style="font: var(--jr-type-body);">{{ c.label }}</span><x-import component-from-global-scope="JRv2.StatusTag" status="{{ c.status }}" hint-size="auto,32px">{{ c.word }}</x-import></li>
+            </sc-for>
+          </ul>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep8 }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); max-width: var(--jr-measure);">
+          <p style="margin: 0; font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-ink-70);">Étape 8 sur 9 · Résultats</p>
+          <h1 style="margin: 0; font: var(--jr-type-h1);">Votre estimation MaPrimeAdapt’</h1>
+          <p style="margin: var(--jr-s-1) 0 0; font: var(--jr-type-body); color: var(--jr-ink-70);">{{ profileLine }}</p>
+        </div>
+        <sc-if value="{{ notElig }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="JRv2.Notice" tone="info" title="D’autres aides sont possibles" hint-size="100%,96px">{{ notEligText }}</x-import>
+        </sc-if>
+        <sc-if value="{{ elig }}" hint-placeholder-val="{{ true }}">
+        <section data-surface="dark" aria-label="Aide estimée" style="background: var(--jr-ink); color: var(--jr-paper); border-radius: var(--jr-radius-m); padding: var(--jr-s-6); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--jr-s-4); align-items: center;">
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); min-width: 0;">
+            <span style="font: var(--jr-type-micro); letter-spacing: var(--jr-micro-tracking); color: var(--jr-paper);">{{ r.totalTitle }}</span>
+            <span style="font: var(--jr-type-amount-l); font-size: {{ bigSize }}; color: var(--jr-sprout); font-variant-numeric: tabular-nums; white-space: nowrap;">{{ r.total }}</span>
+            <sc-if value="{{ r.hasLine }}" hint-placeholder-val="{{ false }}"><span style="font: var(--jr-type-label); font-weight: 400; color: var(--jr-paper); text-wrap: pretty;">{{ r.totalLine }}</span></sc-if>
+            <span style="font: var(--jr-type-label); font-weight: 400; color: var(--jr-paper);">Source : {{ r.source }} · {{ r.date }} · montant indicatif</span>
+          </div>
+          <x-import component-from-global-scope="JRv2.IconBadge" name="valide" size="l" variant="encre" hint-size="48px,48px"></x-import>
+        </section>
+        
+<x-import component-from-global-scope="JRv2.Table" columns="{{ r.cols }}" rows="{{ r.rows }}" caption="Détail du calcul" hint-size="100%,320px"></x-import>
+        <x-import component-from-global-scope="JRv2.Notice" tone="info" title="Accompagnement" hint-size="100%,96px">Un opérateur AMO habilité est obligatoire ; son forfait Anah, de 350 à 800 €, est pris en charge. JungleRenov n’est pas agréé Mon Accompagnateur Rénov’ ; le dépôt se fait par vous, sur le site de l’Anah.</x-import>
+        </sc-if>
+        <x-import component-from-global-scope="JRv2.Accordion" title="À savoir" count="{{ savoirCount }}" items="{{ savoirItems }}" hint-size="100%,72px"></x-import>
+        <sc-if value="{{ elig }}" hint-placeholder-val="{{ true }}">
+        <section aria-label="Constituer mon dossier" style="background: var(--jr-leaf-wash); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; align-items: flex-start; gap: var(--jr-s-3);">
+          <h2 style="margin: 0; font: var(--jr-type-h2);">Prêt à constituer votre dossier&#8239;?</h2>
+          <p style="margin: 0; font: var(--jr-type-body);">Créez votre espace : le site y prépare votre dossier et le remet complet au partenaire habilité de votre secteur.</p>
+          <x-import component-from-global-scope="JRv2.Button" on-click="{{ constituer }}" full-width="{{ narrow }}" hint-size="auto,48px">Constituer mon dossier</x-import>
+        </section>
+        </sc-if>
+        <section aria-label="Recevoir mon récapitulatif" style="background: var(--jr-white); border: var(--jr-border) solid var(--jr-line); border-radius: var(--jr-radius-m); padding: {{ cardPad }}; display: flex; flex-direction: column; gap: var(--jr-s-4);">
+          <h2 style="margin: 0; font: var(--jr-type-label-strong); font-size: calc(var(--jr-s-5) - var(--jr-s-1)); line-height: calc(var(--jr-s-5) + var(--jr-s-1));">Recevoir mon récapitulatif en PDF</h2>
+          <sc-if value="{{ pdfSent }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="JRv2.Notice" tone="valide" title="Demande enregistrée" hint-size="100%,72px">Le récapitulatif sera envoyé à cette adresse.</x-import>
+          </sc-if>
+          <sc-if value="{{ pdfForm }}" hint-placeholder-val="{{ true }}">
+            <div style="display: grid; grid-template-columns: {{ pdfCols }}; gap: var(--jr-s-3) var(--jr-gutter); align-items: end;">
+              <x-import component-from-global-scope="JRv2.TextField" id="pdf-email" label="E-mail" type="email" value="{{ s.pdfEmail }}" on-change="{{ set.pdfEmail }}" error="{{ err.pdf }}" hint-size="100%,100px"></x-import>
+              <x-import component-from-global-scope="JRv2.Button" variant="secondary" on-click="{{ sendPdf }}" full-width="{{ narrow }}" hint-size="auto,48px">Recevoir le PDF</x-import>
+            </div>
+            <x-import component-from-global-scope="JRv2.ChoiceCard" type="checkbox" name="pdf-consent" label="J’accepte de recevoir ce récapitulatif par e-mail" description="Aucun autre envoi, aucune revente." checked="{{ s.pdfConsent }}" on-change="{{ togglePdf }}" hint-size="100%,56px"></x-import>
+          </sc-if>
+        </section>
+        <p style="margin: 0; font: var(--jr-type-label); font-weight: 400; color: var(--jr-ink-70);">Sources : Guide des aides de l’Anah, édition février 2026, pp. 57-60 · barèmes 2026.</p>
+        <section data-surface="dark" aria-label="Notre garantie" style="box-sizing: border-box; display: flex; gap: var(--jr-s-4); align-items: flex-start; background: var(--jr-ink); color: var(--jr-paper); border-radius: var(--jr-radius-m); border-left: var(--jr-border-strong) solid var(--jr-sprout); padding: {{ cardPad }};">
+          <x-import component-from-global-scope="JRv2.IconBadge" name="valide" size="m" variant="pousse" hint-size="40px,40px"></x-import>
+          <div style="display: flex; flex-direction: column; gap: var(--jr-s-2); min-width: 0;">
+            <h2 style="margin: 0; font: var(--fw-bold) 24px/30px var(--font-text); color: var(--jr-sprout); text-wrap: balance;">100&#8239;% indépendant · sans démarchage</h2>
+            <p style="margin: 0; font: var(--jr-type-body); color: var(--jr-paper);">Aucun artisan ne nous paie pour être recommandé. Nous ne vous appellerons jamais sans votre demande.</p>
+          </div>
+        </section>
+      </sc-if>
+      <sc-if value="{{ isStep9 }}" hint-placeholder-val="{{ false }}">
+        <x-import component-from-global-scope="JRv2.DossierHandoff" dc-props="{{ handoff }}" hint-size="100%,1200px"></x-import>
+      </sc-if>
+    </div>
+
+    <div style="grid-column: {{ recapSpan }}; margin-top: {{ recapTop }}; position: {{ recapPos }}; top: var(--jr-s-5); min-width: 0; max-height: {{ recapMax }}; overflow-y: auto;">
+      <x-import component-from-global-scope="JRv2.ProjectRecap" rows="{{ recap }}" title="{{ recapTitle }}" footer="{{ recapFooter }}" hint-size="100%,360px"></x-import>
+    </div>
+  </main>
+
+  <sc-if value="{{ showFooter }}" hint-placeholder-val="{{ true }}">
+    <x-import component-from-global-scope="JRv2.StickyFooter" on-prev="{{ prev }}" prev-disabled="{{ isFirst }}" on-next="{{ next }}" next-label="{{ nextLabel }}" loading="{{ sending }}" narrow="{{ narrow }}" hint-size="100%,80px"></x-import>
+  </sc-if>
+  <div aria-hidden="true" style="height: {{ footGap }};"></div>
+  <dc-import name="site-footer" compact="{{ true }}" hint-size="100%,200px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { step: 1, w: window.innerWidth, s: { type: '', occ: '', who: '', age: '', gir: '', hand: '', foyer: '', rfr: '', works: [], pdfEmail: '', pdfConsent: false }, err: {}, addr: null, addrQuery: '', sug: [], sugMsg: '', resumed: false, libs: false, calc: 0, result: null, worksTouched: false, pdfSent: false, recapOff: 0 };
+  KEY = 'junglerenov.tunnel.autonomie';
+  STEPS = ['Logement', 'Personne', 'Âge', 'Handicap', 'Revenus', 'Aménagements', 'Calcul', 'Résultats', 'Dossier'];
+  formRef = React.createRef();
+  goStep(n) { n = Math.max(1, Math.min(9, n)); clearInterval(this.calcT); this.setState({ step: n, err: {} }); window.scrollTo(0, 0); if (n === 7) this.runCalc(); }
+  save(s, addr) { try { localStorage.setItem(this.KEY, JSON.stringify({ s, addr })); } catch (_) {} }
+  componentDidMount() {
+    this.onR = () => this.setState({ w: window.innerWidth }); window.addEventListener('resize', this.onR);
+    this.libT = setInterval(() => { if (window.RFGeo && window.RFCompute && window.RFDossiers) { clearInterval(this.libT); this.setState({ libs: true }); } }, 50);
+    const q = new URLSearchParams(location.search);
+    try {
+      if (q.get('fresh') === '1') { localStorage.removeItem(this.KEY); q.delete('fresh'); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash); return; }
+      const saved = JSON.parse(localStorage.getItem(this.KEY) || 'null'); if (!saved) return;
+      const s = Object.assign({}, this.state.s, saved.s || {}); if (!Array.isArray(s.works)) s.works = [];
+      const any = !!saved.addr || Object.keys(s).some(k => Array.isArray(s[k]) ? s[k].length : s[k]);
+      this.setState({ s, addr: saved.addr || null, addrQuery: saved.addr ? saved.addr.label : '', resumed: any });
+    } catch (_) {}
+  }
+  componentDidUpdate() { this.alignRecap(); }
+  alignRecap() {
+    const col = this.formRef.current; if (!col) return; let off = 0;
+    if (this.state.w >= 1024) { const card = (col.querySelector('[data-jr-anchor]') || col.querySelector('section')); if (card) off = Math.round(card.getBoundingClientRect().top - col.getBoundingClientRect().top); }
+    if (Math.abs(off - (this.state.recapOff || 0)) > 1) this.setState({ recapOff: off });
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onR); clearTimeout(this.deb); clearInterval(this.libT); clearInterval(this.calcT); }
+  update(k, v) {
+    this.setState(st => { const s = Object.assign({}, st.s, { [k]: v }); if (k === 'age' && v !== '60-69') s.gir = ''; const err = Object.assign({}, st.err); delete err[k]; this.save(s, st.addr); return { s, err, worksTouched: st.worksTouched || k === 'works' }; });
+  }
+  onAddr(val) {
+    const err = Object.assign({}, this.state.err); delete err.addr; this.setState({ addrQuery: val, addr: null, err }); clearTimeout(this.deb);
+    const q = val.trim(); if (q.length < 5) { this.setState({ sug: [], sugMsg: '' }); return; }
+    this.deb = setTimeout(() => this.fetchBan(q), 250);
+  }
+  async fetchBan(q) {
+    this.lastQ = q;
+    try {
+      const r = await fetch('https://api-adresse.data.gouv.fr/search/?q=' + encodeURIComponent(q) + '&limit=6&autocomplete=1'); if (!r.ok) throw new Error('BAN ' + r.status);
+      const j = await r.json(); if (q !== this.lastQ) return;
+      const sug = (j.features || []).map(f => ({ label: f.properties.label, postcode: f.properties.postcode, city: f.properties.city, citycode: f.properties.citycode, context: f.properties.context }));
+      this.setState({ sug, sugMsg: sug.length ? '' : 'Aucune adresse trouvée. Vérifiez la saisie, ou indiquez la rue et la commune.' });
+    } catch (e) { if (q === this.lastQ) this.setState({ sug: [], sugMsg: 'Le service d’adresses ne répond pas. Réessayez dans un instant.' }); }
+  }
+  pick(it) {
+    const cp = String(it.postcode || ''); const dep = /^20/.test(cp) ? (parseInt(cp.slice(2), 10) >= 200 ? '2B' : '2A') : cp.slice(0, 2);
+    const addr = Object.assign({}, it, { dep }); this.setState({ addr, addrQuery: it.label, sug: [], sugMsg: '', err: {} }); this.save(this.state.s, addr);
+  }
+  zone() { const a = this.state.addr; if (!a || !window.RFGeo) return null; return window.RFGeo.check(a.postcode); }
+  num(v) { const n = parseInt(String(v || '').replace(/\D/g, ''), 10); return Number.isFinite(n) ? n : 0; }
+  payload(over) {
+    const s = this.state.s, a = this.state.addr || {};
+    return Object.assign({ rfr: this.num(s.rfr), foyer: Number(s.foyer) || 1, region: 'Grand Est',
+      age: ({ 'lt60': 55, '60-69': 65, '70+': 75 })[s.age] || 0, gir: s.gir && s.gir !== 'nsp' ? Number(s.gir) : null,
+      handicap: s.hand === 'inconnu' || !s.hand ? 'non' : s.hand, travaux: s.works.slice(), amoType: 'complet',
+      logement: { adresse: a.label || null, codePostal: a.postcode || null, ville: a.city || null, dept: a.dep || null, codeInsee: a.citycode || null, region: 'Grand Est', type: s.type || null } }, over || {});
+  }
+  runCalc() {
+    let result = null; const payload = this.payload();
+    try { result = window.RFCompute.computeMprAdapt(payload); localStorage.setItem('junglerenov.autonomie.result', JSON.stringify({ input: Object.assign({}, payload, { who: this.state.s.who, occupation: this.state.s.occ }), result, computedAt: new Date().toISOString() })); } catch (e) { console.error('[calcul]', e); }
+    this.setState({ calc: 0, result });
+    this.calcT = setInterval(() => { const c = this.state.calc + 1; if (c > 6) { clearInterval(this.calcT); if (result) this.goStep(8); return; } this.setState({ calc: c }); }, 450);
+  }
+  validate(step) {
+    const s = this.state.s, err = {};
+    if (step === 1) { if (!s.type) err.type = 'Choisissez le type de logement.'; if (!s.occ) err.occ = 'Indiquez si vous êtes propriétaire ou locataire.'; }
+    if (step === 2 && !s.who) err.who = 'Indiquez la personne concernée.';
+    if (step === 3) { if (!s.age) err.age = 'Choisissez une tranche d’âge.'; if (s.age === '60-69' && !s.gir) err.gir = 'Choisissez un niveau GIR, ou « Je ne sais pas ».'; }
+    if (step === 4 && !s.hand) err.hand = 'Choisissez une réponse pour continuer.';
+    if (step === 5) { const r = this.num(s.rfr); if (!r || r > 2000000) err.rfr = 'Indiquez votre revenu fiscal de référence, en euros.'; if (!s.foyer) err.foyer = 'Indiquez le nombre de personnes au foyer.'; }
+    if (step === 6 && !s.works.length) err.works = true;
+    return err;
+  }
+  renderVals() {
+    const w = this.state.w, narrow = w < 640, wide = w >= 1024, s = this.state.s, J = window.JRv2, zone = this.zone(), step = this.state.step, h = React.createElement, C = window.RFCompute;
+    const v = e => (e && e.target ? e.target.value : e);
+    const set = {}; ['type', 'occ', 'who', 'age', 'gir', 'hand', 'foyer', 'rfr', 'works', 'pdfEmail'].forEach(k => { set[k] = e => this.update(k, v(e)); });
+    const eur = n => Math.round(n || 0).toLocaleString('fr-FR').replace(/\s/g, '\u202f') + '\u202f€';
+    const o = arr => arr.map(([value, label, description, icon]) => ({ value, label, description, icon }));
+    const optType = o([['maison', 'Maison individuelle', 'Pavillon, fermette, longère'], ['appartement', 'Appartement', 'En copropriété ou non']]);
+    const optOcc = o([['proprietaire', 'Propriétaire', 'Vous possédez le logement'], ['locataire', 'Locataire', 'Avec l’accord du propriétaire']]);
+    const optWho = o([['moi', 'Moi-même', 'Je vis dans ce logement'], ['conjoint', 'Mon conjoint', 'Mari, femme ou partenaire'], ['ascendant', 'Un parent', 'Père, mère, beau-parent'], ['descendant', 'Un enfant', 'Majeur ou mineur'], ['autre', 'Une autre personne', 'Membre du foyer']]);
+    const optAge = o([['lt60', 'Moins de 60 ans', 'Selon le handicap'], ['60-69', '60 à 69 ans', 'Selon le niveau GIR'], ['70+', '70 ans ou plus', 'Sans autre condition']]);
+    const optGir = [['1', 'GIR 1 — dépendance totale'], ['2', 'GIR 2'], ['3', 'GIR 3'], ['4', 'GIR 4'], ['5', 'GIR 5'], ['6', 'GIR 6 — autonomie préservée'], ['nsp', 'Je ne sais pas']].map(([value, label]) => ({ value, label }));
+    const optHand = o([['non', 'Non', 'Pas de reconnaissance'], ['oui_50plus', 'Taux d’incapacité ≥ 50\u202f%', 'Reconnu par la MDPH'], ['oui_pch', 'Bénéficiaire de la PCH', 'Prestation de compensation'], ['inconnu', 'Je ne sais pas', 'À vérifier avec la MDPH']]);
+    const optFoyer = ['1', '2', '3', '4', '5', '6'].map(n => ({ value: n, label: n === '6' ? '6+' : n }));
+    const lab = (arr, val) => (arr.find(x => x.value === val) || {}).label;
+    // éligibilité personne (moteur, revenus neutralisés)
+    let elig = null;
+    if (C && C.computeMprAdapt && s.age && s.hand) { try { elig = C.computeMprAdapt(this.payload({ rfr: 1, foyer: 1, travaux: [] })).eligibilite; } catch (_) {} }
+    const handYes = s.hand === 'oui_50plus' || s.hand === 'oui_pch';
+    const eligState = !s.hand ? null : s.hand === 'inconnu' ? 'check' : handYes ? 'hand' : s.age === '70+' ? 'age' : s.age === '60-69' ? 'gir' : (elig && elig.personne ? 'age' : 'no');
+    const ELIG = { hand: ['valide', 'Éligible sans condition d’âge'], age: ['valide', 'Éligible selon l’âge'], gir: ['en-cours', 'Éligible selon l’âge et le GIR'], check: ['en-cours', 'À vérifier'], no: ['action', 'D’autres aides sont possibles : APA, PCH, caisses de retraite'] };
+    let cat = null, taux = null, revOk = null;
+    if (C && C.computeMprAdapt && this.num(s.rfr) && s.foyer) { try { const r0 = C.computeMprAdapt(this.payload({ travaux: [] })); cat = r0.eligibilite.categorie; taux = r0.aide.tauxApplique; revOk = r0.eligibilite.revenu; } catch (_) {} }
+    const CAT = { bleus: 'Très modestes', jaunes: 'Modestes', violets: 'Intermédiaires', roses: 'Aisés' };
+    const catTitle = cat ? 'Catégorie Anah : ' + CAT[cat] + (revOk ? ' — taux MaPrimeAdapt’ ' + Math.round(taux * 100) + '\u202f%, plafond 22\u202f000\u202f€ HT.' : ' — d’autres aides restent possibles : APA, caisses de retraite.') : '';
+    const LIB = (C && C.MPA_LIBELLES) || {}, COST = (C && C.MPA_COUTS_INDICATIFS) || {}, GR = (C && C.MPA && C.MPA.travauxEligibles) || {};
+    const SHORT = { douche_italienne: 'Douche italienne', nouvelle_piece: 'Nouvelle pièce ≤ 20\u202fm²', motorisation_volets: 'Motorisation de volets', cheminement_exterieur: 'Cheminement extérieur', amenagement_parking: 'Place de stationnement', volets_roulants_electriques: 'Volets roulants électriques', elargissement_passages: 'Élargissement des passages', revetement_antiderapant: 'Sol antidérapant', mitigeur_thermostatique: 'Mitigeur thermostatique' };
+    const ICON = { salle_de_bain: 'logement', accessibilite: 'proprietaire', autres_amenagements: 'devis' };
+    const nm = k => SHORT[k] || LIB[k] || k;
+    const workGroups = [['Salle de bain', 'salle_de_bain'], ['Accessibilité', 'accessibilite'], ['Autres', 'autres_amenagements']].map(([title, key], i) => ({ title, name: 'w-' + key,
+      options: (GR[key] || []).map(k => ({ value: k, label: nm(k), icon: ICON[key] })),
+      wrap: { display: 'flex', flexDirection: 'column', gap: 'var(--jr-s-3)', paddingTop: i ? 'var(--jr-s-6)' : 0, borderTop: i ? 'var(--jr-border) solid var(--jr-line)' : 0 } }));
+    // récap
+    const res = this.state.result, edit = n => e => { e.preventDefault(); this.goStep(n); };
+    const personne = [lab(optWho, s.who), lab(optAge, s.age), s.gir && (s.gir === 'nsp' ? 'GIR inconnu' : 'GIR ' + s.gir), s.hand && ({ non: 'sans handicap reconnu', oui_50plus: 'incapacité ≥ 50\u202f%', oui_pch: 'PCH', inconnu: 'handicap à vérifier' })[s.hand]].filter(Boolean).join(' · ');
+    const foyer = [this.num(s.rfr) ? eur(this.num(s.rfr)) : '', s.foyer && (s.foyer === '6' ? '6 personnes et +' : s.foyer + (s.foyer === '1' ? ' personne' : ' personnes')), cat && CAT[cat]].filter(Boolean).join(' · ');
+    const recap = [
+      { at: 1, key: 'Adresse', value: this.state.addr ? this.state.addr.label : '', href: '#', onEdit: edit(1) },
+      { at: 1, key: 'Logement', value: [lab(optType, s.type), lab(optOcc, s.occ)].filter(Boolean).join(' · '), href: '#', onEdit: edit(1) },
+      { at: [2, 3, 4], key: 'Personne', value: personne, href: '#', onEdit: edit(2) },
+      { at: 5, key: 'Foyer', value: foyer, href: '#', onEdit: edit(5) },
+      { at: 6, key: 'Aménagements', value: s.works.map(nm), href: '#', onEdit: edit(6) },
+    ];
+    const __done = r => r.value != null && r.value !== '' && !(Array.isArray(r.value) && !r.value.length);
+    const __mark = (rows, cur) => rows.map(r => { const isCur = Array.isArray(r.at) ? r.at.indexOf(cur) >= 0 : r.at === cur; const reached = (Array.isArray(r.at) ? Math.min.apply(null, r.at) : r.at) <= cur; return Object.assign({}, r, { current: isCur, hidden: r.skip || (!reached && !__done(r)) }); });
+    const recapRows = __mark(recap, Math.min(step, 6));
+    let recapFooter = null;
+    if (J && step >= 8 && res && res.eligible) {
+      recapFooter = h('div', { 'data-surface': 'dark', style: { padding: 'var(--jr-s-4) var(--jr-s-5)', background: 'var(--jr-ink)', color: 'var(--jr-paper)', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 'var(--jr-s-3)' } },
+        h('span', { style: { font: 'var(--jr-type-label-strong)' } }, 'Aide estimée'), h('span', { style: { font: 'var(--jr-type-amount-s)', color: 'var(--jr-sprout)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' } }, (window.JRLecture ? window.JRLecture('autonomie', res, null).montantTxt : '')));
+    } else if (J && step >= 4 && eligState) {
+      const pers = ELIG[eligState], rv = revOk === null ? null : revOk;
+      const line = (k, st, word) => h('div', { key: k, style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 'var(--jr-s-2)', minHeight: 'var(--jr-s-6)' } },
+        h('span', { style: { font: 'var(--jr-type-label)', color: 'var(--jr-ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 } }, k),
+        st ? h(J.StatusTag, { status: st }, word) : h('span', { style: { font: 'var(--jr-type-label)', fontWeight: 400, color: 'var(--jr-ink)', whiteSpace: 'nowrap' } }, word));
+      const eligLines = [
+
+        line('Personne', eligState === 'no' ? null : ELIG[eligState][0], eligState === 'no' ? 'Autres aides' : eligState === 'check' ? 'À vérifier' : eligState === 'gir' ? 'Selon le GIR' : 'Éligible'),
+        line('Revenus', rv === null ? null : rv ? 'valide' : null, rv === null ? '—' : rv ? 'Éligible' : 'Autres aides'),
+        rv && eligState !== 'no' ? line('Taux applicable', null, Math.round(taux * 100) + '\u202f%') : null].filter(Boolean);
+      recapFooter = h('div', { style: { background: 'var(--jr-leaf-wash)', padding: '0 var(--jr-s-5)' } },
+        h(J.Accordion, { key: 'elig-' + (step === 4 ? 'open' : 'closed'), variant: 'dense', defaultOpen: step === 4 ? 0 : undefined, sections: [{ title: 'Éligibilité MaPrimeAdapt’', count: eligLines.length + ' critères', children: h('div', { style: { display: 'flex', flexDirection: 'column', gap: 'var(--jr-s-2)', paddingBottom: 'var(--jr-s-2)' } }, eligLines) }] }));
+    }
+    const CHECKS = ['Adresse et zone couverte', 'Situation de la personne', 'Catégorie de ressources Anah', 'Aménagements éligibles', 'Plafond de 22\u202f000\u202f€ HT', 'Forfait d’accompagnement'];
+    const c = this.state.calc, pct = Math.round(Math.min(c, 6) / 6 * 100);
+    const checks = CHECKS.map((l, i) => ({ label: l, status: i < c ? 'valide' : i === c ? 'en-cours' : 'a-venir', word: i < c ? 'Fait' : i === c ? 'En cours' : 'À venir',
+      row: { display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', alignItems: 'center', gap: 'var(--jr-s-3)', minHeight: 'var(--jr-hit)', borderTop: i ? 'var(--jr-border) solid var(--jr-line)' : 0 } }));
+    let R8 = { trio: [], rows: [], cols: [] };
+    if (res) {
+      const base = { display: 'flex', flexDirection: 'column', gap: 'var(--jr-s-3)', padding: 'var(--jr-s-4) var(--jr-s-5)', borderRadius: 'var(--jr-radius-m)', background: 'var(--jr-white)', border: 'var(--jr-border) solid var(--jr-line)', height: '100%', boxSizing: 'border-box' };
+      const T = res.travaux || {}, A = res.aide || {};
+      const LX = window.JRLecture ? window.JRLecture('autonomie', res, null) : null;
+      R8 = { total: LX ? LX.montantTxt : '', totalTitle: LX ? LX.titre : 'Aide estimée', totalLine: LX ? LX.ligne : '', hasLine: !!(LX && LX.ligne), source: 'Guide des aides de l’Anah, février 2026', date: new Date().toLocaleDateString('fr-FR'),
+        cols: [{ key: 'f', label: 'Élément' }, { key: 'd', label: 'Détail' }, { key: 'm', label: 'Montant', align: 'right' }],
+        rows: [{ f: 'Aménagements choisis', d: (T.liste || []).map(nm).join(', '), m: '' }, { f: 'Catégorie', d: CAT[res.eligibilite.categorie] || '—', m: '' },
+          { f: 'MaPrimeAdapt’', d: 'Des travaux d’adaptation, dans la limite de 22\u202f000\u202f€ HT · montant calculé sur vos devis', m: Math.round((A.tauxApplique || 0) * 100) + '\u202f%' },
+          { f: 'Forfait AMO', d: 'Accompagnement obligatoire, pris en charge', m: eur(A.amo) }] };
+    }
+    const DEPTS = { '54': 'Meurthe-et-Moselle', '55': 'Meuse', '57': 'Moselle', '88': 'Vosges' }, dep = this.state.addr && this.state.addr.dep;
+    return {
+      s, set, err: this.state.err, narrow, wide, steps: this.STEPS, recap: recapRows, recapTitle: step >= 8 ? 'Votre dossier' : 'Votre projet', recapFooter,
+      optType, optOcc, optWho, optAge, optGir, optHand, optFoyer, optTypeCols: 2, optOccCols: 2, optWhoCols: 2, optAgeCols: 3, optHandCols: 2,
+      gut: narrow ? 'var(--jr-margin-mobile)' : 'var(--jr-margin)', cols: wide ? 'repeat(12, minmax(0, 1fr))' : 'minmax(0, 1fr)', formSpan: wide ? '1 / span 8' : '1 / -1', recapSpan: wide ? '9 / span 4' : '1 / -1', recapPos: wide ? 'sticky' : 'static',
+      twoCols: narrow ? 'minmax(0, 1fr)' : 'repeat(2, minmax(0, 1fr))', threeCols: narrow ? 'minmax(0, 1fr)' : 'repeat(3, minmax(0, 1fr))', worksCols: narrow ? 1 : 2,
+      cardPad: narrow ? 'var(--jr-s-5)' : 'var(--jr-s-6)', cardPadX: narrow ? 'var(--jr-s-5)' : 'var(--jr-s-6)', bleed: narrow ? 'calc(-1 * var(--jr-s-5))' : 'calc(-1 * var(--jr-s-6))',
+      formRef: this.formRef, recapTop: wide ? (this.state.recapOff || 0) + 'px' : '0', notWide: !wide,
+      vGap: narrow ? 'var(--jr-s-4)' : 'var(--jr-s-5)', titleTop: narrow ? 'var(--jr-s-5)' : 'calc(var(--jr-s-7) - var(--jr-s-2))', blockGap: narrow ? 'var(--jr-s-5)' : 'var(--jr-s-6)', footGap: narrow ? 'var(--jr-s-8)' : 'var(--jr-s-9)',
+      savoirItems: ['MaPrimeAdapt’ se cumule avec l’APA, la PCH et les aides des caisses de retraite.', 'Les travaux sont retenus dans la limite d’un plafond de 22\u202f000\u202f€ HT.', 'Les coûts sont des moyennes constatées ; seuls les devis feront foi.'], savoirCount: '3 points', pdfCols: narrow ? 'minmax(0, 1fr)' : 'minmax(0, 1fr) auto',
+      bigSize: narrow ? 'var(--jr-s-7)' : 'calc(var(--jr-s-8) + var(--jr-s-2))',
+      needGir: s.age === '60-69', hasElig: !!eligState, eligTone: eligState === 'no' ? 'bloque' : 'action', eligTitle: eligState ? ELIG[eligState][1] : '',
+      zoneLine: dep && DEPTS[dep] ? 'Lorraine · ' + DEPTS[dep] + ' (' + dep + '), détecté depuis l’adresse ·' : 'Département non détecté ·',
+      hasCat: !!cat, catTitle, workGroups, noWorks: !!this.state.err.works && !s.works.length,
+      checks, ringPct: pct + '\u202f%', ringOffset: String(Math.round(264 * (1 - pct / 100))), ringLabel: 'Calcul en cours : ' + pct + ' %',
+      profileLine: [lab(optWho, s.who), lab(optAge, s.age), foyer, dep && DEPTS[dep] ? DEPTS[dep] + ' (' + dep + ')' : ''].filter(Boolean).join(' · '),
+      r: R8, elig: !!(res && res.eligible), notElig: !!(res && !res.eligible),
+      notEligText: res && !res.eligible ? (!res.eligibilite.personne ? 'Pour cette situation, l’APA, la PCH et les caisses de retraite financent les aménagements.' : 'Pour ces revenus, l’APA, la PCH et les caisses de retraite financent les aménagements.') : '',
+      pdfSent: this.state.pdfSent, pdfForm: !this.state.pdfSent, togglePdf: () => this.update('pdfConsent', !s.pdfConsent),
+      sendPdf: () => { if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s.pdfEmail.trim()) || !s.pdfConsent) { this.setState({ err: { pdf: 'Indiquez votre e-mail et cochez la case d’accord.' } }); return; }
+        try { const l = JSON.parse(localStorage.getItem('junglerenov.leadPdf') || '[]'); l.push({ email: s.pdfEmail.trim(), ts: Date.now(), parcours: 'autonomie', total: res && res.aide.total }); localStorage.setItem('junglerenov.leadPdf', JSON.stringify(l)); } catch (_) {}
+        this.setState({ pdfSent: true, err: {} }); },
+      constituer: () => this.constituer(),
+      jump: i => { if (i + 1 < step && step !== 7) this.goStep(i + 1); },
+      stepIdx: step - 1, isStep1: step === 1, isStep2: step === 2, isStep3: step === 3, isStep4: step === 4, isStep5: step === 5, isStep6: step === 6, isStep7: step === 7, isStep8: step === 8, isStep9: step === 9,
+      isFirst: step === 1, showFooter: step !== 7 && step !== 9,
+      handoff: { recap: [{ title: 'Profil', count: '3 points', items: [this.state.addr ? this.state.addr.label : '—', personne || '—', foyer || '—'] }, { title: 'Aménagements', count: s.works.length + (s.works.length > 1 ? ' postes' : ' poste'), items: s.works.length ? s.works.map(nm) : ['—'] }, { title: 'Aides', count: res && res.aide ? (window.JRLecture ? window.JRLecture('autonomie', res, null).montantTxt : '') : '—', items: res && res.aide ? ['MaPrimeAdapt’ : ' + Math.round((res.aide.tauxApplique || 0) * 100) + '\u202f% des travaux, sur devis', 'Forfait d’accompagnement : ' + eur(res.aide.amo)] : ['—'] }], narrow, total: res && res.aide ? (window.JRLecture ? window.JRLecture('autonomie', res, null).montantTxt : '') : '', parcours: 'd’adaptation du logement', eyebrow: 'Étape 9 sur 9 · Dossier', onPrev: () => this.goStep(8), onSubmit: d => this.remettre(d) }, sending: false,
+      nextLabel: step === 6 ? 'Voir mon estimation' : step === 8 ? 'Constituer mon dossier' : 'Continuer',
+      addrQuery: this.state.addrQuery, onAddr: e => this.onAddr(e && e.target ? e.target.value : e),
+      sug: this.state.sug.map((g, i) => ({ label: g.label, ctx: (g.context || '').split(',').slice(0, 2).join(' ·'), sep: i ? 'var(--jr-border) solid var(--jr-line)' : '0', pick: () => this.pick(g) })),
+      hasSug: this.state.sug.length > 0, sugMsg: this.state.sugMsg,
+      zoneOut: !!(zone && zone.status !== 'active' && zone.status !== 'unknown'),
+      wlEmail: this.state.wlEmail || '', onWl: e => this.setState({ wlEmail: e && e.target ? e.target.value : e }), wlForm: !this.state.wlDone, wlDone: !!this.state.wlDone,
+      wlCols: narrow ? 'minmax(0, 1fr)' : 'minmax(0, 1fr) auto',
+      joinWl: () => { const m = (this.state.wlEmail || '').trim(); if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m)) { this.setState({ err: Object.assign({}, this.state.err, { wl: 'Indiquez une adresse e-mail valide, par exemple nom@exemple.fr.' }) }); return; }
+        try { if (window.RFGeo && window.RFGeo.addToWaitlist) window.RFGeo.addToWaitlist({ email: m, cp: this.state.addr && this.state.addr.postcode, region: zone && zone.region }); } catch (_) {} this.setState({ wlDone: true }); },
+      resumed: this.state.resumed && step === 1,
+      restartBtn: J ? h(J.Button, { variant: 'tertiary', href: 'tunnel-autonomie.dc.html?fresh=1' }, 'Recommencer à zéro') : null,
+      waitBtn: J ? h(J.Button, { variant: 'secondary', href: 'merci-liste-attente.dc.html?region=' + encodeURIComponent((zone && zone.region) || '') }, 'M’inscrire sur la liste d’attente') : null,
+      to1: () => this.goStep(1),
+      prev: () => this.goStep(step === 8 ? 6 : step - 1),
+      next: () => {
+        if (step === 1) {
+          if (!this.state.addr) { this.setState({ err: { addr: 'Choisissez votre adresse dans la liste des suggestions.' } }); return; }
+          if (!zone || zone.status !== 'active') return;
+        }
+        if (step === 8) { this.constituer(); return; }
+        const err = this.validate(step); if (Object.keys(err).length) { this.setState({ err, worksTouched: step === 6 || this.state.worksTouched }); return; }
+        this.goStep(step + 1);
+      },
+    };
+  }
+  round(v) { v = Number(v) || 0; return v < 1000 ? Math.max(0, Math.floor(v / 100) * 100) : Math.floor(v / 1000) * 1000; }
+  constituer() { const res = this.state.result; if (res && res.eligible) this.goStep(9); }
+  remettre(data) {
+    const res = this.state.result; if (!res || !res.eligible || !window.RFDossiers) return { error: 'Le calcul n’est pas disponible. Revenez à l’étape Résultats.' };
+    const s = this.state.s, a = this.state.addr || {};
+    let prev = {}; try { prev = JSON.parse(localStorage.getItem('junglerenov.profile') || '{}'); } catch (_) {}
+    const profile = Object.assign({}, prev, { firstname: data.fn, lastname: data.ln, email: data.em, phone: data.tel, address: a.label || '', logement: Object.assign({}, prev.logement || {}, { type: s.type, address: a.label || '', dept: a.dep }), autonomie: { pourQui: s.who, occupation: s.occ, age: s.age, gir: s.gir, handicap: s.hand, travaux: s.works.slice() }, foyer: { rfr: this.num(s.rfr), personnes: Number(s.foyer) }, calcInput: this.payload() });
+    try { return window.jrHandoff('autonomie', profile, res, a.dep, [this.KEY]); } catch (x) { console.error('[remise]', x); return { error: 'La remise n’a pas abouti. Réessayez dans un instant.' }; }
+  }
+
+}
+</script>
+</body>
+</html>
