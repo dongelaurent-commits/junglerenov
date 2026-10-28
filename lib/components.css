@@ -1,0 +1,99 @@
+/* JungleRenov — tokens v2 et socle des composants.
+   À intégrer au design system (tokens/*.css). Les composants de lib/jr-v2.js
+   n'utilisent que ces variables : aucune valeur en dur dans leur code. */
+
+/* ── Polices ─────────────────────────────────────────────────────────────
+   Arsenica et Komet : local() en attendant les woff2 sous licence web.
+   JetBrains Mono : Google Fonts pour la maquette — à auto-héberger en production. */
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap");
+@font-face{font-family:"Arsenica Display";src:local("Arsenica Display Extrabold"),local("ArsenicaDisplay-Extrabold"),local("Arsenica Display ExtraBold");font-weight:800;font-display:swap}
+@font-face{font-family:"Komet";src:local("Komet Regular"),local("Komet-Regular");font-weight:400;font-display:swap}
+@font-face{font-family:"Komet";src:local("Komet Medium"),local("Komet-Medium");font-weight:500;font-display:swap}
+@font-face{font-family:"Komet";src:local("Komet Bold"),local("Komet-Bold");font-weight:700;font-display:swap}
+@font-face{font-family:"Komet";src:local("Komet Heavy"),local("Komet-Heavy");font-weight:900;font-display:swap}
+@font-face{font-family:"Komet";src:local("Komet Heavy Italic"),local("Komet-HeavyItalic");font-weight:900;font-style:italic;font-display:swap}
+
+:root{
+  /* Couleur — palette fermée v1 */
+  --jr-ink:#123A2E; --jr-paper:#F4F1E8; --jr-paper-deep:#E9E3D3; --jr-white:#FFFFFF;
+  --jr-leaf:#1F6B3F; --jr-leaf-wash:#E6F2EA; --jr-sprout:#8FD14F;
+  --jr-ok:#065F46; --jr-ok-wash:#ECFDF5; --jr-ko:#991B1B; --jr-ko-wash:#FEE2E2;
+  /* Nuances d'encre v2 — aplats calculés sur ivoire */
+  --jr-ink-70:#567166;  /* texte secondaire, labels : 4,71:1 sur ivoire, 5,32:1 sur blanc */
+  --jr-ink-60:#6C8378;  /* filets, pictogrammes — jamais de texte */
+  --jr-ink-40:#9AA89E;  /* filets, pictogrammes — jamais de texte */
+  --jr-ink-10:#DDDFD5;  /* filets, bordures */
+  --jr-ink-05:#E9E8DF;  /* fonds de ligne survolée */
+  /* DPE — exception réglementaire */
+  --jr-dpe-a:#00A651; --jr-dpe-b:#52B847; --jr-dpe-c:#C8D400; --jr-dpe-d:#FFED00; --jr-dpe-e:#FFB400; --jr-dpe-f:#FF6900; --jr-dpe-g:#E20613;
+
+  /* Rôles */
+  --jr-surface-page:var(--jr-paper); --jr-surface-card:var(--jr-white); --jr-surface-sunken:var(--jr-paper-deep); --jr-surface-dark:var(--jr-ink);
+  --jr-text:var(--jr-ink); --jr-text-secondary:var(--jr-ink-70); --jr-text-on-dark:var(--jr-paper); --jr-text-accent-on-dark:var(--jr-sprout); --jr-text-on-leaf:var(--jr-white);
+  --jr-line:var(--jr-ink-10); --jr-line-strong:var(--jr-ink-40); --jr-line-field:var(--jr-ink-60);
+  --jr-action:var(--jr-leaf); --jr-action-hover:var(--jr-ink); --jr-action-wash:var(--jr-leaf-wash);
+  --jr-hover-row:var(--jr-ink-05);
+  --jr-focus:var(--jr-ink); --jr-focus-on-dark:var(--jr-paper);
+
+  /* Typographie */
+  --jr-font-display:"Arsenica Display","Abril Fatface",Georgia,serif;
+  --jr-font-text:"Komet","Red Hat Display",system-ui,sans-serif;
+  --jr-font-mono:"JetBrains Mono",ui-monospace,monospace;
+  --jr-type-hero:800 56px/1.05 var(--jr-font-display);
+  --jr-type-h1:800 40px/1.15 var(--jr-font-display);
+  --jr-type-h2:700 28px/34px var(--jr-font-text);
+  --jr-type-h3:700 22px/28px var(--jr-font-text);
+  --jr-type-lead:400 21px/32px var(--jr-font-text);
+  --jr-type-body:400 18px/28px var(--jr-font-text);
+  --jr-type-label:500 17px/24px var(--jr-font-text);
+  --jr-type-label-strong:700 17px/24px var(--jr-font-text);
+  --jr-type-micro:500 13px/18px var(--jr-font-mono); --jr-micro-tracking:0.08em; /* plancher levé pour ce seul style */
+  --jr-type-amount-s:800 32px/1.1 var(--jr-font-display);
+  --jr-type-amount-m:800 44px/1.1 var(--jr-font-display);
+  --jr-type-amount-l:800 64px/1 var(--jr-font-display);
+  --jr-thin-space:"\202F";
+
+  /* Espacement — base 4, rythme 8 */
+  --jr-s-1:4px; --jr-s-2:8px; --jr-s-3:12px; --jr-s-4:16px; --jr-s-5:24px; --jr-s-6:32px; --jr-s-7:48px; --jr-s-8:64px; --jr-s-9:96px;
+  --jr-section:96px; --jr-section-mobile:64px;
+  --jr-container:1200px; --jr-gutter:24px; --jr-margin:32px; --jr-margin-mobile:24px; --jr-measure:44rem;
+  --jr-hit:48px; --jr-choice-h:56px;
+
+  /* Formes */
+  --jr-radius-s:4px; --jr-radius-m:6px; --jr-radius-l:8px; --jr-radius-pill:999px;
+  --jr-border:1px; --jr-border-strong:2px;
+  --jr-icon-stroke:1.5; --jr-icon-s:24px; --jr-icon-m:32px;
+
+  /* Mouvement — couleur, bordure, opacité uniquement */
+  --jr-duration-fast:120ms; --jr-duration:200ms; --jr-duration-enter:240ms; --jr-duration-count:600ms; --jr-ease:cubic-bezier(0.2,0,0,1);
+  --jr-transition:color var(--jr-duration-fast) var(--jr-ease),background-color var(--jr-duration-fast) var(--jr-ease),border-color var(--jr-duration-fast) var(--jr-ease),opacity var(--jr-duration) var(--jr-ease);
+
+  /* Focus */
+  --jr-focus-width:3px; --jr-focus-offset:2px;
+}
+@media (prefers-reduced-motion:reduce){:root{--jr-duration-fast:0ms;--jr-duration:0ms;--jr-duration-enter:0ms;--jr-duration-count:0ms}}
+
+/* Socle */
+.jr2 *,.jr2 *::before,.jr2 *::after{box-sizing:border-box}
+.jr2{color:var(--jr-text);font:var(--jr-type-body);font-variant-numeric:tabular-nums}
+.jr2 :focus-visible{outline:var(--jr-focus-width) solid var(--jr-focus);outline-offset:var(--jr-focus-offset)}
+.jr2 [data-surface="dark"] :focus-visible{outline-color:var(--jr-focus-on-dark)}
+.jr2 a{color:var(--jr-action);text-decoration:underline;text-underline-offset:3px}
+.jr2 a:hover{color:var(--jr-action-hover)}
+@keyframes jr-skeleton{0%,100%{opacity:1}50%{opacity:.55}}
+@media (prefers-reduced-motion:reduce){[data-jr-skeleton]{animation:none!important}}
+
+/* ── v2.1 · Espacements sémantiques responsifs ─────────────────────────
+   Deux points de rupture seulement : 640 (mobile) et 1024 (tablette). */
+:root{
+  --jr-page-top:64px; --jr-section-gap:96px; --jr-block-gap:32px; --jr-card-pad:32px; --jr-stack:16px; --jr-gutter:24px; --jr-page-x:32px;
+  --jr-label-gap:4px; --jr-title-gap:8px; --jr-lead-gap:16px; --jr-sticky-h:64px;
+  /* alias v2 : les pages existantes héritent des nouvelles valeurs */
+  --jr-margin:var(--jr-page-x); --jr-margin-mobile:var(--jr-page-x); --jr-section:var(--jr-section-gap); --jr-section-mobile:var(--jr-section-gap);
+}
+@media (max-width:1023px){:root{--jr-page-top:40px;--jr-section-gap:64px;--jr-block-gap:24px;--jr-card-pad:24px;--jr-stack:12px;--jr-gutter:20px;--jr-page-x:24px}}
+@media (max-width:639px){:root{--jr-page-top:24px;--jr-section-gap:48px;--jr-block-gap:16px;--jr-card-pad:20px;--jr-stack:8px;--jr-gutter:16px;--jr-page-x:20px;--jr-sticky-h:56px;
+  --jr-type-h1:800 32px/1.15 var(--jr-font-display);
+  --jr-type-h2:700 24px/30px var(--jr-font-text);
+  --jr-type-lead:400 18px/28px var(--jr-font-text);
+  --jr-type-body:400 17px/26px var(--jr-font-text)}}
