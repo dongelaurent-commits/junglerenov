@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Super-administration — RénoFacile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --teal-50:#F0FDFA;--teal-100:#CCFBF1;--teal-200:#99F6E4;--teal-400:#2DD4BF;
+    --teal-600:#0D9488;--teal-700:#0F766E;--teal-800:#115E59;--teal-900:#134E4A;
+    --amber-50:#FFFBEB;--amber-500:#F59E0B;--amber-600:#D97706;
+    --purple-50:#F5F3FF;--purple-500:#8B5CF6;--purple-600:#7C3AED;--purple-900:#4C1D95;
+    --slate-50:#F8FAFC;--slate-100:#F1F5F9;--slate-200:#E2E8F0;--slate-300:#CBD5E1;
+    --slate-400:#94A3B8;--slate-500:#64748B;--slate-600:#475569;--slate-700:#334155;
+    --slate-800:#1E293B;--slate-900:#0F172A;
+    --success-50:#ECFDF5;--success-600:#059669;
+    --danger-50:#FEF2F2;--danger-600:#DC2626;
+    --info-50:#EFF6FF;--info-600:#2563EB;
+    --bg:#F8FAFC;--surface:#FFFFFF;--border:#E2E8F0;
+    --font-sans:"Public Sans",system-ui,-apple-system,sans-serif;
+    --font-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+    --sidebar:240px;
+  }
+  *{box-sizing:border-box}
+  /* Le projet pilote la visibilité par l'attribut `hidden` : cette règle
+     l'emporte sur les classes qui déclarent leur propre `display`. */
+  [hidden]{display:none!important}html,body{margin:0;padding:0}
+  body{font-family:var(--font-sans);color:var(--slate-800);background:var(--bg);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
+
+  .layout{display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:100vh}
+  @media (max-width:880px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+  .sidebar{background:linear-gradient(180deg,#1a103a 0%,#0F172A 100%);color:#fff;padding:20px 16px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh}
+  .brand{display:flex;align-items:center;gap:10px;padding:0 8px}
+  .brand-mark{width:28px;height:28px;border-radius:7px;background:var(--purple-600);display:grid;place-items:center}
+  .brand-name{font-weight:700;font-size:15px;color:#fff}
+  .super-badge{display:inline-flex;align-items:center;padding:3px 8px;background:linear-gradient(135deg,var(--purple-500),var(--amber-500));color:#fff;font:700 10px var(--font-mono);letter-spacing:.04em;text-transform:uppercase;border-radius:4px;margin-left:auto}
+
+  .nav{display:flex;flex-direction:column;gap:2px;margin-top:8px}
+  .nav-section{padding:8px 12px 4px;font:600 10px var(--font-mono);color:var(--slate-400);letter-spacing:.06em;text-transform:uppercase}
+  .nav a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;color:var(--slate-300);font-size:13.5px;font-weight:500;cursor:pointer}
+  .nav a:hover{background:rgba(255,255,255,.05);color:#fff}
+  .nav a.active{background:var(--purple-600);color:#fff}
+
+  .me{margin-top:auto;padding:10px;background:rgba(255,255,255,.05);border-radius:8px;display:flex;align-items:center;gap:10px;font-size:12.5px}
+  .me .av{width:28px;height:28px;border-radius:50%;background:var(--purple-500);display:grid;place-items:center;font:600 11px var(--font-sans);color:#fff}
+  .me .nm{color:#fff;font-weight:600;line-height:1.2}
+  .me .role{color:var(--slate-400);font-size:11px}
+  .me .logout{margin-left:auto;color:var(--slate-400);font-size:11px}
+  .me .logout:hover{color:#fff}
+
+  main{padding:24px 32px 48px;max-width:1280px;width:100%}
+  @media (max-width:640px){main{padding:18px 16px 36px}}
+  h1.page-title{margin:0 0 4px;font-size:26px;font-weight:700;letter-spacing:-.015em}
+  .lead{margin:0 0 24px;color:var(--slate-600);font-size:14.5px}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:28px}
+  @media (max-width:780px){.kpis{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px;position:relative;overflow:hidden}
+  .kpi.featured{background:linear-gradient(135deg,#1a103a 0%,#0F172A 100%);color:#fff;border:0}
+  .kpi.featured .lbl{color:var(--slate-300)}
+  .kpi.featured .val{color:#fff}
+  .kpi.featured .delta{color:var(--slate-400)}
+  .kpi.featured::after{content:"";position:absolute;top:-30px;right:-30px;width:80px;height:80px;background:radial-gradient(circle,rgba(139,92,246,.4),transparent 70%);pointer-events:none}
+  .kpi .lbl{font:500 11px var(--font-mono);color:var(--slate-500);letter-spacing:.04em;text-transform:uppercase}
+  .kpi .val{font:700 22px var(--font-sans);color:var(--slate-900);letter-spacing:-.01em;margin-top:4px}
+  .kpi .delta{font-size:12px;color:var(--slate-500);margin-top:2px}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:980px){.grid-2{grid-template-columns:1fr}}
+
+  .panel{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .panel-head{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+  .panel-head h2{margin:0;font-size:15px;font-weight:700}
+  .panel-body{padding:18px 20px}
+
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  thead th{text-align:left;padding:10px 16px;background:var(--slate-50);font:600 11px var(--font-mono);color:var(--slate-600);letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border)}
+  tbody td{padding:12px 16px;border-bottom:1px solid var(--border)}
+  tbody tr:last-child td{border-bottom:0}
+
+  .pill{display:inline-block;padding:3px 9px;border-radius:999px;font:500 11px var(--font-mono);letter-spacing:.04em;text-transform:uppercase}
+  .pill.admin{background:var(--info-50);color:var(--info-600)}
+  .pill.super{background:linear-gradient(135deg,var(--purple-500),var(--amber-500));color:#fff}
+
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid var(--border);background:#fff;border-radius:8px;font-family:inherit;font-size:13px;font-weight:500;color:var(--slate-800);cursor:pointer;transition:all 120ms ease}
+  .btn:hover{border-color:var(--slate-400);background:var(--slate-50)}
+  .btn-primary{background:var(--purple-600);color:#fff;border-color:var(--purple-600)}
+  .btn-primary:hover{background:var(--purple-900)}
+  .btn-danger{color:var(--danger-600);border-color:#FCA5A5}
+  .btn-danger:hover{background:var(--danger-50)}
+
+  .setting{display:flex;align-items:flex-start;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);gap:16px}
+  .setting:last-child{border-bottom:0}
+  .setting .info{flex:1}
+  .setting .name{font-weight:600;font-size:14px}
+  .setting .desc{font-size:12.5px;color:var(--slate-500);margin-top:2px}
+
+  .switch{position:relative;width:44px;height:24px;background:var(--slate-300);border-radius:999px;cursor:pointer;transition:background 150ms}
+  .switch.on{background:var(--purple-600)}
+  .switch::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:left 150ms}
+  .switch.on::after{left:23px}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--slate-900);color:#fff;padding:12px 20px;border-radius:8px;font-size:13.5px;opacity:0;transition:opacity 200ms ease;pointer-events:none;z-index:100}
+  .toast.show{opacity:1}
+
+  .modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.5);display:none;align-items:center;justify-content:center;z-index:60}
+  .modal-bg.open{display:flex}
+  .modal{background:#fff;border-radius:12px;padding:24px;max-width:420px;width:90%}
+  .modal h3{margin:0 0 14px}
+  .modal label{display:block;margin-bottom:12px;font-size:13px}
+  .modal input,.modal select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:14px;margin-top:4px}
+  .modal .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+
+  /* Auth wall super-admin */
+  .auth-wall{position:fixed;inset:0;background:#F8FAFC;display:none;align-items:center;justify-content:center;z-index:999;padding:20px}
+  .auth-wall.show{display:flex}
+  .auth-wall .card-aw{background:#fff;border:1px solid var(--border);border-radius:14px;padding:32px 28px;max-width:380px;width:100%;box-shadow:0 12px 40px rgba(15,23,42,.08)}
+  .auth-wall h2{margin:0 0 6px;font-size:20px;color:var(--slate-900)}
+  .auth-wall .sub{font-size:13.5px;color:var(--slate-500);margin-bottom:18px}
+  .auth-wall .field{margin-bottom:12px}
+  .auth-wall label{display:block;font-size:12px;color:var(--slate-700);margin-bottom:4px;font-weight:500}
+  .auth-wall input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font:400 13.5px sans-serif;box-sizing:border-box}
+  .auth-wall input:focus{outline:none;border-color:#7C3AED;box-shadow:0 0 0 3px rgba(124,58,237,.1)}
+  .auth-wall .btn-go{width:100%;padding:11px;background:#7C3AED;color:#fff;border:0;border-radius:8px;font:600 14px sans-serif;cursor:pointer;margin-top:6px}
+  .auth-wall .btn-go:hover{background:#6D28D9}
+  .auth-wall .err{margin-top:10px;padding:9px 12px;background:#FEF2F2;border:1px solid #FCA5A5;color:#DC2626;border-radius:8px;font-size:12.5px;display:none}
+  .auth-wall .err.show{display:block}
+  .auth-wall .hint{margin-top:16px;padding:10px 12px;background:#F8FAFC;border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--slate-700)}
+  .auth-wall .hint code{font:500 11.5px ui-monospace,monospace;background:#fff;padding:1px 5px;border-radius:4px;border:1px solid var(--border)}
+</style>
+<link rel="stylesheet" href="_mobile_nav.css">
+<script src="_mobile_nav.js" defer></script>
+<script src="_geo.js"></script>
+</head>
+<body>
+
+<!-- Mur de connexion super-admin -->
+<div class="auth-wall" id="auth-wall">
+  <div class="card-aw">
+    <h2>Accès super-administrateur</h2>
+    <div class="sub">Connexion requise pour gérer le site et l'équipe.</div>
+    <form id="auth-form" autocomplete="on">
+      <div class="field">
+        <label for="auth-email">Email</label>
+        <input type="email" id="auth-email" placeholder="vous@exemple.fr" required autocomplete="username" />
+      </div>
+      <div class="field">
+        <label for="auth-pw">Mot de passe</label>
+        <input type="password" id="auth-pw" placeholder="••••••" required autocomplete="current-password" />
+      </div>
+      <button type="submit" class="btn-go">Se connecter</button>
+      <div class="err" id="auth-err"></div>
+    </form>
+    </div>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg></span>
+      <span class="brand-name">RénoFacile</span>
+      <span class="super-badge">Super</span>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section">Pilotage</div>
+      <a class="active" data-view="overview">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+        Vue d'ensemble
+      </a>
+      <a data-view="admins">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+        Administrateurs
+      </a>
+      <a data-view="settings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+        Paramètres site
+      </a>
+      <a data-view="partenaires">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Partenaires
+        <span id="cancel-badge" style="margin-left:auto;background:var(--danger-600);color:#fff;font:700 10px var(--font-mono);padding:2px 7px;border-radius:999px;display:none">0</span>
+      </a>
+      <a data-view="waitlist">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        Liste d'attente <span class="count" id="count-waitlist">—</span>
+      </a>
+      <a data-view="audit">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Audit log complet
+      </a>
+
+      <div class="nav-section" style="margin-top:8px">Liens rapides</div>
+      <a href="admin.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        Espace admin
+      </a>
+      <a href="index.html" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="m15 3 6 6"/><path d="M21 3v6h-6"/></svg>
+        Retour à l'accueil du site
+      </a>
+    </nav>
+
+    <div class="me">
+      <div class="av" id="me-av">S</div>
+      <div>
+        <div class="nm" id="me-name">Super admin</div>
+        <div class="role">super_admin</div>
+      </div>
+      <a href="#" class="logout" id="btn-logout">Quitter</a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- VUE OVERVIEW -->
+    <div id="view-overview">
+      <h1 class="page-title">Vue d'ensemble du site</h1>
+      <p class="lead">Pilotage stratégique de RénoFacile — métriques business, croissance, santé opérationnelle.</p>
+
+      <div class="kpis">
+        <div class="kpi featured"><div class="lbl">Revenu partenaires HT</div><div class="val" id="kpi-mrr">—</div><div class="delta">dossiers transmis × barème contractuel B2B</div></div>
+        <div class="kpi"><div class="lbl">Clients actifs</div><div class="val" id="kpi-actifs">—</div><div class="delta" id="kpi-actifs-d">—</div></div>
+        <div class="kpi"><div class="lbl">Total aides estimées</div><div class="val" id="kpi-aides">—</div><div class="delta">cumulé</div></div>
+        <div class="kpi"><div class="lbl">Admins actifs</div><div class="val" id="kpi-admins">—</div><div class="delta">y compris super admin</div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head"><h2>Répartition des clients</h2></div>
+          <div class="panel-body" id="tier-breakdown" style="font-size:14px"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Dernières actions admin</h2></div>
+          <div class="panel-body" id="last-actions" style="font-size:13.5px;color:var(--slate-600)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VUE ADMINS -->
+    <div id="view-admins" hidden>
+      <h1 class="page-title">Gestion des administrateurs</h1>
+      <p class="lead">Comptes ayant accès à l'espace admin et super admin.</p>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Liste des admins</h2>
+          <button class="btn btn-primary" id="btn-add-admin">+ Ajouter un admin</button>
+        </div>
+        <table>
+          <thead><tr><th>Email</th><th>Rôle</th><th>Actions</th></tr></thead>
+          <tbody id="admins-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VUE PARAMÈTRES -->
+    <div id="view-settings" hidden>
+      <h1 class="page-title">Paramètres du site</h1>
+      <p class="lead">Configuration globale qui s'applique à tous les utilisateurs.</p>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Site</h2></div>
+        <div class="panel-body">
+          <div class="setting">
+            <div class="info">
+              <div class="name">Mode maintenance</div>
+              <div class="desc">Affiche une page « En maintenance » à tous les visiteurs. Les admins gardent l'accès.</div>
+            </div>
+            <div class="switch" id="sw-maintenance" data-key="maintenance"></div>
+          </div>
+          <div class="setting">
+            <div class="info">
+              <div class="name">Inscriptions ouvertes</div>
+              <div class="desc">Si désactivé, le diagnostic reste accessible mais la création de compte est bloquée.</div>
+            </div>
+            <div class="switch on" id="sw-signups" data-key="signups"></div>
+          </div>
+          <div class="setting" style="opacity:.55">
+            <div class="info">
+              <div class="name">Programme artisans <span style="background:var(--slate-100);color:var(--slate-600);font:600 10px var(--font-mono);padding:2px 8px;border-radius:999px;margin-left:6px;text-transform:uppercase">Roadmap V2</span></div>
+              <div class="desc">L'espace artisan est en phase de constitution de la waitlist. À activer quand le B2C aura 500+ clients actifs. La page <code style="background:var(--slate-100);padding:1px 6px;border-radius:4px;font:400 12px var(--font-mono)">espace-artisan.html</code> capture en attendant les emails des artisans intéressés.</div>
+            </div>
+            <div class="switch" id="sw-artisan" data-key="artisan" style="pointer-events:none;opacity:.5" title="Désactivé pour la V1"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:16px">
+        <div class="panel-head"><h2>Modèle économique</h2></div>
+        <div class="panel-body" style="font-size:13.5px;color:var(--slate-600)">
+          <div style="padding:18px 20px;background:var(--teal-50,#F0FDFA);border:1px solid var(--teal-100,#CCFBF1);border-radius:10px">
+            <div style="font:600 11px var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--teal-700)">Rémunération B2B, par dossier transmis</div>
+            <div style="display:flex;gap:26px;flex-wrap:wrap;margin-top:10px">
+              <div><div style="font:700 24px var(--font-mono);color:var(--slate-900)">290 € HT</div><div style="font-size:12.5px">Rénovation d'ampleur · MAR</div></div>
+              <div><div style="font:700 24px var(--font-mono);color:var(--slate-900)">190 € HT</div><div style="font-size:12.5px">Rénovation par geste · AMO</div></div>
+              <div><div style="font:700 24px var(--font-mono);color:var(--slate-500)">290 € HT <span style="font:600 10px var(--font-mono);color:#B45309;background:#FEF3C7;padding:2px 6px;border-radius:4px;vertical-align:middle">À CONFIRMER</span></div><div style="font-size:12.5px">Habitat dégradé · opérateur agréé</div></div>
+            </div>
+          </div>
+          <p style="margin:12px 0 0;font-size:13px;color:var(--slate-500);line-height:1.55"><b>Le particulier ne paie jamais.</b> Le site n'a aucun rôle transactionnel : il qualifie, monte le dossier et le transmet. RénoFacile est rémunéré par le professionnel agréé qui reprend le dossier, hors plateforme.</p>
+          <p style="margin:10px 0 0;font-size:12.5px;color:var(--slate-500)">Source unique : <code>_storage.js</code> (REMUNERATION_HT). Les deux premiers montants viennent des documents « La solution RénoFacile » 2027 et 2028 ; le troisième n'y est pas chiffré et reste à arrêter. L'état mensuel par partenaire est exporté depuis l'onglet Partenaires.</p>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:16px">
+        <div class="panel-head"><h2>Zone de danger</h2></div>
+        <div class="panel-body">
+          <div class="setting">
+            <div class="info">
+              <div class="name">Vider toutes les données de démo</div>
+              <div class="desc">Supprime tous les clients, documents, audit log. Conserve les comptes admin. Action irréversible.</div>
+            </div>
+            <button class="btn btn-danger" id="btn-wipe">Tout effacer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VUE PARTENAIRES — état mensuel à adresser à chaque professionnel agréé -->
+    <div id="view-partenaires" hidden>
+      <h1 class="page-title">Partenaires · état mensuel</h1>
+      <p class="lead">Dossiers transmis par professionnel agréé, valorisés au barème contractuel. C'est la base de la relation B2B : le particulier ne règle jamais rien.</p>
+
+      <div class="kpis">
+        <div class="kpi"><div class="lbl">Dossiers transmis</div><div class="val" id="prt-total">—</div><div class="delta">toutes périodes</div></div>
+        <div class="kpi"><div class="lbl">Ce mois-ci</div><div class="val" id="prt-mois">—</div><div class="delta" id="prt-mois-lbl">—</div></div>
+        <div class="kpi featured"><div class="lbl">À refacturer ce mois</div><div class="val" id="prt-montant">—</div><div class="delta">HT, hors plateforme</div></div>
+        <div class="kpi"><div class="lbl">Partenaires actifs</div><div class="val" id="prt-nb">—</div><div class="delta">ayant reçu au moins un dossier</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>État du mois par partenaire</h2>
+          <button class="btn btn-primary" id="prt-export">Exporter en CSV</button>
+        </div>
+        <table>
+          <thead><tr><th>Partenaire</th><th>Rôle</th><th>Département</th><th>Dossiers ce mois</th><th>Montant HT</th></tr></thead>
+          <tbody id="partenaires-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="panel" style="margin-top:16px">
+        <div class="panel-head"><h2>Détail des dossiers transmis</h2></div>
+        <table>
+          <thead><tr><th>Dossier</th><th>Volet</th><th>Partenaire</th><th>Transmis le</th><th>Statut</th><th>Montant HT</th></tr></thead>
+          <tbody id="partenaires-detail-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VUE LISTE D'ATTENTE GÉOGRAPHIQUE -->
+    <div id="view-waitlist" hidden>
+      <h1 class="page-title">Liste d'attente géographique</h1>
+      <p class="lead">Visiteurs hors zone active ayant demandé à être prévenus de l'ouverture du service dans leur région. Aucun paiement n'a été encaissé.</p>
+
+      <div class="kpis">
+        <div class="kpi"><div class="lbl">Inscrits au total</div><div class="val" id="rf-waitlist-kpi-total">—</div><div class="delta">toutes régions confondues</div></div>
+        <div class="kpi"><div class="lbl">Région la plus demandée</div><div class="val" id="rf-waitlist-kpi-region" style="font-size:18px">—</div><div class="delta" id="rf-waitlist-kpi-region-n">—</div></div>
+        <div class="kpi"><div class="lbl">Zones roadmap</div><div class="val" id="rf-waitlist-kpi-roadmap">—</div><div class="delta">ouverture T3 2026</div></div>
+        <div class="kpi"><div class="lbl">Hors périmètre</div><div class="val" id="rf-waitlist-kpi-blocked">—</div><div class="delta">reste du territoire</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Inscriptions</h2>
+          <button type="button" class="btn btn-primary" id="rf-waitlist-export">Exporter en CSV</button>
+        </div>
+        <table>
+          <thead><tr><th>Email</th><th>Code postal</th><th>Région</th><th>Tunnel</th><th>Inscription</th></tr></thead>
+          <tbody id="rf-waitlist-tbody"></tbody>
+        </table>
+        <div class="empty" id="rf-waitlist-empty" hidden>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div>Aucune inscription sur la liste d'attente.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VUE AUDIT -->
+    <div id="view-audit" hidden>
+      <h1 class="page-title">Audit log complet</h1>
+      <p class="lead">Toutes les actions effectuées par les administrateurs (500 dernières).</p>
+      <div class="panel">
+        <table>
+          <thead><tr><th>Date</th><th>Admin</th><th>Action</th><th>Détails</th></tr></thead>
+          <tbody id="audit-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal Ajouter admin -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <h3>Ajouter un administrateur</h3>
+    <label>Email
+      <input type="email" id="new-admin-email" placeholder="prenom.nom@renofacile.fr" />
+    </label>
+    <label>Rôle
+      <select id="new-admin-role">
+        <option value="admin">Admin</option>
+        <option value="super_admin">Super admin</option>
+      </select>
+    </label>
+    <p style="font-size:12px;color:var(--slate-500);margin:6px 0 0">Mot de passe par défaut : <code>change-me</code> — l'admin devra le modifier à la première connexion (en V1).</p>
+    <div class="actions">
+      <button class="btn" id="modal-cancel">Annuler</button>
+      <button class="btn btn-primary" id="modal-ok">Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="_demo_mode.js"></script>
+<script src="_storage.js"></script>
+<script>
+  // ─── Auth check inline ──────────────────────────────────────────────────
+  function setupSuperUI(){
+    const me = RFStore.getCurrentUser();
+    document.getElementById('me-name').textContent = me ? me.email.split('@')[0] : '';
+    document.getElementById('me-av').textContent = (me && me.email[0] || 'S').toUpperCase();
+    document.getElementById('auth-wall').classList.remove('show');
+  }
+  function showAuthWall(){
+    document.getElementById('auth-wall').classList.add('show');
+    setTimeout(() => document.getElementById('auth-email').focus(), 80);
+  }
+
+  /* Le chargement des données est SUBORDONNÉ à l'authentification : rien
+     n'est injecté dans la page tant que la session super-admin n'est pas
+     établie. Un calque CSS n'est pas un contrôle d'accès — tant qu'il n'y a
+     pas de vérification côté serveur, ces consoles sont retirées du
+     déploiement (voir la règle 404 de vercel.json). */
+  if (RFStore.isSuperAdmin()) {
+    setupSuperUI();
+    loadOverview();
+  } else {
+    showAuthWall();
+  }
+
+  document.getElementById('auth-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errEl = document.getElementById('auth-err');
+    errEl.classList.remove('show');
+    try {
+      const email = document.getElementById('auth-email').value.trim();
+      const pw    = document.getElementById('auth-pw').value;
+      const { role } = await RFStore.login(email, pw);
+      if (role === 'super_admin') {
+        setupSuperUI();
+        // recharge la vue active si besoin
+        loadOverview && loadOverview();
+      } else {
+        errEl.textContent = "Accès super-admin requis pour cet espace.";
+        errEl.classList.add('show');
+        RFStore.logout();
+      }
+    } catch(err){
+      errEl.textContent = err.message || 'Connexion impossible.';
+      errEl.classList.add('show');
+    }
+  });
+
+  document.getElementById('btn-logout').addEventListener('click', e => {
+    e.preventDefault();
+    RFStore.logout();
+    showAuthWall();
+    document.getElementById('auth-email').value = '';
+    document.getElementById('auth-pw').value = '';
+  });
+
+  // ─── Nav ────────────────────────────────────────────────────────────────
+  document.querySelectorAll('.nav a[data-view]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const v = a.dataset.view;
+      document.querySelectorAll('.nav a[data-view]').forEach(x => x.classList.remove('active'));
+      a.classList.add('active');
+      ['overview','admins','settings','partenaires','waitlist','audit'].forEach(x => document.getElementById('view-'+x).hidden = x !== v);
+      if (v === 'admins') loadAdmins();
+      if (v === 'audit') loadAudit();
+      if (v === 'partenaires') loadPartenaires();
+    });
+  });
+
+  /* Badge « Partenaires » : dossiers transmis ce mois, à refacturer. */
+  function refreshPartenairesBadge(){
+    try {
+      const badge = document.getElementById('cancel-badge');
+      if (!badge) return;
+      const now = new Date();
+      const n = (window.RFDossiers ? RFDossiers.getAll() : []).filter(d => {
+        if (!d.transmisLe) return false;
+        const t = new Date(d.transmisLe);
+        return t.getMonth() === now.getMonth() && t.getFullYear() === now.getFullYear();
+      }).length;
+      badge.textContent = n;
+      badge.style.display = n > 0 ? 'inline-block' : 'none';
+    } catch(e){ console.warn('Badge partenaires :', e); }
+  }
+  refreshPartenairesBadge();
+
+  function toast(msg){ const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2400); }
+  function fmtEUR(n){ if (!n || isNaN(n)) return '—'; return new Intl.NumberFormat('fr-FR').format(Math.round(n)) + ' €'; }
+  function fmtDate(d){ if (!d) return '—'; return new Date(d).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', year:'numeric'}); }
+
+  // ─── Overview ───────────────────────────────────────────────────────────
+  async function loadOverview() {
+    const stats = await RFStore.getStats();
+    const admins = await RFStore.listAdmins();
+    document.getElementById('kpi-mrr').textContent = fmtEUR(stats.revenuHT);
+    document.getElementById('kpi-actifs').textContent = stats.activeClients;
+    document.getElementById('kpi-actifs-d').textContent = `${stats.dossiersTransmis} dossier${stats.dossiersTransmis > 1 ? 's' : ''} transmis`;
+    document.getElementById('kpi-aides').textContent = fmtEUR(stats.totalAides);
+    document.getElementById('kpi-admins').textContent = admins.length;
+
+    const clients = await RFStore.listClients();
+    // La répartition utile est celle des statuts de compte.
+    const LIB_STATUT = { actif: 'Dossiers actifs', churn: 'Inactifs' };
+    const buckets = {};
+    clients.forEach(c => {
+      const k = c.status || 'actif';
+      buckets[k] = (buckets[k] || 0) + 1;
+    });
+    document.getElementById('tier-breakdown').innerHTML = Object.entries(buckets).map(([t, n]) => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+        <div style="font-weight:500">${LIB_STATUT[t] || t}</div>
+        <div style="font:600 18px var(--font-sans);color:var(--slate-900)">${n} <span style="font-size:12px;color:var(--slate-500);font-weight:400">client${n>1?'s':''}</span></div>
+      </div>
+    `).join('') || '<div style="color:var(--slate-500)">Aucun client pour l\'instant.</div>';
+
+    const log = await RFStore.getAuditLog(5);
+    document.getElementById('last-actions').innerHTML = log.length ? log.map(e => `
+      <div style="padding:8px 0;border-bottom:1px solid var(--border)">
+        <div style="font-weight:500;color:var(--slate-900)">${e.action}</div>
+        <div style="font-size:12px;color:var(--slate-500);margin-top:2px">${e.admin} · ${new Date(e.timestamp).toLocaleString('fr-FR')}</div>
+      </div>
+    `).join('') : 'Aucune action enregistrée.';
+  }
+
+  // ─── Admins ─────────────────────────────────────────────────────────────
+  async function loadAdmins() {
+    const admins = await RFStore.listAdmins();
+    document.getElementById('admins-tbody').innerHTML = admins.map(a => `
+      <tr>
+        <td><b>${a.email}</b></td>
+        <td><span class="pill ${a.role === 'super_admin' ? 'super' : 'admin'}">${a.role === 'super_admin' ? 'Super admin' : 'Admin'}</span></td>
+        <td>${a.email === me.email ? '<span style="color:var(--slate-400);font-size:12px">(vous)</span>' : `<button class="btn btn-danger" data-del="${a.id}">Retirer</button>`}</td>
+      </tr>
+    `).join('');
+    document.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', async () => {
+      if (!confirm('Retirer ce compte admin ?')) return;
+      await RFStore.removeAdmin(b.dataset.del);
+      toast('Admin retiré.');
+      loadAdmins();
+    }));
+  }
+
+  document.getElementById('btn-add-admin').addEventListener('click', () => document.getElementById('modal-bg').classList.add('open'));
+  document.getElementById('modal-cancel').addEventListener('click', () => document.getElementById('modal-bg').classList.remove('open'));
+  document.getElementById('modal-ok').addEventListener('click', async () => {
+    const email = document.getElementById('new-admin-email').value.trim();
+    const role  = document.getElementById('new-admin-role').value;
+    if (!email) return;
+    try {
+      await RFStore.addAdmin(email, role);
+      document.getElementById('modal-bg').classList.remove('open');
+      document.getElementById('new-admin-email').value = '';
+      toast(`Admin ${email} ajouté.`);
+      loadAdmins();
+    } catch(e) {
+      alert(e.message);
+    }
+  });
+
+  // ─── Settings ───────────────────────────────────────────────────────────
+  document.querySelectorAll('.switch').forEach(sw => {
+    sw.addEventListener('click', () => {
+      sw.classList.toggle('on');
+      const enabled = sw.classList.contains('on');
+      toast(`${sw.dataset.key} : ${enabled ? 'activé' : 'désactivé'}`);
+      RFStore.logAction('toggle_setting', { key: sw.dataset.key, value: enabled });
+    });
+  });
+
+  document.getElementById('btn-wipe').addEventListener('click', () => {
+    if (!confirm('Confirmer la suppression de TOUTES les données de démo ? Cette action est IRRÉVERSIBLE.')) return;
+    if (!confirm('Vraiment ? Tous les clients, documents et logs vont être effacés.')) return;
+    ['renofacile.clients','renofacile.documents','renofacile.audit_log','renofacile.profile'].forEach(k => localStorage.removeItem(k));
+    toast('Toutes les données démo ont été effacées.');
+    setTimeout(()=>location.reload(), 1000);
+  });
+
+  /* ─── Partenaires : état mensuel ────────────────────────────────────────
+     Le revenu de RénoFacile est une rémunération B2B, versée par le
+     professionnel agréé qui reprend le dossier. Rien n'est encaissé auprès
+     du particulier, ici ni ailleurs. */
+  /* Source unique : _storage.js. Ne jamais redéclarer les montants ici. */
+  const BAREME_HT = (window.RFStore && RFStore.REMUNERATION_HT) || { energetique: 290, autonomie: 190, indigne: 290 };
+  const BAREME_A_CONFIRMER = (window.RFStore && RFStore.REMUNERATION_A_CONFIRMER) || [];
+  const ROLE_PAR_TYPE = { energetique: 'MAR', autonomie: 'AMO', indigne: 'Opérateur agréé' };
+  const VOLET = { energetique: 'Rénovation énergétique', autonomie: "Adaptation à l'autonomie", indigne: 'Habitat dégradé' };
+
+  function dossiersTransmis(){
+    try {
+      return (window.RFDossiers ? RFDossiers.getAll() : []).filter(d => d.transmisLe);
+    } catch (e) { return []; }
+  }
+
+  async function loadPartenaires(){
+    const tous = dossiersTransmis();
+    const now = new Date();
+    const memeMois = d => {
+      const t = new Date(d.transmisLe);
+      return t.getMonth() === now.getMonth() && t.getFullYear() === now.getFullYear();
+    };
+    const duMois = tous.filter(memeMois);
+
+    const parPartenaire = {};
+    duMois.forEach(d => {
+      const p = d.partenaire || {};
+      const cle = p.nom || ('Non désigné · ' + (ROLE_PAR_TYPE[d.type] || '—'));
+      if (!parPartenaire[cle]) parPartenaire[cle] = { nom: cle, role: p.role || ROLE_PAR_TYPE[d.type], dept: p.departement || '—', n: 0, ht: 0 };
+      parPartenaire[cle].n += 1;
+      parPartenaire[cle].ht += BAREME_HT[d.type] || BAREME_HT.energetique;
+    });
+    const lignes = Object.values(parPartenaire).sort((a, b) => b.ht - a.ht);
+    const totalHT = lignes.reduce((s2, l) => s2 + l.ht, 0);
+
+    document.getElementById('prt-total').textContent = tous.length;
+    document.getElementById('prt-mois').textContent = duMois.length;
+    document.getElementById('prt-mois-lbl').textContent = now.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    document.getElementById('prt-montant').textContent = fmtEUR(totalHT);
+    document.getElementById('prt-nb').textContent = lignes.length;
+    document.getElementById('cancel-badge').textContent = duMois.length;
+    document.getElementById('cancel-badge').style.display = duMois.length ? '' : 'none';
+
+    const tbody = document.getElementById('partenaires-tbody');
+    tbody.innerHTML = lignes.length ? lignes.map(l => `
+      <tr>
+        <td><b>${l.nom}</b></td>
+        <td>${l.role || '—'}</td>
+        <td>${l.dept || '—'}</td>
+        <td class="num">${l.n}</td>
+        <td class="num"><b>${fmtEUR(l.ht)}</b></td>
+      </tr>`).join('')
+      : '<tr><td colspan="5" style="padding:48px;text-align:center;color:var(--slate-500)">Aucun dossier transmis ce mois-ci.</td></tr>';
+
+    const detail = document.getElementById('partenaires-detail-tbody');
+    const tri = tous.slice().sort((a, b) => new Date(b.transmisLe) - new Date(a.transmisLe));
+    detail.innerHTML = tri.length ? tri.map(d => `
+      <tr>
+        <td style="font:400 12px var(--font-mono)">${d.id}</td>
+        <td>${VOLET[d.type] || d.type}</td>
+        <td>${(d.partenaire && d.partenaire.nom) || 'Désignation en cours'}</td>
+        <td>${fmtDate(d.transmisLe)}</td>
+        <td>${(window.RFTransmission && RFTransmission.libelleStatut(d.statutDossier)) || 'Transmis'}</td>
+        <td class="num">${fmtEUR(BAREME_HT[d.type] || BAREME_HT.energetique)}${BAREME_A_CONFIRMER.indexOf(d.type) !== -1 ? ' <span title="Montant non arrêté" style="color:#B45309">•</span>' : ''}</td>
+      </tr>`).join('')
+      : '<tr><td colspan="6" style="padding:48px;text-align:center;color:var(--slate-500)">Aucun dossier transmis.</td></tr>';
+  }
+
+  const prtExport = document.getElementById('prt-export');
+  if (prtExport) prtExport.addEventListener('click', () => {
+    const now = new Date();
+    const lignes = dossiersTransmis().filter(d => {
+      const t = new Date(d.transmisLe);
+      return t.getMonth() === now.getMonth() && t.getFullYear() === now.getFullYear();
+    });
+    const csv = 'dossier;volet;partenaire;role;departement;transmis_le;montant_ht\n' + lignes.map(d => [
+      d.id, VOLET[d.type] || d.type,
+      (d.partenaire && d.partenaire.nom) || 'Non designe',
+      (d.partenaire && d.partenaire.role) || ROLE_PAR_TYPE[d.type] || '',
+      (d.partenaire && d.partenaire.departement) || '',
+      d.transmisLe, BAREME_HT[d.type] || BAREME_HT.energetique,
+    ].join(';')).join('\n');
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'renofacile-partenaires-' + now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '.csv';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    if (window.RFStore && RFStore.logAction) RFStore.logAction('export_partenaires', { mois: now.toISOString().slice(0, 7), lignes: lignes.length });
+  });
+
+  // ─── Audit ──────────────────────────────────────────────────────────────
+  async function loadAudit() {
+    const log = await RFStore.getAuditLog();
+    document.getElementById('audit-tbody').innerHTML = log.length ? log.map(e => `
+      <tr>
+        <td style="font:500 12px var(--font-mono)">${new Date(e.timestamp).toLocaleString('fr-FR')}</td>
+        <td>${e.admin}</td>
+        <td><span style="font-weight:500">${e.action}</span></td>
+        <td style="font:400 12px var(--font-mono);color:var(--slate-500)">${JSON.stringify(e.details)}</td>
+      </tr>
+    `).join('') : '<tr><td colspan="4" style="padding:48px;text-align:center;color:var(--slate-500)">Aucune action.</td></tr>';
+  }
+
+  // Aucun appel de boot : loadOverview() n'est déclenché qu'après
+  // authentification effective, plus haut dans ce script.
+</script>
+
+<script>
+/* Liste d'attente géographique — lecture, KPI et export CSV. */
+(function initWaitlistTab(){
+  'use strict';
+  if (!window.RFGeo) return;
+  var esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); };
+  var setTxt = function(id, v){ var el = document.getElementById(id); if (el) el.textContent = v; };
+  var TUNNELS = { ENERGETIQUE: 'Énergétique', MPA: 'Autonomie', LHI: 'Habitat dégradé' };
+
+  function render(){
+    var list = RFGeo.getWaitlist().slice().sort(function(a, b){ return b.ts - a.ts; });
+    var roadmapRegions = Object.keys(RFGeo.ZONES_ROADMAP);
+    var parRegion = {}, roadmap = 0, blocked = 0;
+
+    list.forEach(function(r){
+      parRegion[r.region] = (parRegion[r.region] || 0) + 1;
+      if (roadmapRegions.indexOf(r.region) !== -1) roadmap++; else blocked++;
+    });
+    var top = Object.keys(parRegion).sort(function(a, b){ return parRegion[b] - parRegion[a]; })[0];
+
+    setTxt('count-waitlist', list.length);
+    setTxt('rf-waitlist-kpi-total', list.length);
+    setTxt('rf-waitlist-kpi-region', top || '—');
+    setTxt('rf-waitlist-kpi-region-n', top ? parRegion[top] + (parRegion[top] > 1 ? ' inscrits' : ' inscrit') : '—');
+    setTxt('rf-waitlist-kpi-roadmap', roadmap);
+    setTxt('rf-waitlist-kpi-blocked', blocked);
+
+    var tbody = document.getElementById('rf-waitlist-tbody');
+    var empty = document.getElementById('rf-waitlist-empty');
+    if (!tbody) return;
+    if (empty) empty.hidden = list.length > 0;
+    tbody.innerHTML = list.map(function(r){
+      return '<tr>' +
+        '<td>' + esc(r.email) + '</td>' +
+        '<td>' + (esc(r.codePostal) || '—') + '</td>' +
+        '<td>' + esc(r.region) + '</td>' +
+        '<td>' + esc(TUNNELS[r.tunnel] || r.tunnel || '—') + '</td>' +
+        '<td>' + new Date(r.ts).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) + '</td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  var exportBtn = document.getElementById('rf-waitlist-export');
+  if (exportBtn) exportBtn.addEventListener('click', function(){
+    var list = RFGeo.getWaitlist();
+    var csv = 'email;code_postal;region;tunnel;date\n' + list.map(function(r){
+      return [r.email, r.codePostal, r.region, r.tunnel, new Date(r.ts).toISOString()].join(';');
+    }).join('\n');
+    var url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'renofacile-liste-attente-' + Date.now() + '.csv';
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

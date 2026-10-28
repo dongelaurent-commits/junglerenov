@@ -1,0 +1,1305 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Annuaire des artisans RGE — RénoFacile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --teal-50:#F0FDFA;--teal-100:#CCFBF1;--teal-400:#2DD4BF;
+    --teal-600:#0D9488;--teal-700:#0F766E;--teal-800:#115E59;--teal-900:#134E4A;
+    --amber-500:#F59E0B;
+    --slate-50:#F8FAFC;--slate-100:#F1F5F9;--slate-200:#E2E8F0;--slate-300:#CBD5E1;
+    --slate-400:#94A3B8;--slate-500:#64748B;--slate-600:#475569;--slate-700:#334155;--slate-800:#1E293B;--slate-900:#0F172A;
+    --bg:#F8FAFC;--surface:#FFFFFF;--border:#E2E8F0;
+    --font-sans:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --font-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+    --sidebar:280px;
+  }
+  *{box-sizing:border-box}
+  /* Le projet pilote la visibilité par l'attribut `hidden` : cette règle
+     l'emporte sur les classes qui déclarent leur propre `display`. */
+  [hidden]{display:none!important}html,body{margin:0;padding:0}
+  body{font-family:var(--font-sans);color:var(--slate-800);background:var(--bg);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
+
+  .app{display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:100vh}
+  .sidebar{background:#fff;border-right:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;overflow-y:auto}
+  @media (max-width:980px){.app{grid-template-columns:1fr !important}.sidebar{display:none !important}}
+  .brand{display:flex;align-items:center;gap:12px;padding:0 8px}
+  .brand-mark{width:30px;height:30px;border-radius:8px;background:var(--teal-700);display:grid;place-items:center}
+  .brand-name{font-weight:700;font-size:17px}
+  .total-widget{padding:18px;border-radius:14px;background:linear-gradient(135deg,var(--teal-700),var(--teal-900));color:#fff;position:relative;overflow:hidden}
+  .total-widget::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 80% at 100% 0%,rgba(45,212,191,.18),transparent 60%)}
+  .total-widget .lbl{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;opacity:.75;position:relative}
+  .total-widget .val{font:700 24px var(--font-mono);letter-spacing:-.01em;margin-top:4px;position:relative}
+  .total-widget .sub{font-size:12.5px;opacity:.85;position:relative;margin-top:2px}
+  .nav{display:flex;flex-direction:column;gap:2px}
+  .nav-section{padding:8px 12px 4px;font:600 11px var(--font-mono);color:var(--slate-400);letter-spacing:.06em;text-transform:uppercase}
+  .nav a{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;color:var(--slate-700);font-size:14px;font-weight:500}
+  .nav a:hover{background:var(--slate-100)}
+  .nav a.active{background:var(--teal-50);color:var(--teal-800)}
+  .nav a.active svg{color:var(--teal-700)}
+  .nav a svg{color:var(--slate-400);flex:0 0 auto}
+  .nav .exit{margin-top:6px;padding-top:14px;border-top:1px solid var(--border)}
+  .me{margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:10px}
+  .me .av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--teal-100),var(--teal-400));display:grid;place-items:center;color:var(--teal-900);font:600 12px var(--font-sans)}
+  .me .nm{font-size:13.5px;font-weight:600;line-height:1.2}
+  .me .em{font-size:12px;color:var(--slate-500)}
+
+  .container{padding:32px 40px 64px;max-width:1080px;width:100%}
+  @media (max-width:640px){.container{padding:24px 20px 60px}}
+  .breadcrumb{font:500 12px var(--font-mono);color:var(--slate-500);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+  h1{font-size:28px;font-weight:700;letter-spacing:-.02em;margin:0 0 8px}
+  .lead{margin:0 0 28px;color:var(--slate-600);font-size:15px;max-width:72ch;line-height:1.6}
+  .lead b{color:var(--slate-800);font-weight:600}
+
+  .layout-search{display:grid;grid-template-columns:260px 1fr;gap:24px;align-items:start}
+  @media (max-width:880px){.layout-search{grid-template-columns:1fr}}
+  .filters{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px}
+  .filters h3{margin:0 0 12px;font-size:13px;font-weight:600;text-transform:uppercase;color:var(--slate-500);letter-spacing:.04em}
+  .filters .f-group{border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:14px}
+  .filters .f-group:last-child{border:0;margin:0;padding:0}
+  .checkbox{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:14px;color:var(--slate-700);cursor:pointer}
+  .checkbox input{accent-color:var(--teal-700);width:16px;height:16px}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field-label{font-size:12.5px;font-weight:600;color:var(--slate-700)}
+  .select,.input{font:400 14px var(--font-sans);padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--slate-800);width:100%}
+  .select:focus,.input:focus{outline:none;border-color:var(--teal-700);box-shadow:0 0 0 4px var(--teal-100)}
+  .slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;background:var(--slate-200);border-radius:999px;margin:8px 0 0}
+  .slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:var(--teal-700);border-radius:50%;border:3px solid #fff;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+  .slider-val{font:500 12px var(--font-mono);color:var(--slate-500);margin-top:6px;display:flex;justify-content:space-between}
+
+  /* Main result card */
+  .ready-card{background:linear-gradient(135deg,#F0FDFA 0%,#fff 100%);border:1px solid var(--teal-100);border-radius:16px;padding:32px}
+  .ready-card .eyebrow{font:600 11px var(--font-mono);color:var(--teal-700);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+  .ready-card h2{margin:0 0 12px;font-size:22px;font-weight:700;letter-spacing:-.01em;color:var(--slate-900)}
+  .ready-card p{margin:0 0 14px;color:var(--slate-700);font-size:14.5px;line-height:1.6}
+  .ready-card p b{color:var(--slate-900);font-weight:600}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 22px}
+  .tag{padding:5px 11px;background:#fff;border:1px solid var(--teal-100);color:var(--teal-800);border-radius:999px;font:500 12px var(--font-mono);letter-spacing:.04em}
+  .btn{display:inline-flex;align-items:center;gap:8px;font:500 14px var(--font-sans);padding:12px 18px;border-radius:9px;border:1px solid transparent;text-decoration:none;line-height:1}
+  .btn-primary{background:var(--teal-700);color:#fff}.btn-primary:hover{background:var(--teal-800)}
+  .btn-secondary{background:#fff;color:var(--slate-800);border-color:var(--border)}
+  .btn-lg{padding:14px 22px;font-size:15px}
+  .post-cta{margin-top:18px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:10px;font-size:13.5px;color:var(--slate-600);display:flex;gap:10px;align-items:flex-start}
+  .post-cta svg{color:var(--teal-700);flex:0 0 auto;margin-top:2px}
+
+  /* Cartes artisans RGE — résultats API ADEME */
+  .artisan-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px;display:grid;grid-template-columns:1fr auto;gap:12px;margin-bottom:8px}
+  .artisan-card:last-child{margin-bottom:0}
+  .artisan-name{font-weight:600;font-size:14.5px;color:var(--slate-900)}
+  .artisan-meta{font-size:12.5px;color:var(--slate-500);margin-top:2px;line-height:1.4}
+  .artisan-certs{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .artisan-certs .pill{background:var(--teal-50);color:var(--teal-800);padding:3px 8px;border-radius:999px;font:500 11px var(--font-sans);border:1px solid var(--teal-100)}
+  .artisan-action{display:flex;flex-direction:column;gap:6px;align-items:flex-end;justify-content:center;min-width:120px}
+  .artisan-action a{font-size:13px;color:var(--teal-700);font-weight:500;text-decoration:none}
+  .artisan-action a:hover{color:var(--teal-800);text-decoration:underline}
+  .artisan-loading{text-align:center;padding:24px;color:var(--slate-500);font-size:13px}
+  .artisan-notice{margin-bottom:10px;padding:8px 12px;background:var(--slate-50);border:1px solid var(--border);border-radius:8px;color:var(--slate-600);font-size:12px}
+  .artisan-empty{padding:16px;background:var(--slate-50);border:1px solid var(--border);border-radius:8px;color:var(--slate-600);font-size:13px;text-align:center}
+  @media (max-width:600px){.artisan-card{grid-template-columns:1fr}.artisan-action{flex-direction:row;align-items:flex-start;justify-content:flex-start;margin-top:6px}}
+
+  /* Bouton "Ajouter au dossier" sur les cartes artisans */
+  .btn-fav{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:6px;border:1px solid var(--teal-700);background:#fff;color:var(--teal-700);cursor:pointer;font:500 12.5px var(--font-sans);transition:all .12s}
+  .btn-fav:hover{background:var(--teal-50)}
+  .btn-fav.added{background:var(--teal-700);color:#fff;border-color:var(--teal-700)}
+  .btn-fav.added:hover{background:var(--teal-800)}
+  .artisan-card.fav{border-color:var(--teal-200);background:linear-gradient(135deg,#F0FDFA 0%,#fff 60%)}
+
+  /* Liste favoris */
+  .fav-row{display:grid;grid-template-columns:1fr auto;gap:10px;padding:10px 12px;background:var(--slate-50);border-radius:8px;margin-bottom:6px;align-items:center}
+  .fav-row:last-child{margin-bottom:0}
+  .fav-name{font-weight:600;font-size:13.5px;color:var(--slate-900)}
+  .fav-meta{font-size:11.5px;color:var(--slate-500);margin-top:1px}
+  .fav-actions{display:flex;gap:8px;align-items:center}
+  .fav-actions a{font-size:12.5px;color:var(--teal-700);text-decoration:none;font-weight:500}
+  .fav-actions a:hover{text-decoration:underline}
+  .fav-remove{background:transparent;border:0;color:var(--danger-600,#DC2626);cursor:pointer;font-size:18px;line-height:1;padding:0 4px}
+  .fav-remove:hover{color:#991B1B}
+
+  /* Tips section */
+  .tips{margin-top:48px}
+  .tips h2{font-size:20px;font-weight:700;letter-spacing:-.01em;margin:0 0 16px;color:var(--slate-900)}
+  .tip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  .tip{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+  .tip .ic{width:34px;height:34px;border-radius:9px;background:var(--teal-50);color:var(--teal-700);display:grid;place-items:center;margin-bottom:10px}
+  .tip h3{margin:0 0 6px;font-size:14.5px;font-weight:600;color:var(--slate-900)}
+  .tip p{margin:0;font-size:13.5px;color:var(--slate-600);line-height:1.5}
+</style>
+  <script src="_travaux_catalog.js"></script>
+  <script src="_analytics.js" defer></script>
+<style>@media (max-width:980px){.mobile-topbar{display:flex}}
+/* ══════════════════════════════════════════════════════════════════
+   Repli mobile — DÉLIBÉRÉMENT EN FIN DE FEUILLE.
+   La media query qui replie la barre latérale était déclarée AVANT la
+   règle de base `.sidebar{display:flex}` : à spécificité égale c'est la
+   dernière déclarée qui gagne, la barre restait affichée et poussait la
+   page à 654 px de large. Ne pas remonter ce bloc.
+   `:not(.open)` est indispensable, sinon le tiroir mobile ne s'ouvre
+   plus. `minmax(0,1fr)` remplace `1fr`, qui ne descend jamais sous la
+   largeur minimale de son contenu — un seul tableau large suffisait à
+   élargir toute la page.
+   ══════════════════════════════════════════════════════════════════ */
+@media (max-width:880px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .sidebar:not(.open){display:none}
+  .layout > main,.layout > .main{min-width:0;max-width:100%;overflow-x:hidden}
+  .layout table{display:block;overflow-x:auto;max-width:100%}
+}
+/* Respect de « réduire les animations » — neuf animations déclarées, dont un
+   badge en pulsation infinie que rien n'arrêtait. */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+/* Focus visible — les règles `outline:none` + halo `teal-100` donnaient
+   1,13:1 pour un seuil de 3:1. Contour rétabli, halo conservé. */
+:where(input,select,textarea,button,a,[tabindex]):focus-visible{
+  outline:2px solid var(--teal-700)!important;outline-offset:2px!important;
+}
+.suggest > *:focus-visible,.suggest .item:focus-visible,.suggest li:focus-visible{
+  outline:2px solid var(--teal-700)!important;outline-offset:-2px!important;
+}
+</style>
+<link rel="stylesheet" href="_mobile_nav.css">
+<script src="_mobile_nav.js" defer></script>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg></span>
+      <span class="brand-name">Réno<span style="color:var(--teal-700)">Facile</span></span>
+    </a>
+
+    <div class="total-widget" id="rf-aides-widget">
+      <div class="lbl">Aides estimées</div>
+      <div class="val" id="rf-aides-val">—</div>
+      <div class="sub" id="rf-aides-sub">Diagnostic à compléter</div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section" >Mon parcours</div>
+      <a href="dashboard.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg> Mon projet</a>
+      <a href="mes-aides.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg> Mes aides</a>
+      <a href="mes-documents.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg> Mes documents</a>
+      <div class="nav-section" style="margin-top:8px">Outils</div>
+      <a href="annuaire-artisans.html" class="active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg> Annuaire artisans</a>
+      <a href="glossaire-aides.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg> Comprendre les aides</a>
+      <div class="nav-section" style="margin-top:8px">Compte</div>
+      <a href="mon-profil.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg> Mon profil</a>
+      <a href="page-info.html?p=contact"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg> Paramètres</a>
+
+      <div class="exit" style="margin-top:6px;padding-top:14px;border-top:1px solid var(--border)">
+        <a href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg> Retour à l'accueil du site</a>
+      </div>
+    </nav>
+
+    <div class="me">
+      <div class="av" id="rf-me-av">RF</div>
+      <div>
+        <div class="nm" id="rf-me-name">Mon compte</div>
+        <div class="em" id="rf-me-plan">—</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="container">
+    <div class="breadcrumb">Outils · Annuaire artisans</div>
+    <h1>Trouver un artisan RGE pour vos travaux</h1>
+    <p class="lead">Nous filtrons l'<b>annuaire officiel RGE</b> (annuaire-rge.faire.fr, géré par l'État) selon votre projet et votre localisation. C'est la source la plus fiable et la plus complète : ~50 000 entreprises certifiées, mises à jour quotidiennement par les organismes de qualification (Qualibat, Qualifelec, Qualit'EnR…).</p>
+
+    <div class="layout-search">
+      <aside class="filters">
+        <h3>Affiner ma recherche</h3>
+
+        <div class="f-group" id="addr-group">
+          <label class="field-label" for="client-addr" style="display:block;margin-bottom:6px">Votre point de départ</label>
+          <input type="text" id="client-addr" class="input" placeholder="Code postal ou adresse (ex : 54000 Nancy)" autocomplete="street-address" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13.5px;color:var(--slate-800);background:#fff" />
+          <small id="addr-hint" style="display:block;margin-top:5px;font-size:11.5px;color:var(--slate-500);line-height:1.35">Utilisé pour trier les artisans par distance depuis chez vous.</small>
+        </div>
+
+        <div class="f-group">
+          <div class="field-label" style="margin-bottom:8px" id="types-label">Type de travaux</div>
+          <div id="types-travaux"></div>
+        </div>
+
+        <div class="f-group">
+          <div class="field"><label class="field-label" for="dep">Département</label>
+            <select class="select" id="dep">
+              <option value="">Tous les départements</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="f-group">
+          <div class="field"><label class="field-label" for="dist">Distance maximale</label>
+            <input type="range" class="slider" id="dist" min="5" max="100" step="5" value="30" />
+            <div class="slider-val"><span>5 km</span><span id="dist-val">30 km</span><span>100 km</span></div>
+          </div>
+        </div>
+      </aside>
+
+      <div>
+        <!-- SECTION FAVORIS : visible si au moins un artisan ajouté au dossier -->
+        <div id="favs-section" hidden style="background:#fff;border:1px solid var(--teal-200);border-radius:14px;padding:20px;margin-bottom:18px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div>
+              <div style="font:600 11px var(--font-mono);color:var(--teal-700);letter-spacing:.06em;text-transform:uppercase">Mon dossier</div>
+              <h3 style="margin:4px 0 0;font-size:17px;font-weight:600;color:var(--slate-900)">Artisans sélectionnés <span id="favs-count" style="background:var(--teal-700);color:#fff;border-radius:999px;padding:2px 9px;font:600 12px var(--font-mono);margin-left:6px">0</span></h3>
+            </div>
+            <button type="button" id="favs-clear" style="background:transparent;border:0;color:var(--slate-500);cursor:pointer;font-size:12.5px;text-decoration:underline">Tout retirer</button>
+          </div>
+          <div id="favs-list"></div>
+          <div style="margin-top:10px;padding:10px 12px;background:var(--teal-50);border-radius:8px;font-size:12.5px;color:var(--teal-900)">
+            <b>Étapes suivantes :</b> contactez vos artisans pour des devis comparables, puis déposez-les dans <a href="mes-documents.html" style="color:var(--teal-700);font-weight:500">Mes documents</a>. Nous vérifierons leur cohérence avec votre dossier d'aides.
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+            <a href="dashboard.html" class="btn btn-primary" style="flex:1;justify-content:center;text-decoration:none;min-width:160px">
+              Retour au tableau de bord →
+            </a>
+            <a href="mes-documents.html" class="btn btn-secondary" style="flex:1;justify-content:center;text-decoration:none;min-width:160px">
+              Déposer un devis
+            </a>
+          </div>
+        </div>
+
+        <div class="ready-card">
+          <div class="eyebrow">Votre recherche</div>
+          <h2>Recherche prête à lancer</h2>
+          <div style="display:grid;grid-template-columns:1fr;gap:8px;margin:14px 0">
+            <div style="display:flex;gap:8px;align-items:flex-start">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--teal-700);flex:0 0 auto;margin-top:2px"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              <div style="flex:1">
+                <div style="font-size:12px;color:var(--slate-500);text-transform:uppercase;letter-spacing:.04em;font-weight:600">Autour de</div>
+                <div style="font-weight:600;font-size:15px;color:var(--slate-900)" id="loc-label">code postal à renseigner</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--teal-700);flex:0 0 auto;margin-top:2px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="m9 14 2 2 4-4"/></svg>
+              <div style="flex:1">
+                <div style="font-size:12px;color:var(--slate-500);text-transform:uppercase;letter-spacing:.04em;font-weight:600">Pour les travaux</div>
+                <div style="font-weight:600;font-size:14px;color:var(--slate-900)" id="works-list">à définir</div>
+              </div>
+            </div>
+          </div>
+          <div class="tags" id="certifs" style="margin-bottom:18px"></div>
+          <button type="button" class="btn btn-primary btn-lg" id="cta-open" style="width:100%;justify-content:center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <span id="cta-open-label">Rechercher les artisans RGE</span>
+          </button>
+          <div class="post-cta">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg>
+            <div id="post-cta-txt">Recherche en direct dans la base officielle ADEME (~50 000 entreprises RGE certifiées). Sélectionnez les artisans qui vous intéressent — ils s'ajoutent à votre dossier et restent disponibles à tout moment.</div>
+          </div>
+
+          <!-- Note MAR — affichée si l'utilisateur est en rénovation d'ampleur -->
+          <div id="mar-notice" hidden style="margin-top:12px;padding:14px 16px;background:var(--warning-50);border:1px solid #FCD34D;border-radius:10px;font-size:13.5px;color:#92400E;display:flex;gap:10px;align-items:flex-start">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:0 0 auto;margin-top:2px"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div>
+              <b>Votre projet est une rénovation d'ampleur.</b> En plus des artisans RGE ci-dessous, vous devez désigner un <b>Mon Accompagnateur Rénov' (MAR)</b> agréé par l'Anah — il déposera votre dossier MaPrimeRénov' à votre place. Choisissez librement dans <a href="https://france-renov.gouv.fr/annuaires-professionnels/accompagnant" target="_blank" rel="noopener" style="color:#92400E;font-weight:600;text-decoration:underline">l'annuaire officiel Anah</a>. Ses honoraires (1 500 à 3 000 €) sont partiellement couverts par le forfait d'accompagnement MPR.
+            </div>
+          </div>
+
+          <div id="artisans-results" hidden style="margin-top:18px">
+            <h3 style="font-size:15px;font-weight:600;margin:0 0 10px;color:var(--slate-800)">Artisans RGE trouvés</h3>
+            <div id="artisans-list"></div>
+            <div style="text-align:center;margin-top:10px;font-size:12.5px;color:var(--slate-500)">
+              Source : <a href="https://data.ademe.fr/datasets/liste-des-entreprises-rge-2" target="_blank" rel="noopener" style="color:var(--teal-700);font-weight:500">ADEME — base officielle des entreprises RGE</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="tips">
+          <h2 id="tips-titre">Comment choisir le bon artisan ?</h2>
+          <div class="tip-grid" id="tips-grid">
+            <div class="tip">
+              <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m5 12 5 5L20 7"/></svg></div>
+              <h3>Vérifiez la certification RGE active</h3>
+              <p>La date d'expiration doit dépasser la date de fin de travaux prévue, sinon les aides ne s'appliquent pas.</p>
+            </div>
+            <div class="tip">
+              <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg></div>
+              <h3>Demandez 3 devis comparables</h3>
+              <p>Imposez le même périmètre, les mêmes matériaux et le même niveau de garantie pour pouvoir comparer.</p>
+            </div>
+            <div class="tip">
+              <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 9v4M12 17h0"/><circle cx="12" cy="12" r="10"/></svg></div>
+              <h3>Méfiez-vous des prix trop bas</h3>
+              <p>Un devis 30 % sous le marché est souvent un signe d'arnaque ou de sous-traitance non déclarée.</p>
+            </div>
+            <div class="tip">
+              <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div>
+              <h3>Privilégiez les artisans locaux</h3>
+              <p>Distance ≤ 50 km idéalement : meilleure réactivité, frais de déplacement réduits, suivi SAV facilité.</p>
+            </div>
+            <div class="tip">
+              <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6Z"/></svg></div>
+              <h3>Vérifiez l'assurance décennale</h3>
+              <p>L'attestation doit couvrir l'année des travaux et mentionner les corps de métier que vous engagez.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const KEY = 'renofacile.profile';
+  const ALT = 'renofacile.profile';
+  function getDossier(){
+    try {
+      const a = JSON.parse(localStorage.getItem(KEY) || 'null');
+      const b = JSON.parse(localStorage.getItem(ALT) || 'null');
+      return a || b || null;
+    } catch { return null; }
+  }
+
+  const WORK_LABELS = {
+    combles:'Isolation combles', ite:'Isolation murs (ITE)', pac:'Pompe à chaleur',
+    biomasse:'Chaudière biomasse', menuiseries:'Menuiseries', vmc:'VMC double flux',
+    solaire:'Panneaux solaires', panneaux_solaires:'Panneaux solaires',
+  };
+  const CERTIFS = {
+    combles:'Qualibat RGE (Isolation)', ite:'Qualibat RGE (Isolation thermique)',
+    pac:'QualiPAC', biomasse:'Qualibois', menuiseries:'Qualibat RGE (Menuiseries)',
+    vmc:'Qualibat RGE (Ventilation)', solaire:'QualiPV', panneaux_solaires:'QualiPV',
+    // Codes canoniques du catalogue partagé (_travaux_catalog.js)
+    toiture_terrasse:'Qualibat RGE (Isolation)', pac_aireau:'QualiPAC',
+    pac_geothermique:'QualiForage / QualiPAC', chauffe_eau_thermo:'QualiPAC',
+    chauffe_eau_solaire:'QualiSol', chauffage_solaire_combine:'QualiSol Combi',
+    pvt_eau:'QualiPV', poele_granules:'Qualibois module Air', poele_buches:'Qualibois module Air',
+    insert_foyer:'Qualibois module Air', raccordement_reseau:'Qualibat RGE (Réseaux de chaleur)',
+    vmc_df:'Qualibat RGE (Ventilation)', audit_energetique:'RGE Étude (audit énergétique)',
+    depose_cuve_fioul:'Qualibat RGE (Chauffage)',
+  };
+  const WORK_CODES = {
+    combles:'isolation-combles', ite:'isolation-murs', pac:'pompe-chaleur',
+    biomasse:'chaudiere-biomasse', menuiseries:'menuiseries', vmc:'vmc',
+    solaire:'photovoltaique', panneaux_solaires:'photovoltaique',
+  };
+
+  // Populate departments
+  const DEPS = [];
+  for (let i = 1; i <= 95; i++){
+    if (i === 20) { DEPS.push(['2A','Corse-du-Sud']); DEPS.push(['2B','Haute-Corse']); continue; }
+    DEPS.push([String(i).padStart(2,'0'), '']);
+  }
+  ['971','972','973','974','976'].forEach(c => DEPS.push([c, 'DROM']));
+  const depSel = document.getElementById('dep');
+  DEPS.forEach(([code, label]) => {
+    const o = document.createElement('option');
+    o.value = code;
+    o.textContent = code + (label ? ' — ' + label : '');
+    depSel.appendChild(o);
+  });
+
+  // Slider
+  const dist = document.getElementById('dist');
+  dist.addEventListener('input', () => document.getElementById('dist-val').textContent = dist.value + ' km');
+
+  function extractPostcode(addr){
+    if (!addr) return null;
+    const m = addr.match(/\b(\d{5})\b/);
+    return m ? m[1] : null;
+  }
+  function extractCity(addr){
+    if (!addr) return null;
+    const m = addr.match(/\d{5}\s+([^,]+)$/) || addr.match(/\d{5}\s+(.+)/);
+    return m ? m[1].trim() : null;
+  }
+
+  function bind(){
+    const d = getDossier();
+    const works = (d && (d.travaux || (d.diagnostic && d.diagnostic.travaux))) || [];
+    const addr = (d && (d.address || (d.diagnostic && d.diagnostic.address))) || '';
+    const cp = extractPostcode(addr);
+    const city = extractCity(addr);
+
+    // Pre-check filter checkboxes from dossier
+    works.forEach(w => {
+      const cb = document.querySelector(`.checkbox input[value="${w}"]`);
+      if (cb) cb.checked = true;
+    });
+    // Pre-select département
+    if (cp) depSel.value = cp.slice(0,2);
+
+    refresh();
+  }
+
+  window.RFAnnuaireRefresh = function(){ refresh(); };
+  function refresh(){
+    const checked = [...document.querySelectorAll('.checkbox input:checked')].map(c => c.value);
+    const worksLabel = checked.length ? checked.map(w => WORK_LABELS[w] || w).join(', ') : 'à définir';
+    document.getElementById('works-list').textContent = worksLabel;
+
+    const certifsBox = document.getElementById('certifs');
+    certifsBox.innerHTML = '';
+    const seen = new Set();
+    checked.forEach(w => {
+      const cert = CERTIFS[w];
+      if (cert && !seen.has(cert)){
+        seen.add(cert);
+        const t = document.createElement('span');
+        t.className = 'tag';
+        t.textContent = cert;
+        certifsBox.appendChild(t);
+      }
+    });
+    if (!checked.length){
+      const t = document.createElement('span');
+      t.className = 'tag';
+      t.style.opacity = .6;
+      t.textContent = 'sélectionnez vos travaux';
+      certifsBox.appendChild(t);
+    }
+
+    // Location label
+    const d = getDossier();
+    const addr = (d && (d.address || (d.diagnostic && d.diagnostic.address))) || '';
+    const cp = extractPostcode(addr);
+    const city = extractCity(addr);
+    const dep = depSel.value;
+    let locLabel;
+    if (cp && city) locLabel = `${cp} ${city}`;
+    else if (dep) locLabel = `département ${dep}`;
+    else locLabel = 'code postal à renseigner';
+    document.getElementById('loc-label').textContent = locLabel;
+
+  }
+
+  /* ───── Favoris : artisans ajoutés au dossier (persistance localStorage) ───── */
+  function getFavorites(){
+    try {
+      const p = JSON.parse(localStorage.getItem(KEY) || '{}');
+      return Array.isArray(p.artisans_favoris) ? p.artisans_favoris : [];
+    } catch { return []; }
+  }
+  function saveFavorites(list){
+    try {
+      const p = JSON.parse(localStorage.getItem(KEY) || '{}');
+      p.artisans_favoris = list;
+      p.updatedAt = Date.now();
+      localStorage.setItem(KEY, JSON.stringify(p));
+    } catch(e){ console.warn('saveFavorites :', e); }
+  }
+  function isFavorite(siret){
+    return getFavorites().some(f => f.siret === siret);
+  }
+  function addFavorite(art){
+    const favs = getFavorites();
+    if (favs.some(f => f.siret === art.siret)) return;
+    favs.push(art);
+    saveFavorites(favs);
+    renderFavorites();
+  }
+  function removeFavorite(siret){
+    saveFavorites(getFavorites().filter(f => f.siret !== siret));
+    renderFavorites();
+    // Re-rend les cartes recherche pour mettre à jour leur badge
+    const grid = document.getElementById('artisans-list');
+    if (grid && grid.children.length) {
+      grid.querySelectorAll('.btn-fav[data-siret="'+siret+'"]').forEach(b => {
+        b.classList.remove('added');
+        b.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14"/><path d="M5 12h14"/></svg> Ajouter au dossier';
+      });
+      grid.querySelectorAll('.artisan-card[data-siret="'+siret+'"]').forEach(c => c.classList.remove('fav'));
+    }
+  }
+  function renderFavorites(){
+    const favs = getFavorites();
+    const section = document.getElementById('favs-section');
+    const list    = document.getElementById('favs-list');
+    const count   = document.getElementById('favs-count');
+    if (!favs.length){
+      section.hidden = true;
+      return;
+    }
+    section.hidden = false;
+    count.textContent = favs.length;
+    list.innerHTML = favs.map(a => {
+      const tel = a.telephone || '';
+      const site = a.site_internet || '';
+      const telLink = tel ? '<a href="tel:' + tel.replace(/[^\d+]/g,'') + '">📞 ' + escapeHtml(tel) + '</a>' : '';
+      let siteUrl = site;
+      if (siteUrl && !/^https?:\/\//.test(siteUrl)) siteUrl = 'https://' + siteUrl;
+      const siteLink = site ? '<a href="' + escapeAttr(siteUrl) + '" target="_blank" rel="noopener">Site ↗</a>' : '';
+      return '<div class="fav-row">' +
+        '<div>' +
+          '<div class="fav-name">' + escapeHtml(a.nom_entreprise || '—') + '</div>' +
+          '<div class="fav-meta">' + escapeHtml((a.commune || '') + ' · ' + (a.code_postal || '')) + '</div>' +
+        '</div>' +
+        '<div class="fav-actions">' + telLink + siteLink +
+          '<button class="fav-remove" data-remove="' + escapeAttr(a.siret) + '" title="Retirer du dossier" aria-label="Retirer">×</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+    list.querySelectorAll('[data-remove]').forEach(b => {
+      b.addEventListener('click', () => removeFavorite(b.dataset.remove));
+    });
+  }
+  document.getElementById('favs-clear').addEventListener('click', () => {
+    if (!confirm('Retirer tous les artisans de votre dossier ?')) return;
+    saveFavorites([]);
+    renderFavorites();
+    // Reset badges
+    document.querySelectorAll('.btn-fav.added').forEach(b => {
+      b.classList.remove('added');
+      b.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14"/><path d="M5 12h14"/></svg> Ajouter au dossier';
+    });
+    document.querySelectorAll('.artisan-card.fav').forEach(c => c.classList.remove('fav'));
+  });
+  renderFavorites(); // au chargement de la page
+
+  /* Affiche la note MAR si le projet est une rénovation d'ampleur */
+  (function showMarNoticeIfNeeded(){
+    try {
+      const p = JSON.parse(localStorage.getItem(KEY) || '{}');
+      const notice = document.getElementById('mar-notice');
+      if (notice && p.aids && p.aids.mpr && p.aids.mpr.isRenovAmpleur){
+        notice.hidden = false;
+      }
+    } catch(e){ console.warn('MAR notice :', e); }
+  })();
+
+  /* Mapping geste tunnel → fragments de mots-clés à matcher dans le champ
+     `domaine` de l'API ADEME (valeurs réellement présentes en base).
+     Un artisan est retenu pour un geste si AU MOINS UN de ses `domaines`
+     contient AU MOINS UN fragment (insensible à la casse, sous-chaîne). */
+  const DOMAINE_KEYWORDS = {
+    combles:            ['isolation des combles', 'isolation par soufflage', 'toitures terrasses'],
+    ite:                ["isolation des murs par l'extérieur", "isolation par l'extérieur", "isolation thermique par l'extérieur", "ite"],
+    iti:                ['isolation par l’intérieur des murs', "isolation par l'intérieur des murs"],
+    planchers_bas:      ['isolation des planchers bas', 'plancher bas'],
+    menuiseries:        ['fenêtres', 'porte d’entrée', "porte d'entrée", 'porte-fenêtre', 'menuiseries extérieures'],
+    pac_aireau:         ['pompe à chaleur', 'pac air/eau', 'pac aérothermique'],
+    pac_eaueau:         ['pompe à chaleur', 'pac eau/eau', 'géothermie'],
+    chaudiere_bois:     ['chaudière bois', 'chaudière à granulés', 'chaudière biomasse'],
+    poele_bois:         ['poêle', 'insert', 'foyer fermé', 'appareil indépendant de chauffage au bois'],
+    solaire_thermique:  ['eau chaude solaire', 'chauffe-eau solaire', 'système solaire combiné', 'solaire thermique'],
+    solaire_pv:         ['photovoltaïque', 'panneau solaire photovoltaïque'],
+    ventilation:        ['ventilation mécanique', 'vmc', 'vmc double flux'],
+    chaudiere_gaz:      ['chaudière condensation', 'chaudière gaz', 'chaudière micro-cogénération'],
+    chauffe_eau_thermo: ['chauffe-eau thermodynamique', 'ballon thermodynamique'],
+    audit:              ['audit énergétique'],
+    raccordement_reseau:['réseau de chaleur', 'sous-station'],
+    depose_cuve_fioul:  ['dépose de cuve', 'cuve à fioul'],
+  };
+
+  /* Alias : valeurs des cases de la page + codes gestes du tunnel de diagnostic
+     → clés canoniques de DOMAINE_KEYWORDS ci-dessus. */
+  const GESTE_ALIAS = {
+    pac: 'pac_aireau', pac_geothermique: 'pac_eaueau', biomasse: 'chaudiere_bois',
+    vmc: 'ventilation', vmc_df: 'ventilation', solaire: 'solaire_pv',
+    chauffe_eau_solaire: 'solaire_thermique', chauffage_solaire_combine: 'solaire_thermique',
+    pvt_eau: 'solaire_pv', poele_buches: 'poele_bois', poele_granules: 'poele_bois',
+    insert_foyer: 'poele_bois', plancher_bas: 'planchers_bas',
+    sarking: 'combles', toiture_terrasse: 'combles', audit_energetique: 'audit',
+  };
+  function gesteKey(g){ return GESTE_ALIAS[g] || g; }
+
+  /* Regex non-poseur (ceinture + bretelles, en plus du NOT organisme côté API).
+     Note : l'ADEME utilise l'apostrophe typographique `´` dans « Tableau de l´Ordre ». */
+  const NON_POSEUR = /tableau de l['’´]ordre|architecte|opqibi|bureau d['’]études|ing[ée]nierie/i;
+
+  function artisanMatchesGeste(artisan, geste){
+    const fragments = DOMAINE_KEYWORDS[gesteKey(geste)] || [];
+    if (!fragments.length) return false;
+    const doms = (artisan.domaines || []).map(d => (d || '').toLowerCase());
+    return fragments.some(f => {
+      const lf = f.toLowerCase();
+      return doms.some(d => d.indexOf(lf) !== -1);
+    });
+  }
+
+  /* Adresse client — priorité à l'input de la page, sinon dossier tunnel */
+  function getClientAddrValue(){
+    const el = document.getElementById('client-addr');
+    const v = (el && el.value || '').trim();
+    if (v) return v;
+    const d = getDossier();
+    return (((d && (d.address || (d.diagnostic && d.diagnostic.address))) || '')).trim();
+  }
+
+  /* Géocode l'adresse client via BAN (retourne {lat, lon} ou null).
+     Cache mémoire indexé sur la valeur d'adresse. */
+  let _coordsCache = null;
+  let _coordsCacheKey = null;
+  async function geocodeClientAddr(){
+    const addr = getClientAddrValue();
+    if (!addr){ _coordsCache = false; _coordsCacheKey = null; return null; }
+    if (_coordsCacheKey === addr && _coordsCache !== null) return _coordsCache || null;
+    _coordsCacheKey = addr;
+    try {
+      const url = 'https://api-adresse.data.gouv.fr/search/?q=' + encodeURIComponent(addr) + '&limit=1';
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(res.status);
+      const json = await res.json();
+      const f = (json.features || [])[0];
+      if (!f || !f.geometry || !f.geometry.coordinates){ _coordsCache = false; return null; }
+      const [lon, lat] = f.geometry.coordinates;
+      _coordsCache = { lat, lon };
+      return _coordsCache;
+    } catch(e){
+      console.warn('[RénoFacile] Geocode BAN client :', e);
+      _coordsCache = false;
+      return null;
+    }
+  }
+
+  /* Distance Haversine entre 2 points (en km) — pour tri/filtre côté client */
+  function haversine(lat1, lon1, lat2, lon2){
+    const R = 6371; // rayon Terre en km
+    const toRad = d => d * Math.PI / 180;
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a = Math.sin(dLat/2)**2 +
+              Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon/2)**2;
+    return 2 * R * Math.asin(Math.sqrt(a));
+  }
+
+  /* Récupère jusqu'à 500 artisans RGE du département, en excluant côté API les
+     architectes (cnoa) et, sauf recherche d'audit, les bureaux d'études (opqibi).
+     Déduplique par SIRET : un artisan a une ligne ADEME par domaine/qualification. */
+  async function fetchArtisansDept(dept, opts){
+    opts = opts || {};
+    const notOrganisme = opts.includeAudit
+      ? 'NOT organisme:cnoa'
+      : 'NOT organisme:cnoa AND NOT organisme:opqibi';
+    const qs = 'code_postal:' + dept + '* AND ' + notOrganisme;
+    const url = 'https://data.ademe.fr/data-fair/api/v1/datasets/liste-des-entreprises-rge-2/lines'
+              + '?size=500&qs=' + encodeURIComponent(qs);
+    let raw;
+    try {
+      const r = await fetch(url);
+      if (!r.ok) throw new Error('ADEME ' + r.status);
+      raw = await r.json();
+    } catch(e){
+      console.error('[RénoFacile] fetch ADEME KO', e);
+      return null;
+    }
+    const rows = Array.isArray(raw.results) ? raw.results : (raw.lines || []);
+    console.info('[RénoFacile] ADEME dept ' + dept + ' — ' + rows.length + ' lignes brutes');
+
+    const bySiret = new Map();
+    for (const row of rows){
+      if (NON_POSEUR.test(row.nom_certificat || '')) continue;
+      if (NON_POSEUR.test(row.domaine || '')) continue;
+      const key = row.siret || (row.nom_entreprise + '|' + row.code_postal);
+      let a = bySiret.get(key);
+      if (!a){
+        a = {
+          siret: row.siret, nom_entreprise: row.nom_entreprise, adresse: row.adresse,
+          code_postal: row.code_postal, commune: row.commune, telephone: row.telephone,
+          email: row.email, site_internet: row.site_internet,
+          latitude:  (typeof row.latitude  === 'number') ? row.latitude  : null,
+          longitude: (typeof row.longitude === 'number') ? row.longitude : null,
+          organisme: row.organisme, nom_certificat: row.nom_certificat,
+          domaines: [], qualifications: [],
+        };
+        if ((a.latitude === null || a.longitude === null) && typeof row._geopoint === 'string'){
+          const parts = row._geopoint.split(',');
+          if (parts.length === 2){
+            const lat = parseFloat(parts[0]), lon = parseFloat(parts[1]);
+            if (isFinite(lat) && isFinite(lon)){ a.latitude = lat; a.longitude = lon; }
+          }
+        }
+        bySiret.set(key, a);
+      }
+      if (row.domaine && a.domaines.indexOf(row.domaine) === -1) a.domaines.push(row.domaine);
+      if (row.nom_qualification && a.qualifications.indexOf(row.nom_qualification) === -1){
+        a.qualifications.push(row.nom_qualification);
+      }
+    }
+    return Array.from(bySiret.values());
+  }
+
+  /* Distances : les coordonnées sont déjà dans les données ADEME. */
+  function attachDistances(artisans, clientCoords){
+    if (!clientCoords || typeof clientCoords.lat !== 'number' || typeof clientCoords.lon !== 'number'){
+      return artisans.map(a => Object.assign({}, a, { _dist: null }));
+    }
+    return artisans.map(a => {
+      let d = null;
+      if (typeof a.latitude === 'number' && typeof a.longitude === 'number'){
+        d = haversine(clientCoords.lat, clientCoords.lon, a.latitude, a.longitude);
+      }
+      return Object.assign({}, a, { _dist: d });
+    });
+  }
+
+  /* On conserve les artisans sans coordonnées connues — le tri les met en fin. */
+  function filterByRadius(artisans, radiusKm){
+    if (!radiusKm || radiusKm <= 0) return artisans;
+    return artisans.filter(a => a._dist == null || a._dist <= radiusKm);
+  }
+
+  function sortByDistance(artisans){
+    return artisans.slice().sort((x, y) => {
+      if (x._dist == null && y._dist == null) return 0;
+      if (x._dist == null) return 1;
+      if (y._dist == null) return -1;
+      return x._dist - y._dist;
+    });
+  }
+
+  /* Orchestration : une requête ADEME par département, puis filtrage client
+     par mots-clés `domaine`, distance et tri. */
+  async function fetchArtisansRge(){
+    const dep = depSel.value;
+    const km = parseInt(dist.value, 10) || 30;
+    const checked = [...document.querySelectorAll('.checkbox input:checked')].map(c => c.value);
+    const results = document.getElementById('artisans-results');
+    const list    = document.getElementById('artisans-list');
+    results.hidden = false;
+    list.innerHTML = '<div class="artisan-loading">Recherche en cours dans la base ADEME…</div>';
+
+    if (!dep){
+      list.innerHTML = '<div class="artisan-empty">Sélectionnez d\'abord un département pour lancer la recherche.</div>';
+      return;
+    }
+
+    const gestes = checked.map(gesteKey);
+    const includeAudit = gestes.indexOf('audit') !== -1;
+    const artisans = await fetchArtisansDept(dep, { includeAudit });
+
+    if (artisans === null){
+      list.innerHTML = '<div class="artisan-empty">La base ADEME est momentanément indisponible. Réessayez dans un instant.</div>';
+      return;
+    }
+    if (!artisans.length){
+      list.innerHTML = '<div class="artisan-empty">Aucun artisan RGE recensé dans le département ' + dep + '. Essayez un département voisin.</div>';
+      return;
+    }
+
+    // Filtrage par gestes cochés (aucun coché → tout le département)
+    let filtered = gestes.length
+      ? artisans.filter(a => gestes.some(g => artisanMatchesGeste(a, g)))
+      : artisans;
+
+    if (!filtered.length){
+      list.innerHTML = '<div class="artisan-empty">Aucun artisan RGE ne correspond exactement à ces critères. '
+        + 'Essayez d\'élargir le rayon ou de décocher un ou deux types de travaux — les artisans les plus '
+        + 'complets sont souvent certifiés sur 2-3 gestes seulement.</div>';
+      return;
+    }
+
+    // Distance depuis le point de départ client
+    const coords = await geocodeClientAddr();
+    filtered = attachDistances(filtered, coords);
+    const avantRayon = filtered.length;
+    filtered = sortByDistance(filterByRadius(filtered, coords ? km : 0));
+    if (coords) console.info('[RénoFacile] Après filtre distance ' + km + 'km : ' + filtered.length + '/' + avantRayon);
+
+    if (!filtered.length){
+      list.innerHTML = '<div class="artisan-empty">Aucun artisan dans un rayon de ' + km + ' km. '
+        + 'Élargissez la distance ou choisissez un département voisin.</div>';
+      return;
+    }
+
+    const sansCoords = filtered.filter(a => a._dist == null).length;
+    const notice = !coords
+      ? '<div class="artisan-notice">Renseignez votre point de départ pour trier les artisans par proximité.</div>'
+      : (sansCoords > 0
+          ? '<div class="artisan-notice">Distance non calculée pour ' + sansCoords + ' artisan(s) — affichés en fin de liste.</div>'
+          : '');
+    renderArtisans(list, filtered, notice);
+  }
+
+  /* Rendu des cartes artisan — logique de rendu inchangée (favoris inclus) */
+  function renderArtisans(list, uniq, notice){
+    try {
+      list.innerHTML = (notice || '') + uniq.slice(0, 15).map((a, idx) => {
+        const certs = (a.domaines || []).slice(0, 3)
+          .map(c => '<span class="pill">' + escapeHtml(c) + '</span>').join('');
+        const tel = a.telephone ? a.telephone.toString().trim() : '';
+        const telLink = tel ? '<a href="tel:' + tel.replace(/[^\d+]/g,'') + '">' + escapeHtml(tel) + '</a>' : '';
+        let site = a.site_internet ? a.site_internet.toString().trim() : '';
+        let siteLink = '';
+        if (site){
+          if (!/^https?:\/\//.test(site)) site = 'https://' + site;
+          siteLink = '<a href="' + escapeAttr(site) + '" target="_blank" rel="noopener">Site web ↗</a>';
+        }
+        const siret = a.siret || ('idx_' + idx);
+        const already = isFavorite(siret);
+        const btnFav = '<button type="button" class="btn-fav' + (already ? ' added' : '') + '" data-siret="' + escapeAttr(siret) + '">' +
+          (already
+            ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 12 5 5L20 7"/></svg> Dans mon dossier'
+            : '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14"/><path d="M5 12h14"/></svg> Ajouter au dossier') +
+          '</button>';
+        const distLabel = typeof a._dist === 'number'
+          ? ' · à ' + (a._dist < 10 ? a._dist.toFixed(1) : Math.round(a._dist)) + ' km'
+          : '';
+        return '<div class="artisan-card' + (already ? ' fav' : '') + '" data-siret="' + escapeAttr(siret) + '">' +
+          '<div>' +
+            '<div class="artisan-name">' + escapeHtml(a.nom_entreprise || 'Entreprise') + '</div>' +
+            '<div class="artisan-meta">' + escapeHtml([a.adresse, a.code_postal + ' ' + (a.commune || '')].filter(Boolean).join(' · ')) + distLabel + '</div>' +
+            (certs ? '<div class="artisan-certs">' + certs + '</div>' : '') +
+          '</div>' +
+          '<div class="artisan-action">' + telLink + siteLink + btnFav + '</div>' +
+        '</div>';
+      }).join('');
+
+      // Branche le bouton "Ajouter / Dans mon dossier" pour chaque carte
+      list.querySelectorAll('.btn-fav').forEach((btn, i) => {
+        btn.addEventListener('click', () => {
+          const siret = btn.dataset.siret;
+          if (btn.classList.contains('added')){
+            removeFavorite(siret);
+          } else {
+            const a = uniq[i];
+            addFavorite({
+              siret: siret,
+              nom_entreprise: a.nom_entreprise || '',
+              adresse: a.adresse || '',
+              code_postal: a.code_postal || '',
+              commune: a.commune || '',
+              telephone: a.telephone || '',
+              site_internet: a.site_internet || '',
+              certs: (a.domaines || []).slice(0, 6),
+              addedAt: new Date().toISOString(),
+            });
+            btn.classList.add('added');
+            btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m5 12 5 5L20 7"/></svg> Dans mon dossier';
+            btn.closest('.artisan-card').classList.add('fav');
+          }
+        });
+      });
+    } catch(e){
+      console.warn('ADEME RGE :', e);
+      list.innerHTML = '<div class="artisan-empty">Recherche impossible pour le moment. Réessayez dans un instant.</div>';
+    }
+  }
+
+  function escapeHtml(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function escapeAttr(s){
+    return escapeHtml(s).replace(/`/g,'&#96;');
+  }
+
+  document.getElementById('cta-open').addEventListener('click', fetchArtisansRge);
+
+  document.querySelectorAll('.checkbox input').forEach(c => c.addEventListener('change', refresh));
+  depSel.addEventListener('change', refresh);
+  dist.addEventListener('input', refresh);
+
+  /* Relances de recherche — uniquement si des résultats sont déjà affichés,
+     pour ne pas déclencher d'appels API avant le premier clic utilisateur. */
+  function resultsVisible(){
+    const r = document.getElementById('artisans-results');
+    return r && !r.hidden;
+  }
+  let _distDebounce = null;
+  dist.addEventListener('change', () => {
+    if (!resultsVisible()) return;
+    clearTimeout(_distDebounce);
+    _distDebounce = setTimeout(fetchArtisansRge, 300);
+  });
+  document.querySelectorAll('.checkbox input').forEach(c => c.addEventListener('change', () => {
+    if (!resultsVisible()) return;
+    clearTimeout(_distDebounce);
+    _distDebounce = setTimeout(fetchArtisansRge, 300);
+  }));
+  const addrInput = document.getElementById('client-addr');
+  if (addrInput){
+    let _addrDebounce = null;
+    addrInput.addEventListener('input', () => {
+      _coordsCacheKey = null; _coordsCache = null;
+      if (!resultsVisible()) return;
+      clearTimeout(_addrDebounce);
+      _addrDebounce = setTimeout(fetchArtisansRge, 600);
+    });
+  }
+
+  // Pré-remplit l'input adresse depuis le dossier tunnel si dispo
+  (function prefillClientAddr(){
+    const el = document.getElementById('client-addr');
+    if (!el || el.value) return;
+    const d = getDossier();
+    const addr = (d && (d.address || (d.diagnostic && d.diagnostic.address))) || '';
+    if (addr) el.value = addr;
+  })();
+
+  bind();
+</script>
+<script>
+/* RénoFacile — bindings sidebar canonique (lit renofacile.profile écrit par le diagnostic) */
+(function(){
+  const KEY = 'renofacile.profile';
+  function readData(){
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}'); }
+    catch { return {}; }
+  }
+  function fmtEUR(n){
+    if (n == null || isNaN(n)) return '—';
+    return new Intl.NumberFormat('fr-FR').format(Math.round(n)) + ' €';
+  }
+  function refresh(){
+    const d = readData();
+    const aids = d.aids || {};
+    const trav = aids.travaux || {};
+
+    // Widget aides estimées
+    const valEl = document.getElementById('rf-aides-val');
+    const subEl = document.getElementById('rf-aides-sub');
+    let total = aids.totalAides || aids.total || null;
+    let projet = trav.totalTTC || aids.coutTotalTTC || null;
+    // Un utilisateur MPA ou LHI n'a pas de renofacile.profile.aids : le montant
+    // vient alors des dossiers transmis, tous types confondus. Même règle que le
+    // dashboard et « Mes aides ».
+    if (!total && window.RFDossiers && typeof RFDossiers.getActifs === 'function'){
+      try {
+        let sommeAides = 0, sommeTTC = 0;
+        RFDossiers.getActifs().forEach(function(dos){
+          sommeAides += Number(RFDossiers.totalAides(dos)) || 0;
+          const t = (dos.result && dos.result.travaux) || {};
+          // coutEstime (MPA) et coutHT (LHI) sont des montants HT.
+          const ht = t.coutEstime || t.coutHT || 0;
+          sommeTTC += Number(t.totalTTC || (ht ? Math.round(ht * 1.055) : 0)) || 0;
+        });
+        if (sommeAides > 0){ total = sommeAides; projet = sommeTTC || projet; }
+      } catch(e){ console.warn('Widget aides multi-dossiers :', e); }
+    }
+    if (valEl){
+      if (total){
+        valEl.textContent = fmtEUR(total);
+        if (subEl) subEl.textContent = projet ? 'sur ' + fmtEUR(projet) + ' TTC' : 'Estimation indicative';
+      } else {
+        valEl.textContent = '—';
+        if (subEl) subEl.textContent = 'Diagnostic à compléter';
+      }
+    }
+
+    // Profil utilisateur en bas
+    const nameEl = document.getElementById('rf-me-name');
+    const planEl = document.getElementById('rf-me-plan');
+    const avEl = document.getElementById('rf-me-av');
+    const fn = (d.firstname || '').trim();
+    const ln = (d.lastname || '').trim();
+    const fullName = (fn + ' ' + ln).trim();
+    /* Le badge porte le statut du dossier, jamais une formule commerciale. */
+    let planTxt = '';
+    try {
+      const actifs = (window.RFDossiers && RFDossiers.getActifs && RFDossiers.getActifs()) || [];
+      if (actifs.length){
+        const dernier = actifs[actifs.length - 1];
+        const statut = (window.RFTransmission && RFTransmission.libelleStatut(dernier.statutDossier)) || 'Transmis';
+        const nomPart = dernier.partenaire && dernier.partenaire.nom;
+        planTxt = nomPart ? statut + ' · ' + nomPart : statut;
+      } else {
+        planTxt = 'Diagnostic en cours';
+      }
+    } catch (e) { planTxt = ''; }
+    if (nameEl) nameEl.textContent = fullName || 'Mon compte';
+    if (planEl) planEl.textContent = planTxt || '—';
+    if (avEl){
+      if (fullName){
+        const initials = ((fn[0]||'') + (ln[0]||'')).toUpperCase() || 'RF';
+        avEl.textContent = initials;
+      } else {
+        avEl.textContent = 'RF';
+      }
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', refresh);
+  else refresh();
+  window.addEventListener('storage', refresh);
+})();
+</script>
+<script src="_demo_mode.js"></script>
+<script src="_storage.js"></script>
+<script src="_dossiers.js"></script>
+<script src="_transmission.js"></script>
+<script>
+/* Aucun dossier fictif n'est injecté : ce que l'utilisateur voit vient
+   uniquement de ce qu'il a saisi. */
+</script>
+<script src="_auth_guard.js"></script>
+<script>
+/* RénoFacile — rend le widget profil de sidebar cliquable et ajoute Déconnexion */
+(function(){
+  function init(){
+    var me = document.querySelector('.sidebar .me, aside .me');
+    if (!me) return;
+    me.style.cursor = 'pointer';
+    me.style.position = 'relative';
+    var menu = document.createElement('div');
+    menu.style.cssText = 'display:none;position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid #E2E8F0;border-radius:8px;box-shadow:0 -4px 16px rgba(15,23,42,.08);padding:6px;z-index:50;font-size:13px';
+    menu.innerHTML =
+      '<a href="mon-profil.html" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:6px;color:#1E293B;text-decoration:none">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>' +
+        'Mon profil' +
+      '</a>' +
+      '<div style="height:1px;background:#E2E8F0;margin:4px 0"></div>' +
+      '<a href="#" id="rf-side-logout" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:6px;color:#DC2626;text-decoration:none">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>' +
+        'Se déconnecter' +
+      '</a>';
+    me.appendChild(menu);
+    me.addEventListener('click', function(e){
+      if (e.target.closest('a')) return;
+      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    });
+    document.addEventListener('click', function(e){
+      if (!e.target.closest('.me')) menu.style.display = 'none';
+    });
+    var logoutLink = document.getElementById('rf-side-logout');
+    if (logoutLink){
+      logoutLink.addEventListener('click', function(e){
+        e.preventDefault();
+        if (window.RFStore) RFStore.logout();
+        else {
+          ['renofacile.session','renofacile.profile'].forEach(function(k){ try{localStorage.removeItem(k);}catch{} });
+        }
+        window.location.href = 'login.html';
+      });
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+<script>
+/* ══ Annuaire polymorphique ═══════════════════════════════════════
+   La page est bâtie sur l'annuaire RGE, qui ne concerne que la rénovation
+   énergétique : la certification RGE n'est pas exigée pour MaPrimeAdapt', et un
+   dossier habitat dégradé mêle des lots RGE et des lots hors RGE. Ce script
+   n'intervient que sur un dossier non énergétique. */
+(function(){
+  function activeDossier(){
+    try {
+      if (!window.RFDossiers) return null;
+      var id = new URLSearchParams(location.search).get('dossier');
+      if (!id) { try { id = localStorage.getItem('renofacile.dossierCourant'); } catch(_){} }
+      if (id){
+        var byId = RFDossiers.getById(id);
+        if (byId) return byId;
+      }
+      var actifs = (RFDossiers.getActifs && RFDossiers.getActifs()) || [];
+      return actifs.length ? actifs[actifs.length - 1] : null;
+    } catch (_) { return null; }
+  }
+
+  var ICONS = {
+    check:  '<path d="m5 12 5 5L20 7"/>',
+    wallet: '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/>',
+    alert:  '<path d="M12 9v4M12 17h0"/><circle cx="12" cy="12" r="10"/>',
+    pin:    '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+    shield: '<path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6Z"/>',
+  };
+
+  var CONF = {
+    autonomie: {
+      titre: "Trouver une entreprise d'adaptation qualifiée",
+      lead: "Pour <b>MaPrimeAdapt'</b>, la certification RGE n'est pas exigée. C'est votre <b>opérateur AMO habilité par l'Anah</b> qui vous propose une short-list d'entreprises qualifiées en adaptation du logement et qui valide les devis avant le dépôt du dossier.",
+      typesLabel: "Travaux d'adaptation",
+      types: [
+        ['douche_italienne', 'Douche italienne / remplacement baignoire'],
+        ['monte_escalier', 'Monte-escalier'],
+        ['wc_rehausse', "WC rehaussé et barres d'appui"],
+        ['rampe_acces', "Rampe d'accès"],
+        ['plateforme_elevatrice', 'Plateforme élévatrice'],
+        ['elargissement_passages', 'Élargissement des passages'],
+        ['volets_roulants_electriques', 'Volets roulants électriques / motorisation'],
+        ['amenagement_parking', 'Aménagement place de stationnement PMR'],
+      ],
+      cta: 'Demander la short-list à mon opérateur AMO',
+      postCta: "La certification RGE ne s'applique pas à l'adaptation du logement : votre opérateur AMO habilité par l'Anah sélectionne les entreprises et valide chaque devis. Nous n'exposons pas d'annuaire RGE ici, il serait hors sujet.",
+      tipsTitre: 'Comment choisir la bonne entreprise ?',
+      tips: [
+        ['check', 'Validation par votre AMO obligatoire', "Votre opérateur habilité par l'Anah valide chaque devis avant le dépôt. Ne vous engagez pas sans son accord."],
+        ['wallet', 'Demandez 3 devis comparables', "Même équipement (marque et modèle), même garantie, même délai. Votre AMO vous aide à les comparer."],
+        ['shield', 'Vérifiez assurance décennale et RC pro', "L'attestation doit couvrir l'année des travaux. Elle est exigée pour toute demande à l'Anah."],
+        ['alert', 'Normes techniques spécifiques', "Monte-escalier : certification EN 81-40. Rampe : pente ≤ 5 %. Douche : receveur extra-plat et barre de maintien."],
+        ['pin', 'Privilégiez les entreprises locales', 'Meilleure réactivité à la pose comme au SAV — idéalement dans un rayon de 50 km.'],
+      ],
+    },
+    indigne: {
+      titre: 'Trouver vos artisans pour la rénovation lourde',
+      lead: "Votre dossier combine une <b>partie énergétique</b> (isolation, chauffage : artisans RGE obligatoires, recherche ci-dessous dans la base ADEME) et une <b>partie mise en sécurité et salubrité</b> (électricité, plomberie, toiture, humidité) où le RGE n'est pas exigé — ces lots sont sourcés et validés par votre opérateur spécialisé habilité par l'Anah.",
+      typesLabel: 'Lots énergétiques (recherche RGE)',
+      types: [
+        ['combles', 'Isolation des combles'],
+        ['ite', 'Isolation des murs'],
+        ['pac', 'Pompe à chaleur'],
+        ['biomasse', 'Chaudière biomasse'],
+        ['menuiseries', 'Menuiseries (portes, fenêtres)'],
+        ['vmc', 'Ventilation'],
+        ['audit_energetique', 'Audit énergétique (RGE Étude)'],
+      ],
+      horsRge: ['Mise aux normes électriques', 'Mise aux normes plomberie et sanitaires', 'Remise en état de la toiture', 'Traitement humidité et salubrité'],
+      cta: 'Rechercher les artisans RGE (lots énergétiques)',
+      postCta: "Recherche en direct dans la base officielle ADEME pour les lots énergétiques. Les lots de mise en sécurité et de salubrité ne relèvent pas du RGE : votre opérateur spécialisé vous en fournit la short-list.",
+      tipsTitre: 'Comment coordonner vos artisans ?',
+      tips: [
+        ['check', 'Partie énergétique : RGE obligatoire', "Pour mobiliser MaPrimeRénov' en complément de Ma Prime Logement Décent, les artisans isolation et chauffage doivent être RGE."],
+        ['shield', 'Partie salubrité : entreprises assurées', "Hors énergétique, pas d'obligation RGE — mais assurance décennale et RC pro à jour, systématiquement."],
+        ['check', 'Validation par votre opérateur spécialisé', "L'opérateur habilité par l'Anah valide chaque devis dans le montage du dossier. Ne signez rien sans son accord."],
+        ['wallet', 'Trois devis par lot de travaux', 'Séparez énergétique, électricité, plomberie, toiture : chaque lot se devise et se compare indépendamment.'],
+        ['pin', 'Groupez les interventions', "Coordonnées par l'opérateur, les entreprises interviennent en séquence : moins de reprises, et 15 à 20 % d'économies sur le total."],
+      ],
+    },
+  };
+
+  /* Cases de travaux : catalogue partagé, groupé par section. Sur un dossier
+     habitat dégradé, seuls les lots RGE sont cherchables dans la base ADEME ;
+     les lots de mise en sécurité sont listés à part, sans case, car un geste
+     inconnu du mapping RGE viderait les résultats. */
+  function renderTypes(type, prof){
+    var host = document.getElementById('types-travaux');
+    var cat = window.RFTravauxCatalog;
+    if (!host || !cat) return null;
+    var items = cat.get(type);
+    var cherchables = items.filter(function(t){ return t.rge !== false; });
+    var horsRge = items.filter(function(t){ return t.rge === false; });
+    var choisis = (prof && prof.travaux) || [];
+
+    var bySection = [];
+    cherchables.forEach(function(t){
+      var grp = null;
+      for (var i = 0; i < bySection.length; i++) if (bySection[i].s === t.section) grp = bySection[i];
+      if (!grp){ grp = { s: t.section, items: [] }; bySection.push(grp); }
+      grp.items.push(t);
+    });
+    var plusieursSections = bySection.length > 1;
+    host.innerHTML = bySection.map(function(grp){
+      return (plusieursSections
+        ? '<div class="field-label" style="margin:12px 0 4px;color:var(--slate-500)">' + grp.s + '</div>' : '') +
+        grp.items.map(function(t){
+          var on = choisis.indexOf(t.id) !== -1;
+          return '<label class="checkbox"><input type="checkbox" value="' + t.id + '"' + (on ? ' checked' : '') + ' /> ' + t.label + '</label>';
+        }).join('');
+    }).join('');
+
+    var extraId = 'types-hors-rge';
+    var prev = document.getElementById(extraId);
+    if (prev) prev.remove();
+    if (horsRge.length){
+      var extra = document.createElement('div');
+      extra.id = extraId;
+      extra.style.cssText = 'margin-top:14px;padding-top:12px;border-top:1px dashed var(--border)';
+      extra.innerHTML = '<div class="field-label" style="margin-bottom:6px">Lots hors RGE — via votre opérateur</div>' +
+        horsRge.map(function(t){
+          return '<div style="font-size:13.5px;color:var(--slate-500);padding:5px 0;display:flex;gap:8px"><span style="color:var(--slate-400)">▸</span><span>' + t.label + '</span></div>';
+        }).join('');
+      host.parentNode.appendChild(extra);
+    }
+
+    var LIB = {};
+    items.forEach(function(t){ LIB[t.id] = t.label; });
+    return LIB;
+  }
+
+  function run(){
+    var dos = activeDossier();
+    var typeCourant = (dos && dos.type) || 'energetique';
+    var LIB_TYPES = renderTypes(typeCourant, dos && dos.profile);
+    var conf = dos && CONF[dos.type];
+    if (!conf){
+      // Dossier énergétique ou aucun dossier : seule la liste des travaux est
+      // reconstruite, tout le reste de la page est inchangé.
+      reattacher(LIB_TYPES);
+      return;
+    }
+
+    var h1 = document.querySelector('main h1');
+    if (h1) h1.textContent = conf.titre;
+    var lead = document.querySelector('main .lead');
+    if (lead) lead.innerHTML = conf.lead;
+
+    var lbl = document.getElementById('types-label');
+    if (lbl) lbl.textContent = conf.typesLabel;
+
+    reattacher(LIB_TYPES);
+
+    // Libellés « Pour les travaux » : les codes MPA ne sont pas connus du script
+    // d'origine, on réécrit après lui.
+    var LIB = {};
+    conf.types.forEach(function(t){ LIB[t[0]] = t[1]; });
+    function majWorksList(){
+      var el = document.getElementById('works-list');
+      if (!el) return;
+      var checked = Array.prototype.map.call(
+        document.querySelectorAll('#types-travaux .checkbox input:checked'), function(c){ return LIB[c.value] || c.value; });
+      el.textContent = checked.length ? checked.join(', ') : 'à définir';
+    }
+    // Les tags de certification RGE ne concernent pas ces dispositifs : on
+    // relance le rendu d'origine pour purger ceux calculés avant la refonte.
+    if (window.RFAnnuaireRefresh) window.RFAnnuaireRefresh();
+    majWorksList();
+
+    var ctaLabel = document.getElementById('cta-open-label');
+    if (ctaLabel) ctaLabel.textContent = conf.cta;
+    var post = document.getElementById('post-cta-txt');
+    if (post) post.textContent = conf.postCta;
+
+    var tipsTitre = document.getElementById('tips-titre');
+    if (tipsTitre) tipsTitre.textContent = conf.tipsTitre;
+    var grid = document.getElementById('tips-grid');
+    if (grid){
+      grid.innerHTML = conf.tips.map(function(t){
+        return '<div class="tip"><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">' +
+          (ICONS[t[0]] || ICONS.check) + '</svg></div><h3>' + t[1] + '</h3><p>' + t[2] + '</p></div>';
+      }).join('');
+    }
+
+    // MaPrimeAdapt' : lancer une recherche RGE n'aurait aucun sens — on explique
+    // le vrai chemin (short-list de l'opérateur AMO) au lieu de requêter l'ADEME.
+    if (dos.type === 'autonomie'){
+      var cta = document.getElementById('cta-open');
+      if (cta){
+        var clone = cta.cloneNode(true);
+        cta.parentNode.replaceChild(clone, cta);
+        clone.addEventListener('click', function(){
+          var res = document.getElementById('artisans-results');
+          var list = document.getElementById('artisans-list');
+          if (!res || !list) return;
+          res.hidden = false;
+          var titre = res.querySelector('h3');
+          if (titre) titre.textContent = 'Votre short-list AMO';
+          var src = res.querySelector('div[style*="text-align:center"]');
+          if (src) src.hidden = true;
+          list.innerHTML = '<div class="artisan-empty" style="text-align:left;line-height:1.6">' +
+            "<b>La sélection passe par votre opérateur AMO.</b><br />" +
+            "Il est habilité par l'Anah, connaît les entreprises d'adaptation de votre département et valide les devis avant le dépôt du dossier — son forfait est pris en charge à 100 %. " +
+            "Nous vous mettons en relation dès que votre rendez-vous est planifié : retrouvez la prochaine action à mener dans " +
+            "<a href='dashboard.html' style='color:var(--teal-700);font-weight:600'>votre tableau de bord</a>." +
+            '</div>';
+        });
+      }
+    }
+  }
+
+  /* Les cases régénérées ont perdu les écouteurs posés au chargement. */
+  function reattacher(LIB){
+    var host = document.getElementById('types-travaux');
+    if (!host) return;
+    function majWorks(){
+      var el = document.getElementById('works-list');
+      if (!el || !LIB) return;
+      var checked = Array.prototype.map.call(
+        host.querySelectorAll('.checkbox input:checked'), function(c){ return LIB[c.value] || c.value; });
+      el.textContent = checked.length ? checked.join(', ') : 'à définir';
+    }
+    host.querySelectorAll('.checkbox input').forEach(function(c){
+      c.addEventListener('change', function(){
+        if (window.RFAnnuaireRefresh) window.RFAnnuaireRefresh();
+        majWorks();
+      });
+    });
+    if (window.RFAnnuaireRefresh) window.RFAnnuaireRefresh();
+    majWorks();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+})();
+</script>
+</body>
+</html>

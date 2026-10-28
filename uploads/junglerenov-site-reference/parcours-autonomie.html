@@ -1,0 +1,1533 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="Estimez votre aide MaPrimeAdapt' en 5 étapes : adaptation du logement à la perte d'autonomie, jusqu'à 70 % des travaux financés." />
+<title>Adapter mon logement à la perte d'autonomie — RénoFacile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --teal-50:#F0FDFA;--teal-100:#CCFBF1;--teal-200:#99F6E4;--teal-600:#0D9488;
+    --teal-700:#0F766E;--teal-800:#115E59;--teal-900:#134E4A;
+    --amber-100:#FEF3C7;--amber-300:#FCD34D;--amber-500:#F59E0B;--amber-600:#D97706;
+    --slate-50:#F8FAFC;--slate-100:#F1F5F9;--slate-200:#E2E8F0;--slate-300:#CBD5E1;
+    --slate-400:#94A3B8;--slate-500:#64748B;--slate-600:#475569;--slate-700:#334155;
+    --slate-800:#1E293B;--slate-900:#0F172A;
+    --bg:#F8FAFC;--surface:#FFFFFF;--border:#E2E8F0;
+    --shadow-md:0 4px 12px rgba(15,23,42,.06),0 2px 4px rgba(15,23,42,.04);
+    --font-sans:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --font-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  /* Le projet pilote la visibilité par l'attribut `hidden` : cette règle
+     l'emporte sur les classes qui déclarent leur propre `display`. */
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{font-family:var(--font-sans);color:var(--slate-800);background:var(--bg);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:var(--teal-700);text-decoration:none}
+  a:hover{color:var(--teal-800);text-decoration:underline}
+  button{font-family:inherit}
+  header.simple{height:64px;border-bottom:1px solid var(--border);background:#fff;display:flex;align-items:center;position:sticky;top:0;z-index:10}
+  header.simple .row{max-width:1200px;width:100%;margin:0 auto;padding:0 32px;display:flex;justify-content:space-between;align-items:center}
+  .brand{display:flex;align-items:center;gap:12px;color:inherit}
+  .brand:hover{text-decoration:none}
+  .brand-mark{width:30px;height:30px;border-radius:8px;background:var(--teal-700);display:grid;place-items:center}
+  .brand-name{font-weight:700;font-size:17px;letter-spacing:-.01em}
+  .brand-name .accent{color:var(--teal-700)}
+  .help{font-size:13px;color:var(--slate-500)}
+  .stepper{background:#fff;border-bottom:1px solid var(--border)}
+  .stepper .row{max-width:920px;margin:0 auto;padding:18px 32px;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none}
+  .stepper .row::-webkit-scrollbar{display:none}
+  .pip{display:flex;align-items:center;gap:9px;padding:6px 12px;border-radius:999px;color:var(--slate-500);font-size:13px;font-weight:500;flex:0 0 auto}
+  .pip .num{width:22px;height:22px;border-radius:50%;background:var(--slate-100);color:var(--slate-500);display:grid;place-items:center;font:600 11px var(--font-mono)}
+  .pip.active{color:var(--teal-800);background:var(--teal-50)}
+  .pip.active .num{background:var(--teal-700);color:#fff}
+  .pip.done .num{background:var(--teal-100);color:var(--teal-700)}
+  .pip-line{flex:0 0 14px;height:1px;background:var(--slate-200)}
+  /* Fil d'Ariane cliquable — étapes déjà validées seulement */
+  .pip{transition:background .15s ease,opacity .15s ease}
+  .pip.done{cursor:pointer;opacity:.95}
+  .pip.done:hover{background:var(--teal-50);opacity:1}
+  .pip.done:focus-visible{outline:2px solid var(--teal-600);outline-offset:2px}
+  .pip.pending{cursor:default;opacity:.4}
+  .pip.pending:hover{background:transparent}
+  .pip.hors-flux{display:none}
+  main{max-width:920px;margin:0 auto;padding:48px 32px 80px}
+  .screen{display:none}
+  .screen.active{display:block}
+  .eyebrow{font:600 12px var(--font-mono);color:var(--teal-700);letter-spacing:.08em;text-transform:uppercase}
+  h1.q-title{font-size:32px;font-weight:700;letter-spacing:-.02em;line-height:1.18;margin:10px 0 12px;text-wrap:balance}
+  .q-sub{color:var(--slate-600);font-size:16.5px;margin:0 0 30px;max-width:62ch;text-wrap:pretty}
+  .card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:28px}
+  .field{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+  .field-label{font-size:14px;font-weight:500;color:var(--slate-700)}
+  .field-help{font-size:13px;color:var(--slate-500)}
+  .input,.select{width:100%;font:400 16px var(--font-sans);padding:14px 16px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--slate-800)}
+  .input:focus,.select:focus{outline:none;border-color:var(--teal-600);box-shadow:0 0 0 4px var(--teal-100)}
+  .row-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:640px){.row-2{grid-template-columns:1fr}}
+  .tiles{display:grid;gap:12px}
+  .tiles-2{grid-template-columns:1fr 1fr}
+  @media (max-width:560px){.tiles-2{grid-template-columns:1fr}}
+  /* Autocomplete Base Adresse Nationale */
+  .ban-field{position:relative}
+  .ban-suggestions{position:absolute;top:100%;left:0;right:0;margin-top:4px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 28px rgba(15,23,42,.12);max-height:250px;overflow-y:auto;z-index:20}
+  .ban-suggestions[hidden]{display:none}
+  .ban-item{display:block;width:100%;text-align:left;padding:11px 14px;border:0;border-bottom:1px solid var(--slate-100,#f1f5f9);background:#fff;cursor:pointer;font:inherit}
+  .ban-item:last-child{border-bottom:0}
+  .ban-item:hover,.ban-item:focus-visible{background:var(--slate-50);outline:none}
+  .ban-item .lbl{display:block;font-size:14px;font-weight:500;color:var(--slate-800)}
+  .ban-item .ctx{display:block;font-size:12px;color:var(--slate-500);margin-top:1px}
+  .tile{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;cursor:pointer;font-size:15px;color:var(--slate-800);transition:border-color .12s ease,background .12s ease}
+  .tile:hover{border-color:var(--teal-600)}
+  .tile.selected{border-color:var(--teal-700);background:var(--teal-50);box-shadow:0 0 0 3px var(--teal-100)}
+  .tile .nm{font-weight:600;display:block}
+  .tile .ds{display:block;font-size:13px;color:var(--slate-500);margin-top:2px}
+  .tile .box{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--slate-300);flex:0 0 auto;display:grid;place-items:center;color:transparent;background:#fff}
+  .tile.selected .box{border-color:var(--teal-700);background:var(--teal-700);color:#fff}
+  .works{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  @media (max-width:880px){.works{grid-template-columns:1fr}}
+  .works h3{font:600 12px var(--font-mono);color:var(--teal-700);letter-spacing:.06em;text-transform:uppercase;margin:0 0 12px}
+  .works .tiles{gap:8px}
+  .works .tile{padding:12px 14px;font-size:14px;gap:11px}
+  .cost{margin-left:auto;font:500 12px var(--font-mono);color:var(--slate-400);flex:0 0 auto}
+  .nav{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:28px}
+  .btn{display:inline-flex;align-items:center;gap:8px;border-radius:10px;font-weight:600;font-size:15px;padding:13px 22px;border:1px solid transparent;cursor:pointer;text-decoration:none}
+  .btn:hover{text-decoration:none}
+  .btn-primary{background:var(--teal-700);color:#fff}
+  .btn-primary:hover{background:var(--teal-800);color:#fff}
+  .btn-primary[disabled]{opacity:.5;cursor:not-allowed}
+  .btn-ghost{background:#fff;border-color:var(--border);color:var(--slate-700)}
+  .btn-ghost:hover{color:var(--slate-900);border-color:var(--slate-300)}
+  .note{display:flex;gap:12px;padding:14px 16px;background:var(--teal-50);border:1px solid var(--teal-100);border-radius:10px;color:var(--teal-900);font-size:13.5px;line-height:1.5;margin-top:6px}
+  .running{margin-top:18px;padding:14px 16px;border-radius:10px;background:var(--slate-50);border:1px solid var(--border);font-size:13.5px;color:var(--slate-600);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .running b{font:600 15px var(--font-mono);color:var(--slate-900)}
+  .legal{font-size:12.5px;color:var(--slate-500);margin-top:26px;text-align:center}
+  /* Écran de calcul (étape 7) — même vocabulaire visuel que le tunnel énergétique */
+  .loader-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;padding:48px 0}
+  .loader-circle{width:120px;height:120px;border-radius:50%;background:conic-gradient(var(--teal-700) var(--p,0%),var(--slate-100) 0);display:grid;place-items:center;margin-bottom:24px}
+  .loader-circle .inner{width:100px;height:100px;border-radius:50%;background:#fff;display:grid;place-items:center;font:600 24px var(--font-mono);color:var(--teal-700)}
+  .loader-checks{margin-top:32px;text-align:left;width:100%;max-width:440px;display:flex;flex-direction:column;gap:14px}
+  .lc-item{display:flex;align-items:center;gap:14px;padding:14px 16px;background:#fff;border:1px solid var(--border);border-radius:10px;font-size:14.5px;color:var(--slate-600)}
+  .lc-item .ic{width:24px;height:24px;border-radius:50%;background:var(--slate-100);display:grid;place-items:center;color:var(--slate-400);flex:0 0 auto}
+  .lc-item.done .ic{background:var(--teal-50);color:var(--teal-700)}
+  .lc-item.active .ic{background:var(--teal-50);color:var(--teal-700)}
+  .lc-item.active{color:var(--slate-800)}
+  .spinner{width:14px;height:14px;border:2px solid var(--teal-200);border-top-color:var(--teal-700);border-radius:50%;animation:spin 800ms linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  /* Encadré de traçabilité : catégorie de revenus détectée */
+  .cat-hint{margin-top:16px;padding:14px 16px;border:1px solid var(--border);border-left-width:4px;border-radius:10px;background:var(--slate-50);font-size:13.5px;line-height:1.6;color:var(--slate-700)}
+  .cat-hint[hidden]{display:none}
+  .cat-hint .cat-title{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:6px}
+  .cat-hint .cat-title svg{flex:0 0 auto}
+  .cat-hint strong{color:var(--slate-900)}
+  .cat-hint .cat-taux{margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:13px}
+  /* Étape Transmission — teaser étape de transmission */
+  .tz-verdict{display:flex;gap:13px;align-items:flex-start;padding:15px 17px;border-radius:12px;background:var(--teal-50);border:1px solid var(--teal-100);color:var(--teal-900);font-size:14px;line-height:1.5;margin-bottom:18px}
+  .tz-verdict.ko{background:var(--amber-100);border-color:var(--amber-300);color:#78350F}
+  .tz-verdict b{display:block;font-size:15px;margin-bottom:2px}
+  .tz-amount{background:linear-gradient(135deg,var(--teal-700),var(--teal-900));color:#fff;border-radius:16px;padding:30px 28px;text-align:center;margin-bottom:22px}
+  .tz-amount .lbl{font:600 12px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;opacity:.82}
+  .tz-amount .v{font:700 48px var(--font-mono);letter-spacing:-.025em;margin:8px 0 6px;line-height:1}
+  .tz-amount .hint{font-size:13px;opacity:.85;line-height:1.5;max-width:44ch;margin:0 auto}
+  .tz-amount .tz-hint-fine{margin-top:8px;font-size:11.5px;opacity:.7}
+  /* Décomposition du calcul dans le teaser */
+  .tz-calc{margin-top:14px;padding:14px 16px;background:rgba(255,255,255,.12);border-radius:10px;text-align:left}
+  .tz-calc .h{font:600 12px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;opacity:.85;margin-bottom:9px}
+  .tz-calc .r{display:flex;justify-content:space-between;gap:14px;font-size:13.5px;padding:3px 0;opacity:.92}
+  .tz-calc .r b{font-family:var(--font-mono);font-weight:600;white-space:nowrap}
+  .tz-calc .tot{margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.25);font-weight:700;opacity:1}
+  .tz-sep{display:flex;align-items:center;gap:14px;margin:26px 0 18px;color:var(--slate-500);font:600 12px var(--font-mono);letter-spacing:.06em;text-transform:uppercase}
+  .tz-sep::before,.tz-sep::after{content:"";flex:1;height:1px;background:var(--border)}
+  .tz-price{font-size:15.5px;color:var(--slate-700);margin:0 0 16px}
+  .tz-price b{color:var(--slate-900)}
+  .tz-list{list-style:none;margin:0 0 22px;padding:0;display:flex;flex-direction:column;gap:10px}
+  .tz-list li{display:flex;gap:11px;align-items:flex-start;font-size:14.5px;color:var(--slate-700);line-height:1.5}
+  .tz-list svg{flex:0 0 auto;color:var(--teal-700);margin-top:3px}
+  .btn-pay{background:var(--amber-600);color:#fff;font-size:16px;padding:15px 26px;width:100%;justify-content:center}
+  .btn-pay:hover{background:#B45309;color:#fff}
+  .btn-pay[disabled]{opacity:.5;cursor:not-allowed;background:var(--amber-600)}
+  .tz-reassure{margin-top:12px;text-align:center;font-size:12.5px;color:var(--slate-500);line-height:1.5}
+  /* Modal générique — conservée pour les messages du parcours */
+  .rf-modal{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(15,23,42,.55);backdrop-filter:blur(6px)}
+  .rf-modal__box{background:#fff;border:1px solid var(--border);border-radius:18px;padding:34px 32px;max-width:460px;width:100%;text-align:center;box-shadow:0 24px 56px rgba(15,23,42,.25)}
+  .rf-modal__ico{width:54px;height:54px;border-radius:50%;background:var(--amber-100);color:var(--amber-600);display:grid;place-items:center;margin:0 auto 18px}
+  .rf-modal__box h2{margin:0 0 10px;font-size:20px;font-weight:700;letter-spacing:-.01em;color:var(--slate-900)}
+  .rf-modal__box p{margin:0 0 22px;font-size:14.5px;line-height:1.55;color:var(--slate-600);text-wrap:pretty}
+  .rf-modal__box .btn-primary{display:flex;width:100%;justify-content:center}
+  /* Styles hérités du formulaire de démonstration */
+  .cb-box{background:#fff;border-radius:14px;max-width:440px;width:100%;overflow:hidden;box-shadow:0 24px 56px rgba(15,23,42,.25)}
+  .cb-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border)}
+  .cb-head .t{display:flex;align-items:center;gap:9px;font-weight:700;font-size:14px;color:var(--slate-900)}
+  .cb-x{background:none;border:0;padding:2px;line-height:1;color:var(--slate-400);cursor:pointer;font-size:22px}
+  .cb-x:hover{color:var(--slate-700)}
+  .cb-body{padding:22px 20px}
+  .cb-amount{text-align:center;margin-bottom:20px}
+  .cb-amount .l{font:600 11px var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--slate-500)}
+  .cb-amount .v{font:800 30px var(--font-mono);letter-spacing:-.02em;color:var(--slate-900);margin-top:3px}
+  .cb-form{display:flex;flex-direction:column;gap:13px}
+  .cb-form label{display:block}
+  .cb-form .lb{display:block;font-size:13px;font-weight:600;color:var(--slate-800);margin-bottom:6px}
+  .cb-form input{width:100%;padding:11px 13px;border:1px solid var(--border);border-radius:8px;font:400 14px var(--font-sans);color:var(--slate-800);background:#fff}
+  .cb-form input:focus{outline:none;border-color:var(--teal-600);box-shadow:0 0 0 3px var(--teal-100);position:relative;z-index:1}
+  .cb-card input:first-child{border-radius:8px 8px 0 0;border-bottom:0}
+  .cb-card .row{display:flex}
+  .cb-card .row input:first-child{border-radius:0 0 0 8px;border-right:0}
+  .cb-card .row input:last-child{border-radius:0 0 8px 0}
+  .cb-warn{padding:10px 12px;background:var(--amber-100);border-radius:7px;font-size:12px;color:#78350F;line-height:1.5}
+  .cb-submit{width:100%;padding:13px;background:var(--teal-700);color:#fff;border:0;border-radius:8px;font:700 15px var(--font-sans);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px}
+  .cb-submit:hover{background:var(--teal-800)}
+  .cb-submit[disabled]{opacity:.75;cursor:progress}
+  .cb-spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:cbspin .7s linear infinite}
+  @keyframes cbspin{to{transform:rotate(360deg)}}
+  .cb-foot{text-align:center;font-size:11px;color:var(--slate-400)}
+
+  /* ══ Transmission — mêmes composants que l'étape 8 du tunnel énergétique ══
+     Copié depuis onboarding-diagnostic.html pour que les 3 tunnels présentent
+     exactement le même écran de transmission. */
+  .btn-amber{background:var(--amber-500,#F59E0B);color:#1E293B}
+  .btn-amber:hover{background:var(--amber-600);color:#fff}
+  .btn-lg{padding:16px 26px;font-size:16px}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .rf-hero-roi{max-width:720px;margin:28px auto 20px;padding:0;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(13,107,82,.10);background:#fff;border:1px solid #d1e8dd}
+  .rf-hero-roi__main{padding:36px 24px 28px;text-align:center;background:linear-gradient(180deg,#f0f7f4 0%,#fff 100%)}
+  .rf-hero-roi__label{font-size:12px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:#0d6b52;margin-bottom:14px}
+  .rf-hero-roi__amount{font-size:64px;font-weight:800;line-height:1;color:#0d6b52;letter-spacing:-.03em;font-variant-numeric:tabular-nums;margin-bottom:12px}
+  .rf-hero-roi__sub{font-size:13px;color:#4a5854;line-height:1.5;max-width:420px;margin:0 auto}
+  @media (max-width:640px){.rf-hero-roi__amount{font-size:48px}.rf-hero-roi__main{padding:28px 20px 22px}}
+  .rf-dossier__benefits{list-style:none;padding:0;margin:20px 0}
+  .rf-dossier__benefits li{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #f0f4f2}
+  .rf-dossier__benefits li:last-child{border-bottom:none}
+  .rf-dossier__benefits li > div{display:flex;flex-direction:column;gap:3px}
+  .rf-dossier__benefit-icon{font-size:22px;line-height:1;flex-shrink:0;margin-top:2px}
+  .rf-dossier__benefits strong{font-size:14px;font-weight:700;color:#0f1a17;line-height:1.35}
+  .rf-dossier__benefits p{font-size:13px;color:#4a5854;line-height:1.5;margin:0}
+  .rf-dossier__benefit--star{background:#f0f7f4;border-radius:8px;padding:12px !important;border:1px solid #d1e8dd;border-bottom:1px solid #d1e8dd !important;margin:8px -4px}
+  .rf-dossier__benefit--star strong::after{content:"★ Différenciateur";display:inline-block;margin-left:8px;padding:2px 8px;font-size:10px;font-weight:600;color:#0d6b52;background:#fff;border:1px solid #0d6b52;border-radius:10px;text-transform:uppercase;letter-spacing:.5px;vertical-align:middle}
+  .rf-guarantees{max-width:720px;margin:20px auto;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 18px;background:#f8faf9;border:1px solid #e4ebe7;border-radius:12px}
+  .rf-guarantee{display:flex;gap:8px;align-items:center;padding:6px 8px}
+  .rf-guarantee__icon{font-size:18px;line-height:1;flex-shrink:0}
+  .rf-guarantee > div{display:flex;flex-direction:column;gap:0}
+  .rf-guarantee strong{font-size:12px;font-weight:700;color:#0f1a17;line-height:1.3}
+  .rf-guarantee span{font-size:11px;color:#6b7671;line-height:1.3;display:none}
+  @media (max-width:720px){.rf-guarantees{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:400px){.rf-guarantees{grid-template-columns:1fr}.rf-guarantee span{display:block}}
+  .rf-dossier__human{max-width:720px;margin:20px auto 0;padding:14px 18px;background:#f8faf9;border:1px dashed #d1dcd7;border-radius:10px;text-align:center}
+  .rf-dossier__human p{margin:0;font-size:13px;line-height:1.55;color:#4a5854}
+  .rf-dossier__human strong{color:#0f1a17;display:block;margin-bottom:4px}
+  .rf-dossier__human a{color:#0d6b52;font-weight:600;text-decoration:underline}
+  .rf-dossier__reassurance-line{text-align:center;font-size:12px;color:#6b7671;margin-top:8px}
+  .step-eyebrow{font:600 12px var(--font-mono);color:var(--teal-700);letter-spacing:.08em;text-transform:uppercase}
+  .signup{margin-top:22px;background:#fff;border:1px solid var(--border);border-radius:16px;padding:28px;max-width:720px;margin-inline:auto}
+  .signup h3{margin:0 0 6px;font-size:19px;font-weight:700;letter-spacing:-.01em}
+  .signup .sub{font-size:14px;color:var(--slate-500);margin:0 0 22px}
+  .signup .sub b{color:var(--slate-800);font-weight:600}
+  .signup-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+  @media (max-width:640px){.signup-grid{grid-template-columns:1fr}}
+  .signup .summary{background:var(--slate-50);border:1px solid var(--border);border-radius:12px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+  .signup .summary > div:last-child{margin-left:auto}
+  .signup .summary .lbl{font:500 12px var(--font-mono);color:var(--slate-500);letter-spacing:.04em;text-transform:uppercase}
+  .signup .summary .nm{font-weight:600;font-size:15px;margin-top:2px}
+  .signup .summary .price{font:700 22px var(--font-mono);color:var(--slate-900)}
+  .signup .summary .period{font-size:13px;color:var(--slate-500);font-weight:400}
+  .signup .legal{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--slate-600);line-height:1.5;margin-bottom:18px}
+  .signup .legal input{margin-top:3px;flex:0 0 auto;accent-color:var(--teal-700)}
+  .signup .legal a{color:var(--teal-700);text-decoration:underline}
+  .signup .pay-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  .signup .pay-meta{font-size:12.5px;color:var(--slate-500);display:flex;align-items:center;gap:8px}
+  .signup .pay-meta svg{color:var(--success-600,#059669)}
+  .signup .field{margin-bottom:0}
+  .row-3{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .rf-dossier-block .card{max-width:720px;margin:0 auto 32px}
+</style>
+<script src="_demo_mode.js"></script>
+<script>
+/* Redémarrage propre du tunnel : ?fresh=1 purge le brouillon en cours.
+   Cas MaPrimeAdapt' : dernière estimation locale et brouillon en attente de transmission.
+   En développement local seulement, les dossiers sont purgés aussi, pour repartir
+   d'un tableau de bord vide. Partout ailleurs, renofacile.dossiers survit toujours —
+   de même que le compte et la session, dans tous les cas. */
+(function resetIfFresh(){
+  try {
+    var params = new URLSearchParams(location.search);
+    if (params.get('fresh') !== '1') return;
+    localStorage.removeItem('renofacile.autonomie.result');
+    localStorage.removeItem('renofacile.dossierEnAttente');
+    localStorage.removeItem('renofacile.returnTo');
+    if (window.rfIsDemoStaging && window.rfIsDemoStaging()){
+      try { localStorage.removeItem('renofacile.dossiers'); } catch(_) {}
+      try { localStorage.removeItem('renofacile.profile'); } catch(_) {}
+      try { localStorage.removeItem('renofacile.currentStep'); } catch(_) {}
+      try { localStorage.removeItem('renofacile.indigne.result'); } catch(_) {}
+    }
+    history.replaceState(null, '', location.pathname);
+  } catch (_) {}
+})();
+</script>
+<script src="_dossiers.js"></script>
+<script src="_partner_config.js"></script>
+<script src="_analytics.js" defer></script>
+<style>
+  /* ── Chromatique du tunnel : le checkout suit la couleur du parcours ── */
+  .tunnel-autonomie #rf-mpa-checkout .card[style*="teal"],
+  .tunnel-autonomie #rf-lhi-checkout .card[style*="teal"]{border-color:#7C3AED!important}
+  .tunnel-autonomie .rf-hero-roi{border-color:#DDD6FE}
+  .tunnel-autonomie .rf-hero-roi__main{background:linear-gradient(180deg,#F5F3FF 0%,#fff 100%)}
+  .tunnel-autonomie .rf-hero-roi__label,.tunnel-autonomie .rf-hero-roi__amount{color:#5B21B6}
+  .tunnel-autonomie .rf-dossier__benefit--star{background:#F5F3FF;border-color:#DDD6FE;border-bottom-color:#DDD6FE!important}
+  .tunnel-autonomie .rf-dossier__benefit--star strong::after{color:#5B21B6;border-color:#DDD6FE}
+  .tunnel-autonomie #mpa-scroll-to-form,.tunnel-autonomie #lhi-scroll-to-form{background:#7C3AED;border-color:#7C3AED}
+  .tunnel-autonomie #mpa-scroll-to-form:hover,.tunnel-autonomie #lhi-scroll-to-form:hover{background:#5B21B6;border-color:#5B21B6}
+
+/* Respect de « réduire les animations ». */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+/* Focus visible — les règles `outline:none` + halo `teal-100` donnaient
+   1,13:1 pour un seuil de 3:1. Contour rétabli, halo conservé. */
+:where(input,select,textarea,button,a,[tabindex]):focus-visible{
+  outline:2px solid var(--teal-700)!important;outline-offset:2px!important;
+}
+.suggest > *:focus-visible,.suggest .item:focus-visible,.suggest li:focus-visible{
+  outline:2px solid var(--teal-700)!important;outline-offset:-2px!important;
+}
+
+/* Lien vers le glossaire — les tunnels masquent la navigation publique */
+.rf-glossaire-lien{max-width:720px;margin:28px auto 36px;padding:0 20px;text-align:center;font-size:14px}
+.rf-glossaire-lien a{color:var(--teal-700);font-weight:600}
+abbr[title]{text-decoration:underline dotted;text-underline-offset:3px;cursor:help}
+
+/* Prochaine étape — information, pas une alerte */
+.rf-tx__next{margin:14px 0 0;font-size:14px;line-height:1.6;color:var(--slate-600,#475569);text-wrap:pretty}
+.rf-tx__next strong{color:var(--slate-900,#0F172A)}
+
+/* Ce qui manque pour continuer — jamais un bouton grisé sans explication */
+.rf-missing{margin:10px 0 0;font-size:13.5px;line-height:1.5;color:var(--slate-600,#475569)}
+.rf-missing[hidden]{display:none}
+</style>
+<script src="_transmission.js"></script>
+<script src="_geo.js"></script>
+<script src="_baremes_sources.js"></script>
+<script src="_adresse_secours.js"></script>
+<script src="_mar.js"></script>
+</head>
+<body class="tunnel-autonomie" data-tunnel="MPA">
+<header class="simple">
+  <div class="row">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg></span>
+      <span class="brand-name">Réno<span class="accent">Facile</span></span>
+    </a>
+    <div class="help" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <a href="choix-parcours.html" style="color:var(--slate-500);text-decoration:none;display:inline-flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Changer de projet</a>
+      <span>Besoin d'aide ? France Rénov' <b>0 808 800 700</b> (gratuit)</span>
+    </div>
+  </div>
+</header>
+
+<div class="stepper">
+  <div class="row" id="pips">
+    <div class="pip active" data-pip="1" data-goto="1"><span class="num">1</span><span>Logement</span></div>
+    <span class="pip-line"></span>
+    <div class="pip" data-pip="2" data-goto="2"><span class="num">2</span><span>Personne</span></div>
+    <span class="pip-line"></span>
+    <div class="pip" data-pip="3" data-goto="3"><span class="num">3</span><span>Âge</span></div>
+    <span class="pip-line"></span>
+    <div class="pip" data-pip="4" data-goto="4"><span class="num">4</span><span>Handicap</span></div>
+    <span class="pip-line"></span>
+    <div class="pip" data-pip="5" data-goto="5"><span class="num">5</span><span>Revenus</span></div>
+    <span class="pip-line"></span>
+    <div class="pip" data-pip="6" data-goto="6"><span class="num">6</span><span>Travaux</span></div>
+    <span class="pip-line"></span>
+    <div class="pip" data-pip="7" data-goto="7" data-non-cliquable><span class="num">7</span><span>Calcul</span></div>
+    <span class="pip-line"></span>
+    <div class="pip" data-pip="8" data-goto="8"><span class="num">8</span><span>Transmission</span></div>
+  </div>
+</div>
+
+<main>
+  <!-- ÉTAPE 1 — Logement -->
+  <section class="screen active" id="s1" data-screen-label="01 Logement">
+    <div class="eyebrow">Étape 1 sur 8</div>
+    <h1 class="q-title">Où se situe le logement à adapter&nbsp;?</h1>
+    <div id="rf-mar-anchor"></div>
+    <p class="q-sub">L'adresse permet d'identifier les aides locales mobilisables et de préparer votre dossier Anah.</p>
+    <div class="card">
+      <div class="field ban-field">
+        <label class="field-label" for="ad-adresse">Adresse complète</label>
+        <input class="input" type="text" id="ad-adresse" placeholder="Ex. 12 rue Stanislas 54000 Nancy" autocomplete="street-address" />
+        <div class="ban-suggestions" id="ad-adresse-suggestions" hidden></div>
+        <span class="field-help">Saisissez au moins 5 caractères pour voir les suggestions. Source : Base Adresse Nationale (IGN, La Poste, Etalab).</span>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Type de logement</span>
+        <div class="tiles tiles-2" id="ad-type">
+          <button type="button" class="tile" data-val="maison"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg></span><span><span class="nm">Maison individuelle</span></span></button>
+          <button type="button" class="tile" data-val="appartement"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg></span><span><span class="nm">Appartement</span></span></button>
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label class="field-label" for="ad-surface">Surface habitable</label>
+          <input class="input" type="number" id="ad-surface" min="9" max="500" step="1" placeholder="Ex. 85" inputmode="numeric" />
+          <span class="field-help">En m².</span>
+        </div>
+        <div class="field">
+          <label class="field-label" for="ad-annee">Année de construction</label>
+          <input class="input" type="number" id="ad-annee" min="1800" step="1" placeholder="Ex. 1985" inputmode="numeric" />
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <a class="btn btn-ghost" href="choix-parcours.html">← Changer de projet</a>
+      <button class="btn btn-primary" data-next="2" disabled>Continuer →</button>
+    </div>
+  </section>
+
+  <!-- ÉTAPE 2 -->
+  <section class="screen" id="s2" data-screen-label="02 Personne concernée">
+    <div class="eyebrow">Étape 2 sur 8</div>
+    <h1 class="q-title">Pour qui prévoyez-vous les travaux d'adaptation&nbsp;?</h1>
+    <p class="q-sub">MaPrimeAdapt' finance l'adaptation du logement d'une personne âgée ou en situation de handicap. Le dossier peut être porté par un proche.</p>
+    <div class="card">
+      <div class="tiles" id="who">
+        <button type="button" class="tile" data-val="moi"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg></span><span><span class="nm">Moi-même</span></span></button>
+        <button type="button" class="tile" data-val="conjoint"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg></span><span><span class="nm">Mon conjoint</span></span></button>
+        <button type="button" class="tile" data-val="ascendant"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg></span><span><span class="nm">Un parent (ascendant)</span><span class="ds">Père, mère, grand-parent</span></span></button>
+        <button type="button" class="tile" data-val="descendant"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg></span><span><span class="nm">Un enfant (descendant)</span></span></button>
+        <button type="button" class="tile" data-val="autre"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg></span><span><span class="nm">Une autre personne du foyer</span></span></button>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn btn-ghost" data-prev="1">← Précédent</button>
+      <button class="btn btn-primary" data-next="3" disabled>Continuer →</button>
+    </div>
+  </section>
+
+  <!-- ÉTAPE 3 -->
+  <section class="screen" id="s3" data-screen-label="03 Âge et autonomie">
+    <div class="eyebrow">Étape 3 sur 8</div>
+    <h1 class="q-title">Quel est l'âge de la personne concernée&nbsp;?</h1>
+    <p class="q-sub">À partir de 70 ans, aucune autre condition n'est demandée. Entre 60 et 69 ans, une évaluation GIR est nécessaire.</p>
+    <div class="card">
+      <div class="field">
+        <label class="field-label" for="age">Âge de la personne concernée</label>
+        <input class="input" type="number" id="age" min="0" max="120" step="1" placeholder="Ex. 75" inputmode="numeric" />
+        <span class="field-help">En années révolues.</span>
+      </div>
+      <div id="gir-block" hidden>
+        <div class="field">
+          <span class="field-label">Cette personne a-t-elle été évaluée en GIR (Groupe Iso-Ressources)&nbsp;?</span>
+          <div class="tiles" id="gir-choice">
+            <button type="button" class="tile" data-val="oui"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg></span><span><span class="nm">Oui</span></span></button>
+            <button type="button" class="tile" data-val="non"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg></span><span><span class="nm">Non</span></span></button>
+            <button type="button" class="tile" data-val="inconnu"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg></span><span><span class="nm">Je ne sais pas</span><span class="ds">L'opérateur AMO pourra le vérifier</span></span></button>
+          </div>
+        </div>
+        <div class="field" id="gir-select-field" hidden>
+          <label class="field-label" for="gir">Niveau GIR</label>
+          <select class="select" id="gir">
+            <option value="">Sélectionner…</option>
+            <option value="1">GIR 1 — dépendance totale</option>
+            <option value="2">GIR 2</option>
+            <option value="3">GIR 3</option>
+            <option value="4">GIR 4</option>
+            <option value="5">GIR 5</option>
+            <option value="6">GIR 6 — autonomie préservée</option>
+          </select>
+        </div>
+      </div>
+      <div class="note" id="age-note" hidden></div>
+    </div>
+    <div class="nav">
+      <button class="btn btn-ghost" data-prev="2">← Précédent</button>
+      <button class="btn btn-primary" data-next="4" disabled>Continuer →</button>
+    </div>
+  </section>
+
+  <!-- ÉTAPE 4 -->
+  <section class="screen" id="s4" data-screen-label="04 Handicap">
+    <div class="eyebrow">Étape 4 sur 8</div>
+    <h1 class="q-title">Cette personne est-elle en situation de handicap&nbsp;?</h1>
+    <p class="q-sub">Un taux d'incapacité de 50 % ou plus, ou le bénéfice de la PCH, ouvre droit à MaPrimeAdapt' sans condition d'âge.</p>
+    <div class="card">
+      <div class="tiles" id="handicap">
+        <button type="button" class="tile" data-val="non"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg></span><span><span class="nm">Non</span></span></button>
+        <button type="button" class="tile" data-val="oui_50plus"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg></span><span><span class="nm">Oui, avec un taux d'incapacité ≥ 50 %</span><span class="ds">Notification MDPH ou carte mobilité inclusion</span></span></button>
+        <button type="button" class="tile" data-val="oui_pch"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg></span><span><span class="nm">Oui, bénéficiaire de la PCH</span><span class="ds">Prestation de Compensation du Handicap</span></span></button>
+        <button type="button" class="tile" data-val="inconnu"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg></span><span><span class="nm">Je ne sais pas</span></span></button>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn btn-ghost" data-prev="3">← Précédent</button>
+      <button class="btn btn-primary" data-next="5" disabled>Continuer →</button>
+    </div>
+  </section>
+
+  <!-- ÉTAPE 5 -->
+  <section class="screen" id="s5" data-screen-label="05 Revenus">
+    <div class="eyebrow">Étape 5 sur 8</div>
+    <h1 class="q-title">Composition du foyer et revenus</h1>
+    <p class="q-sub">Le revenu fiscal de référence figure sur votre dernier avis d'imposition, page 1.</p>
+    <div class="card">
+      <div class="row-2">
+        <div class="field">
+          <label class="field-label" for="foyer">Personnes composant le foyer</label>
+          <input class="input" type="number" id="foyer" min="1" max="12" step="1" value="1" inputmode="numeric" />
+        </div>
+        <div class="field">
+          <label class="field-label" for="rfr">Revenu fiscal de référence</label>
+          <input class="input" type="number" id="rfr" min="0" step="100" placeholder="Ex. 18 000" inputmode="numeric" />
+          <span class="field-help">En euros, foyer entier.</span>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="region">Région</label>
+        <select class="select" id="region">
+          <option value="Grand Est" selected>Grand Est</option>
+          <option value="Île-de-France">Île-de-France</option>
+          <option value="Autre">Autre région</option>
+        </select>
+      </div>
+      <div class="cat-hint" id="categorie-hint" hidden></div>
+      <div class="note">MaPrimeAdapt' est réservée aux ménages aux revenus modestes ou très modestes. Nous vous indiquons votre éligibilité immédiatement, sans création de compte.</div>
+    </div>
+    <div class="nav">
+      <button class="btn btn-ghost" data-prev="4">← Précédent</button>
+      <button class="btn btn-primary" data-next="6" disabled>Continuer →</button>
+    </div>
+  </section>
+
+  <!-- ÉTAPE 6 -->
+  <section class="screen" id="s6" data-screen-label="06 Travaux">
+    <div class="eyebrow">Étape 6 sur 8</div>
+    <h1 class="q-title">Quels aménagements envisagez-vous&nbsp;?</h1>
+    <p class="q-sub">Sélectionnez tout ce qui vous intéresse. Les montants indiqués sont des coûts moyens constatés — l'opérateur AMO affinera le chiffrage.</p>
+    <div class="card">
+      <div class="works" id="works"></div>
+      <div class="running">
+        <span>Coût estimé des travaux sélectionnés</span>
+        <b id="run-total">0 €</b>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn btn-ghost" data-prev="5">← Précédent</button>
+      <button class="btn btn-primary" id="go-results" disabled>Voir mon estimation →</button>
+    </div>
+    <p class="legal">Estimation indicative fondée sur le Guide Anah éd. février 2026 (pp. 57-60). Validation officielle par un conseiller France Rénov' ou un opérateur AMO agréé.</p>
+  </section>
+
+  <!-- ÉTAPE 7 — Calcul des aides (transition automatique vers l'étape 8) -->
+  <section class="screen" id="s7" data-screen-label="07 Calcul">
+    <div class="eyebrow">Étape 7 sur 8</div>
+    <h1 class="q-title">Nous calculons votre aide MaPrimeAdapt'…</h1>
+    <p class="q-sub">Cette analyse croise vos réponses avec les barèmes Anah 2026 et les critères d'éligibilité MaPrimeAdapt'. Comptez une dizaine de secondes.</p>
+    <div class="card">
+      <div class="loader-wrap">
+        <div class="loader-circle" id="mpa-loader-circle" style="--p:0%">
+          <div class="inner" id="mpa-loader-pct">0%</div>
+        </div>
+        <div id="mpa-loader-title" style="font-weight:500;color:var(--slate-800)">Connexion aux bases officielles…</div>
+        <div id="mpa-loader-sub" style="font-size:13px;color:var(--slate-500);margin-top:4px">Quelques secondes, ne fermez pas la fenêtre.</div>
+        <div class="loader-checks" id="mpa-loader-checks">
+          <div class="lc-item" data-lbl="Vérification de vos données"><span class="ic"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></span> Données du logement validées</div>
+          <div class="lc-item" data-lbl="Vérification de l'éligibilité"><span class="ic"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></span> Éligibilité MaPrimeAdapt' (âge, handicap, GIR)</div>
+          <div class="lc-item" data-lbl="Croisement du barème Anah"><span class="ic"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></span> Taux de prise en charge selon vos revenus (70 % ou 50 %)</div>
+          <div class="lc-item" data-lbl="Estimation de l'accompagnement AMO"><span class="ic"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></span> Accompagnement AMO : forfait Anah de 350 à 800 € selon le niveau de prestation</div>
+          <div class="lc-item" data-lbl="Recherche des aides complémentaires"><span class="ic"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></span> Aides complémentaires mobilisables (APA, PCH)</div>
+          <div class="lc-item" data-lbl="Vérification du plafond de travaux"><span class="ic"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg></span> Plafond de travaux subventionnables (22 000 € HT)</div>
+        </div>
+      </div>
+    </div>
+    <p class="legal">Aucune donnée n'est transmise à un tiers pendant ce calcul. Barèmes : Guide Anah éd. février 2026.</p>
+  </section>
+
+  <!-- ÉTAPE 8 — Transmission du dossier -->
+  <section class="screen" id="s8" data-screen-label="08 Transmission">
+    <div class="eyebrow">Étape 8 sur 8 · dernière étape</div>
+    <h1 class="q-title">Votre estimation MaPrimeAdapt'</h1>
+    <p class="q-sub">Voici le montant que vous pouvez espérer. Le dossier complet contient le calcul détaillé et l'accompagnement jusqu'au versement.</p>
+    <div id="rf-alertes"></div>
+    <div id="tz-verdict"></div>
+    <div id="rf-referentiel"></div>
+
+<!-- Lead magnet MPA : capture email en échange d'un PDF récap.
+     Symétrique au bloc du tunnel énergétique. -->
+<div id="lead-magnet-mpa" style="display:none;margin:24px 0;padding:24px;background:linear-gradient(135deg,#F5F3FF 0%,#EDE9FE 100%);border:1px solid #DDD6FE;border-radius:14px">
+  <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+    <div style="width:48px;height:48px;border-radius:12px;background:#fff;color:#7C3AED;display:grid;place-items:center;flex:0 0 auto;box-shadow:0 2px 8px rgba(124,58,237,.12)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg>
+    </div>
+    <div style="flex:1;min-width:260px">
+      <h3 style="font-size:20px;font-weight:700;color:#4C1D95;margin:0 0 6px;letter-spacing:-.01em">Votre aide de <span id="lead-magnet-mpa-amount"></span>, dans votre boîte mail</h3>
+      <p style="font-size:14px;color:#5B21B6;margin:0 0 16px;opacity:.9">Un PDF détaillé de votre estimation MaPrimeAdapt', prêt à imprimer ou partager. On garde une trace, vous prenez votre temps pour décider.</p>
+      <div id="lead-magnet-mpa-form" style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input type="email" id="lead-magnet-mpa-email" placeholder="votre.email@exemple.fr" aria-label="Votre adresse email" style="flex:1;min-width:220px;padding:12px 14px;border:1px solid #DDD6FE;border-radius:10px;font:400 15px var(--font-sans);background:#fff;color:var(--slate-800)" />
+          <button type="button" id="lead-magnet-mpa-submit" style="padding:12px 20px;white-space:nowrap;background:#7C3AED;color:#fff;border:0;border-radius:10px;cursor:pointer;font:600 15px var(--font-sans)">Recevoir mon récap PDF →</button>
+        </div>
+        <label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#5B21B6;line-height:1.5;cursor:pointer">
+          <input type="checkbox" id="lead-magnet-mpa-consent" style="margin-top:3px;flex:0 0 auto;accent-color:#7C3AED" />
+          <span>J'accepte de recevoir mon récap PDF et des informations utiles de RénoFacile sur les aides à l'adaptation. Vous pouvez vous désinscrire à tout moment. Voir notre <a href="page-info.html?p=privacy" target="_blank" style="color:#7C3AED">politique de confidentialité</a>.</span>
+        </label>
+        <div id="lead-magnet-mpa-error" style="display:none;font-size:13px;color:#DC2626;margin-top:4px">Email invalide ou consentement manquant.</div>
+      </div>
+      <div id="lead-magnet-mpa-success" style="display:none;padding:14px 16px;background:#fff;border:1px solid #DDD6FE;border-radius:10px">
+        <div style="font-weight:600;color:#166534;margin-bottom:4px">✓ C'est parti&nbsp;!</div>
+        <div style="font-size:13.5px;color:var(--slate-600)">Votre récapitulatif est enregistré dans votre espace personnel, où vous pourrez le consulter et le télécharger.</div>
+      </div>
+      <p style="font-size:11.5px;color:#5B21B6;opacity:.7;margin:12px 0 0;line-height:1.5">Aucune revente commerciale de vos données. Désinscription en 1 clic dans chaque email · Données stockées en France</p>
+    </div>
+  </div>
+</div>
+
+    <section id="rf-mpa-checkout" class="rf-dossier-block">
+      <div style="text-align:center;margin:40px 0 28px">
+        <div class="step-eyebrow">Dernière étape</div>
+        <h2 style="font-size:28px;margin:8px 0 12px;letter-spacing:-.02em">Dernière étape : votre dossier.</h2>
+        <p style="color:var(--slate-600);max-width:640px;margin:0 auto">Nous rassemblons votre diagnostic et votre estimation dans un dossier, conservé dans votre espace. Il sera transmis dès qu'un accompagnateur agréé sera désigné dans votre département. Vous n'avez rien à régler sur ce site.</p>
+      </div>
+
+      <section class="rf-hero-roi" aria-labelledby="mpa-roi-title">
+        <h3 id="mpa-roi-title" class="sr-only">Votre aide estimée</h3>
+        <div class="rf-hero-roi__main">
+          <div class="rf-hero-roi__label">Votre aide estimée</div>
+          <div class="rf-hero-roi__amount" id="mpa-roi-amount">—</div>
+          <div class="rf-hero-roi__sub">MaPrimeAdapt' — l'Anah prend en charge l'accompagnement AMO à hauteur d'un forfait de 350 à 800&nbsp;€ selon le niveau de prestation</div>
+        </div>
+      </section>
+
+      <div class="rf-tx">
+        <div class="rf-tx__card">
+          <h3>Récapitulatif de votre dossier</h3>
+          <dl class="rf-tx__rows">
+            <div class="rf-tx__row"><dt>Parcours</dt><dd>Adaptation à l'autonomie</dd></div>
+            <div class="rf-tx__row"><dt>Logement</dt><dd id="tx-adresse">—</dd></div>
+            <div class="rf-tx__row"><dt>Aides estimées</dt><dd id="tx-aides">—</dd></div>
+          </dl>
+          <p class="rf-tx__next"><strong>Prochaine étape</strong> — l'accompagnateur vous indiquera les pièces à fournir (avis d'imposition, justificatif de domicile, devis de l'artisan retenu). Vous les déposerez depuis votre espace, à votre rythme.</p>
+        </div>
+
+        <div class="rf-tx__pro" id="rf-tx-pro"></div>
+
+        <div id="rf-referentiel-final"></div>
+        <div class="rf-tx__free">
+          <strong>Gratuit pour vous.</strong>
+          <p>L'utilisation de RénoFacile ne vous coûte rien : aucun paiement, aucun abonnement, aucune carte bancaire. Nous sommes rémunérés par le professionnel agréé qui prend votre dossier en charge.</p>
+        </div>
+        <p class="rf-tx__aval">L'accompagnement de votre projet par ce professionnel peut faire l'objet d'une prestation à sa charge ou à la vôtre selon le dispositif. Son montant vous est indiqué par lui, par écrit, avant tout engagement de votre part. RénoFacile ne perçoit aucune commission sur vos travaux.</p>
+
+        <div id="mao-partenaire-slot"></div>
+
+        <!-- Compte personnel : il sert au suivi du dossier, jamais à facturer -->
+        <div class="signup" id="mpa-signup" style="margin-top:32px">
+          <h3>Créer mon compte et transmettre</h3>
+          <p class="sub">Vos coordonnées servent à suivre l'avancement du dossier et à permettre à votre accompagnateur de vous joindre.</p>
+
+          <div id="rf-mar-line-anchor"></div>
+
+          <div class="signup-grid">
+            <div class="field"><label class="field-label" for="mpa-firstname">Prénom</label><input class="input" id="mpa-firstname" type="text" placeholder="Sophie" autocomplete="given-name" /></div>
+            <div class="field"><label class="field-label" for="mpa-lastname">Nom</label><input class="input" id="mpa-lastname" type="text" placeholder="Marin" autocomplete="family-name" /></div>
+            <div class="field"><label class="field-label" for="mpa-email">Adresse e-mail</label><input class="input" id="mpa-email" type="email" placeholder="sophie.marin@exemple.fr" autocomplete="email" /></div>
+            <div class="field"><label class="field-label" for="mpa-tel">Téléphone</label><input class="input" id="mpa-tel" type="tel" placeholder="06 12 34 56 78" autocomplete="tel" /><span class="field-help">Votre accompagnateur vous contactera dès qu'il aura pris votre dossier en charge.</span></div>
+          </div>
+
+          <label class="rf-tx__consent" for="mpa-transmission">
+            <input type="checkbox" id="mpa-transmission" />
+            <span>J'accepte que RénoFacile transmette mon dossier et les données qu'il contient (identité, logement, revenus, travaux envisagés) à <strong id="tx-destinataire">l'accompagnateur agréé désigné pour mon département</strong>, aux seules fins du dépôt et du suivi de ma demande d'aides auprès de l'Anah.</span>
+          </label>
+
+          <label class="legal">
+            <input type="checkbox" id="mpa-tos" />
+            <span>J'ai lu et j'accepte les <a href="page-info.html?p=cgu" target="_blank">CGU</a> et la <a href="page-info.html?p=privacy" target="_blank">politique de confidentialité</a>. Je comprends que RénoFacile est un outil d'information — pour validation personnalisée : <b>France Rénov', 0 808 800 700, gratuit</b>.</span>
+          </label>
+
+          <div id="rf-mar-consent-anchor"></div>
+          <button class="btn btn-amber btn-lg rf-tx__submit" id="mpa-submit" type="button" disabled style="opacity:.55;cursor:not-allowed">Créer mon dossier →</button>
+          <p class="rf-tx__foot">Gratuit · aucun paiement sur ce site · vous pouvez retirer votre consentement à tout moment depuis votre espace</p>
+        </div>
+
+        <div class="rf-dossier__human">
+          <p><strong>Une question avant de transmettre&nbsp;?</strong> Écrivez-nous par email — <a href="mailto:hello@renofacile.fr">hello@renofacile.fr</a>.</p>
+        </div>
+
+        <!-- Confirmation de transmission -->
+        <div class="rf-tx-success" id="mpa-success">
+          <div class="check"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></div>
+          <h3>Dossier créé.</h3>
+          <p><span id="mpa-succ-partenaire" hidden></span>Il sera transmis dès qu'un accompagnateur agréé sera désigné dans votre département ; il vous contactera et vous serez prévenu par e-mail. Suivez l'avancement depuis votre tableau de bord.</p>
+        </div>
+      </div>
+    </section>
+    <div class="nav">
+      <button class="btn btn-ghost" data-prev="6">← Modifier mes réponses</button>
+      <span></span>
+    </div>
+    <p class="legal">Estimation indicative fondée sur le Guide Anah éd. février 2026 (pp. 57-60). Le montant définitif est arrêté par l'Anah après instruction du dossier.</p>
+  </section>
+</main>
+<p class="rf-glossaire-lien"><a href="glossaire-aides.html#vocabulaire" target="_blank" rel="noopener">Un mot vous échappe&nbsp;? Le vocabulaire des aides, expliqué</a></p>
+
+<script src="_compute_aids.js"></script>
+<script src="_alertes.js"></script>
+<script>
+(function(){
+  var C = window.RFCompute;
+  var state = { who:null, age:null, gir:null, girChoice:null, handicap:null, travaux:[], logement:{} };
+  var STORE = 'renofacile.autonomie';
+
+  try {
+    var saved = JSON.parse(localStorage.getItem(STORE) || 'null');
+    if (saved && typeof saved === 'object') state = Object.assign(state, saved);
+  } catch(e){}
+
+  function persist(){
+    var payload = Object.assign({}, state, {
+      foyer: val('foyer'), rfr: val('rfr'),
+      region: (document.getElementById('region')||{}).value || 'Grand Est',
+    });
+    try { localStorage.setItem(STORE, JSON.stringify(payload)); } catch(e){}
+  }
+  function el(id){ return document.getElementById(id); }
+  function val(id){ var e = el(id); return e ? e.value : ''; }
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){
+      return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' })[c];
+    });
+  }
+  function fmt(n){ return Math.round(n||0).toLocaleString('fr-FR') + ' €'; }
+
+  /* ── Navigation ─────────────────────────────────────────────── */
+  var current = 1;
+  var maxReached = 1;
+
+  /* Fil d'Ariane : états visuels + accessibilité des pastilles. */
+  function refreshStepperStates(){
+    document.querySelectorAll('.pip[data-goto]').forEach(function(p){
+      var t = Number(p.dataset.goto);
+      p.classList.remove('done', 'active', 'pending');
+      // Une étape déjà atteinte reste « done » (donc cliquable) même si on est
+      // revenu en arrière : elle ne doit pas repasser en grisé.
+      if (t === current)        p.classList.add('active');
+      else if (t <= maxReached) p.classList.add('done');
+      else                      p.classList.add('pending');
+      var clickable = t !== current && t <= maxReached && !p.hasAttribute('data-non-cliquable');
+      if (clickable){
+        p.setAttribute('role', 'button');
+        p.setAttribute('tabindex', '0');
+        var lbl = p.querySelector('span:last-child');
+        p.setAttribute('aria-label', "Retourner à l'étape " + (lbl ? lbl.textContent : t));
+      } else {
+        p.removeAttribute('role');
+        p.removeAttribute('tabindex');
+        p.removeAttribute('aria-label');
+      }
+      p.setAttribute('aria-current', t === current ? 'step' : 'false');
+    });
+  }
+
+  function bindStepperClicks(){
+    document.querySelectorAll('.pip[data-goto]').forEach(function(p){
+      function jump(){
+        var t = Number(p.dataset.goto);
+        // Navigation libre entre les étapes DÉJÀ atteintes, dans les deux sens :
+        // reculer pour corriger, puis revenir en avant sans tout re-valider.
+        // Une étape non encore atteinte reste inaccessible.
+        if (t === current || t > maxReached) return;
+        // L'écran de calcul est une transition, pas une étape sur laquelle revenir
+        if (p.hasAttribute('data-non-cliquable')) return;
+        goTo(t);
+      }
+      p.addEventListener('click', jump);
+      p.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); jump(); }
+      });
+    });
+  }
+
+  function goTo(n){
+    current = n;
+    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+    var screenEl = el('s' + n);
+    if (screenEl) screenEl.classList.add('active');
+    // Étape la plus avancée atteinte : borne le retour arrière ET empêche
+    // de sauter en avant, même en trafiquant les attributs du stepper.
+    if (n > maxReached) maxReached = n;
+    refreshStepperStates();
+    // L'étape Transmission est recalculée à CHAQUE affichage : on peut y arriver
+    // par le fil d'Ariane après avoir modifié une réponse en arrière.
+    if (n === 8){
+      /* Une opération, un try : l'échec du teaser ne doit jamais empêcher le
+         récapitulatif de se remplir (sinon adresse, montant et brouillon restent vides). */
+      try { renderTeaser(computeAndStore()); } catch(e){ console.error('Teaser :', e); }
+      try { if (window.rfUpdateRecapTransmission) window.rfUpdateRecapTransmission(); }
+      catch(e){ console.error('Récapitulatif de transmission :', e); }
+    }
+    if (n === 7) startCalcAnimation(); else stopCalcAnimation();
+    window.scrollTo({ top:0, behavior:'smooth' });
+    refresh();
+  }
+  document.querySelectorAll('[data-next]').forEach(function(b){
+    b.addEventListener('click', function(){ persist(); goTo(Number(b.dataset.next)); });
+  });
+  document.querySelectorAll('[data-prev]').forEach(function(b){
+    b.addEventListener('click', function(){ goTo(Number(b.dataset.prev)); });
+  });
+
+  /* ── Groupes de tuiles à choix unique ───────────────────────── */
+  function singleSelect(containerId, key, onPick){
+    var box = document.getElementById(containerId);
+    if (!box) return;
+    box.querySelectorAll('.tile').forEach(function(t){
+      if (state[key] === t.dataset.val) t.classList.add('selected');
+      t.addEventListener('click', function(){
+        box.querySelectorAll('.tile').forEach(function(x){ x.classList.remove('selected'); });
+        t.classList.add('selected');
+        state[key] = t.dataset.val;
+        if (onPick) onPick(t.dataset.val);
+        persist(); refresh();
+      });
+    });
+  }
+  singleSelect('who', 'who');
+  singleSelect('handicap', 'handicap');
+  singleSelect('gir-choice', 'girChoice', function(v){
+    var f = document.getElementById('gir-select-field');
+    var sel = document.getElementById('gir');
+    if (f) f.hidden = (v !== 'oui');
+    // Le DOM et l'état doivent rester alignés : sans remise à zéro du select,
+    // un retour sur « Oui » réafficherait un niveau alors que state.gir est nul,
+    // et re-choisir la valeur déjà affichée n'émet aucun `change`.
+    if (v === 'oui') {
+      state.gir = (sel && sel.value) || null;
+    } else {
+      state.gir = null;
+      if (sel) sel.value = '';
+    }
+  });
+
+  /* ── Âge & GIR ──────────────────────────────────────────────── */
+  var ageIn = document.getElementById('age');
+  if (state.age) ageIn.value = state.age;
+  var girSel = document.getElementById('gir');
+  if (state.gir) girSel.value = state.gir;
+  girSel.addEventListener('change', function(){ state.gir = girSel.value || null; persist(); refresh(); });
+
+  /* Visibilité du bloc GIR et de la note contextuelle, dérivée de l'âge.
+     Fonction nommée pour être rejouée à la restauration de session : sinon un
+     utilisateur de 60-69 ans qui revient dans son tunnel ne voit plus la
+     question GIR, alors que sa réponse est bien mémorisée. */
+  function updateAgeConditionals(){
+    var a = Number(ageIn.value) || 0;
+    state.age = a || null;
+    var girBlock = document.getElementById('gir-block');
+    var note = document.getElementById('age-note');
+    if (girBlock) girBlock.hidden = !(a >= 60 && a < 70);
+    // Le niveau GIR n'est demandé qu'après une réponse « Oui »
+    var girField = document.getElementById('gir-select-field');
+    if (girField) girField.hidden = !(a >= 60 && a < 70 && state.girChoice === 'oui');
+    if (!note) return;
+    if (a >= 70){
+      note.hidden = false;
+      note.textContent = "À partir de 70 ans, l'éligibilité MaPrimeAdapt' est acquise sans condition d'autonomie — seuls les revenus sont examinés.";
+    } else if (a >= 60 && a < 70){
+      note.hidden = true;
+    } else if (a > 0){
+      note.hidden = false;
+      note.textContent = "Avant 60 ans, MaPrimeAdapt' est accessible uniquement en situation de handicap (taux ≥ 50 % ou PCH) — question suivante.";
+    } else {
+      note.hidden = true;
+    }
+  }
+
+  ageIn.addEventListener('input', function(){
+    updateAgeConditionals();
+    persist(); refresh();
+  });
+
+  // Rejoue la dérivation sur l'état restauré
+  updateAgeConditionals();
+
+  /* ── Étape 1 : Logement (adresse BAN, type, surface, année) ─── */
+  state.logement = state.logement || {};
+
+  /* Région déduite du département : sert à choisir le bon barème de plafonds
+     (Île-de-France vs hors Île-de-France) à l'étape Revenus. */
+  var DEPTS_IDF = ['75','77','78','91','92','93','94','95'];
+  var DEPTS_GRAND_EST = ['08','10','51','52','54','55','57','67','68','88'];
+  function regionFromDept(dept){
+    if (DEPTS_IDF.indexOf(dept) !== -1) return 'Île-de-France';
+    if (DEPTS_GRAND_EST.indexOf(dept) !== -1) return 'Grand Est';
+    return 'Autre';
+  }
+
+  var adAdresse = el('ad-adresse');
+  var adSugg    = el('ad-adresse-suggestions');
+  var adSurface = el('ad-surface');
+  var adAnnee   = el('ad-annee');
+
+  function closeSugg(){ if (adSugg){ adSugg.hidden = true; adSugg.innerHTML = ''; } }
+
+  /* Secours : BAN injoignable ou adresse inconnue → saisie manuelle, code postal exigé. */
+  var adSecours = window.RFAdresseSecours ? RFAdresseSecours.attach(adAdresse, {
+    regionFromDept: regionFromDept,
+    onValide: function(data){
+      if (data){
+        state.logement.adresse = data.adresse; state.logement.codePostal = data.codePostal;
+        state.logement.ville = data.ville; state.logement.dept = data.dept;
+        state.logement.region = data.region; state.logement.saisieManuelle = true;
+      } else state.logement.adresse = null;
+      persist(); refresh();
+    },
+  }) : { ouvrir: function(){} };
+
+  if (adAdresse && adSugg){
+    var banTimer = null;
+    adAdresse.addEventListener('input', function(){
+      clearTimeout(banTimer);
+      // La saisie libre invalide l'adresse retenue : il faut choisir une
+      // suggestion pour que l'étape soit valide.
+      state.logement.adresse = null;
+      persist(); refresh();
+      var q = adAdresse.value.trim();
+      if (q.length < 5){ closeSugg(); return; }
+      banTimer = setTimeout(function(){
+        fetch('https://api-adresse.data.gouv.fr/search/?q=' + encodeURIComponent(q) + '&limit=5')
+          .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+          .then(function(j){
+            var feats = (j && j.features) || [];
+            if (!feats.length){ closeSugg(); adSecours.ouvrir("Cette adresse n'est pas dans la base. Saisissez-la ci-dessous."); return; }
+            adSugg.innerHTML = feats.map(function(f, i){
+              var p = f.properties || {};
+              return '<button type="button" class="ban-item" data-i="' + i + '">' +
+                '<span class="lbl">' + esc(p.label || '') + '</span>' +
+                '<span class="ctx">' + esc(p.context || '') + '</span></button>';
+            }).join('');
+            adSugg.hidden = false;
+            adSugg.querySelectorAll('.ban-item').forEach(function(btn){
+              btn.addEventListener('click', function(){
+                var p = (feats[Number(btn.dataset.i)] || {}).properties || {};
+                var cp = String(p.postcode || '');
+                state.logement.adresse    = p.label || '';
+                state.logement.codePostal = cp;
+                state.logement.ville      = p.city || '';
+                state.logement.dept       = cp.slice(0, 2);
+                state.logement.codeInsee  = p.citycode || '';
+                state.logement.contexte   = p.context || '';
+                state.logement.region     = regionFromDept(state.logement.dept);
+                adAdresse.value = state.logement.adresse;
+                closeSugg();
+                // La région déduite pré-sélectionne le barème de l'étape Revenus
+                var regSel = el('region');
+                if (regSel && state.logement.region) regSel.value = state.logement.region;
+                persist(); refresh();
+              });
+            });
+          })
+          .catch(function(e){ console.warn('[RénoFacile] BAN :', e); closeSugg(); adSecours.ouvrir("Le service d'adresses ne répond pas. Saisissez votre adresse ci-dessous."); });
+      }, 250);
+    });
+    adAdresse.addEventListener('blur', function(){ setTimeout(closeSugg, 150); });
+  }
+
+  singleSelectInto('ad-type', 'type');
+  /* Variante de singleSelect qui écrit dans state.logement plutôt qu'à la racine. */
+  function singleSelectInto(containerId, key){
+    var box = el(containerId);
+    if (!box) return;
+    box.querySelectorAll('.tile').forEach(function(t){
+      if (state.logement[key] === t.dataset.val) t.classList.add('selected');
+      t.addEventListener('click', function(){
+        box.querySelectorAll('.tile').forEach(function(x){ x.classList.remove('selected'); });
+        t.classList.add('selected');
+        state.logement[key] = t.dataset.val;
+        persist(); refresh();
+      });
+    });
+  }
+
+  [[adSurface, 'surface'], [adAnnee, 'annee']].forEach(function(pair){
+    var input = pair[0], key = pair[1];
+    if (!input) return;
+    input.addEventListener('input', function(){
+      var v = parseInt(input.value, 10);
+      state.logement[key] = v > 0 ? v : null;
+      persist(); refresh();
+    });
+  });
+  if (adAnnee) adAnnee.max = String(new Date().getFullYear());
+
+  // Restaure la saisie d'une visite précédente
+  if (state.logement.adresse && adAdresse) adAdresse.value = state.logement.adresse;
+  if (state.logement.surface && adSurface) adSurface.value = state.logement.surface;
+  if (state.logement.annee && adAnnee)     adAnnee.value = state.logement.annee;
+
+  /* ── Travaux ────────────────────────────────────────────────── */
+  var GROUPES = [
+    { titre:'Salle de bain',        cle:'salle_de_bain' },
+    { titre:'Accessibilité',        cle:'accessibilite' },
+    { titre:'Autres aménagements',  cle:'autres_amenagements' },
+  ];
+  function buildWorks(){
+    var host = document.getElementById('works');
+    if (!host || !C) return;
+    host.innerHTML = GROUPES.map(function(g){
+      var codes = (C.MPA.travauxEligibles[g.cle] || []);
+      return '<div><h3>' + g.titre + '</h3><div class="tiles">' + codes.map(function(code){
+        var on = state.travaux.indexOf(code) !== -1;
+        return '<button type="button" class="tile' + (on ? ' selected' : '') + '" data-work="' + code + '">' +
+          '<span class="box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg></span>' +
+          '<span class="nm">' + (C.MPA_LIBELLES[code] || code) + '</span>' +
+          '<span class="cost">' + fmt(C.MPA_COUTS_INDICATIFS[code]) + '</span>' +
+        '</button>';
+      }).join('') + '</div></div>';
+    }).join('');
+    host.querySelectorAll('[data-work]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var code = b.dataset.work, i = state.travaux.indexOf(code);
+        if (i === -1) state.travaux.push(code); else state.travaux.splice(i, 1);
+        b.classList.toggle('selected', i === -1);
+        persist(); refresh();
+      });
+    });
+  }
+  buildWorks();
+
+  /* ── Validation par étape ───────────────────────────────────── */
+  function stepValid(n){
+    // Étape 1 — Logement : adresse choisie dans la BAN + type + surface + année
+    if (n === 1){
+      var L = state.logement || {};
+      return !!(L.adresse && L.type && Number(L.surface) >= 9
+                && Number(L.annee) >= 1800 && Number(L.annee) <= new Date().getFullYear());
+    }
+    if (n === 2) return !!state.who;
+    if (n === 3) {
+      var a = Number(state.age) || 0;
+      if (!a) return false;
+      // 60-69 ans : « Oui » exige le niveau GIR, sinon le moteur conclurait
+      // à tort à une non-éligibilité contredisant la réponse de l'utilisateur.
+      if (a >= 60 && a < 70) return state.girChoice === 'oui' ? !!state.gir : !!state.girChoice;
+      return true;
+    }
+    if (n === 4) return !!state.handicap;
+    if (n === 5) return Number(val('rfr')) > 0 && Number(val('foyer')) > 0;
+    if (n === 6) return state.travaux.length > 0;
+    return true;
+  }
+  function stepMissing(n){
+    if (stepValid(n)) return '';
+    if (n === 1){
+      var L = state.logement || {};
+      if (!L.adresse) return "Choisissez votre adresse dans la liste, ou utilisez « Mon adresse n'apparaît pas ».";
+      if (!L.type) return 'Indiquez le type de logement.';
+      if (!(Number(L.surface) >= 9)) return 'Indiquez la surface habitable (9 m² au moins).';
+      return "Indiquez l'année de construction — une approximation suffit.";
+    }
+    if (n === 2) return 'Indiquez pour qui sont les travaux.';
+    if (n === 3) return (Number(state.age) || 0) ? 'Précisez votre niveau de perte d\u2019autonomie (GIR), ou répondez « non ».' : "Indiquez l'âge de la personne concernée.";
+    if (n === 4) return 'Répondez à la question sur le handicap.';
+    if (n === 5) return "Indiquez votre revenu fiscal de référence et le nombre de personnes du foyer.";
+    if (n === 6) return 'Choisissez au moins un aménagement.';
+    return '';
+  }
+  /* Un bouton grisé dit toujours pourquoi. */
+  function showMissing(screen, cta, msg){
+    if (!screen || !cta) return;
+    var p = screen.querySelector('.rf-missing');
+    if (!p){
+      p = document.createElement('p');
+      p.className = 'rf-missing'; p.setAttribute('aria-live', 'polite');
+      cta.parentNode.insertBefore(p, cta.nextSibling);
+    }
+    p.textContent = msg || '';
+    p.hidden = !msg;
+  }
+  function refresh(){
+    var screen = document.getElementById('s' + current);
+    if (!screen) return;
+    var cta = screen.querySelector('[data-next], #go-results');
+    if (cta) cta.disabled = !stepValid(current);
+    showMissing(screen, cta, stepMissing(current));
+    var run = document.getElementById('run-total');
+    if (run && C){
+      var t = 0;
+      state.travaux.forEach(function(c){ t += (C.MPA_COUTS_INDICATIFS[c] || 0); });
+      run.textContent = fmt(t);
+    }
+  }
+
+  /* ── Traçabilité : catégorie de revenus détectée en temps réel ─────
+     L'utilisateur doit comprendre d'où vient son taux avant de voir un montant. */
+  var CAT_HINT = {
+    bleus:   { nom: 'très modestes',   color: '#0F766E' },
+    jaunes:  { nom: 'modestes',        color: '#15803D' },
+    violets: { nom: 'intermédiaires',  color: '#A16207' },
+    roses:   { nom: 'supérieures',     color: '#B45309' },
+  };
+  function updateCategorieHint(){
+    var box = el('categorie-hint');
+    if (!box) return;
+    var rfr    = Number(val('rfr')) || 0;
+    var foyer  = Number(val('foyer')) || 1;
+    var region = val('region') || 'Grand Est';
+    if (rfr <= 0 || !C || !C.categorie){ box.hidden = true; return; }
+
+    var cat  = C.categorie(rfr, foyer, region);
+    var conf = CAT_HINT[cat] || { nom: cat, color: 'var(--slate-500)' };
+    var zone = (region === 'Île-de-France') ? 'idf' : 'hors_idf';
+    var plaf = (C.plafond && cat !== 'roses') ? C.plafond(zone, cat, foyer) : null;
+    var eligible = (cat === 'bleus' || cat === 'jaunes');
+
+    box.style.borderLeftColor = conf.color;
+    box.innerHTML =
+      '<div class="cat-title" style="color:' + conf.color + '">' +
+        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="m5 12 5 5L20 7"/></svg>' +
+        'Ressources ' + conf.nom + '</div>' +
+      '<div>Pour un foyer de <strong>' + foyer + ' personne' + (foyer > 1 ? 's' : '') + '</strong> ' +
+        (zone === 'idf' ? 'en Île-de-France' : 'hors Île-de-France') + ', ' +
+        (plaf ? 'le plafond de cette catégorie est de <strong>' + plaf.toLocaleString('fr-FR') + ' €</strong>. ' : '') +
+        'Votre revenu fiscal de référence de <strong>' + rfr.toLocaleString('fr-FR') + ' €</strong> vous y place.</div>' +
+      '<div class="cat-taux">' + (eligible
+        ? "Taux MaPrimeAdapt' applicable : <strong>" + Math.round((C.MPA.tauxParCategorie[cat] || 0) * 100) + " %</strong> du coût des travaux, dans la limite de " + C.MPA.plafondTravauxHT.toLocaleString('fr-FR') + " € HT. En plus, l'Anah prend en charge l'accompagnement AMO à hauteur d'un forfait de 350 à 800 € selon le niveau de prestation."
+        : "MaPrimeAdapt' est réservée aux ménages modestes et très modestes : cette catégorie n'y ouvre pas droit. Nous vous indiquerons les autres leviers mobilisables.") + '</div>';
+    box.hidden = false;
+  }
+
+  ['foyer','rfr','region'].forEach(function(id){
+    var input = el(id);
+    if (input) input.addEventListener('input', function(){ persist(); refresh(); updateCategorieHint(); });
+    if (input) input.addEventListener('change', function(){ persist(); refresh(); updateCategorieHint(); });
+  });
+  updateCategorieHint();
+  // Restaure les champs revenus
+  try {
+    var s2 = JSON.parse(localStorage.getItem(STORE) || 'null');
+    if (s2){
+      if (s2.foyer)  document.getElementById('foyer').value = s2.foyer;
+      if (s2.rfr)    document.getElementById('rfr').value = s2.rfr;
+      if (s2.region) document.getElementById('region').value = s2.region;
+    }
+  } catch(e){}
+
+  /* ── Résultats ──────────────────────────────────────────────── */
+  /* ── Étape 6 : Transmission ──────────────────────────────────── */
+  var lastResult = null;
+  var lastPayload = null;
+  function computeAndStore(){
+    if (!C || !C.computeMprAdapt) return null;
+    var payload = {
+      rfr: Number(val('rfr')) || 0,
+      foyer: Number(val('foyer')) || 1,
+      region: val('region') || 'Grand Est',
+      age: Number(state.age) || 0,
+      gir: state.gir || null,
+      handicap: (state.handicap === 'inconnu' ? 'non' : (state.handicap || 'non')),
+      travaux: state.travaux,
+      amoType: 'complet',
+      // Enrichit le profil stocké dans le dossier. computeMprAdapt() ignore
+      // proprement les champs qu'il n'utilise pas.
+      logement: {
+        adresse:    state.logement.adresse || null,
+        codePostal: state.logement.codePostal || null,
+        ville:      state.logement.ville || null,
+        dept:       state.logement.dept || null,
+        codeInsee:  state.logement.codeInsee || null,
+        region:     state.logement.region || null,
+        surface:    state.logement.surface || null,
+        annee:      state.logement.annee || null,
+        type:       state.logement.type || null,
+      },
+    };
+    var result = C.computeMprAdapt(payload);
+    try {
+      localStorage.setItem('renofacile.autonomie.result', JSON.stringify({
+        input: Object.assign({}, payload, { who: state.who, girChoice: state.girChoice }),
+        result: result, computedAt: new Date().toISOString(),
+      }));
+    } catch(e){}
+    lastResult = result;
+    lastPayload = payload;
+    try { if (window.rfUpdateCheckoutAmount) window.rfUpdateCheckoutAmount(); } catch(e){}
+    return result;
+  }
+
+  /* ── Étape Transmission : teaser étape de transmission ──────────────────────── */
+  function roundDown100(n){
+    // Arrondi indicatif au millier inférieur (à la centaine inférieure sous 1 000 €).
+    // Aucun décalage arbitraire : un montant pile sur un multiple reste inchangé.
+    // C'est le calcul réel qui varie selon la saisie, jamais l'arrondi.
+    var v = Number(n) || 0;
+    if (v < 1000) return Math.max(0, Math.floor(v / 100) * 100);
+    return Math.floor(v / 1000) * 1000;
+  }
+
+  var CAT_TAUX = { bleus:'très modestes', jaunes:'modestes', violets:'intermédiaires', roses:'supérieurs' };
+
+  function renderTeaser(result){
+    /* Mises en garde du moteur et version des barèmes, comme sur le tunnel principal. */
+    if (window.RFAlertes){
+      try {
+        RFAlertes.rendre(result, 'rf-alertes');
+        RFAlertes.rendreReferentiel(result, 'rf-referentiel');
+        RFAlertes.rendreReferentiel(result, 'rf-referentiel-final');
+      } catch (e) { console.warn('Alertes :', e); }
+    }
+    var vEl = document.getElementById('tz-verdict');
+    if (!vEl) return;
+    // L'utilisateur peut revenir corriger ses réponses : on restaure le bloc de
+    // transmission, qu'un passage précédent a pu masquer (cas non éligible).
+    if (window.RFPartner) window.RFPartner.mount();
+    var checkoutM = document.getElementById('rf-mpa-checkout');
+    if (checkoutM) checkoutM.hidden = false;
+    validateMPA();
+    if (!result || !result.eligible){
+      vEl.innerHTML = '<div class="tz-verdict ko">' +
+        '<span><b>' + "MaPrimeAdapt' ne peut pas être mobilisée dans cette situation" + '</b>' +
+        (result && result.motif ? escapeHtml(result.motif) : "Les conditions d'éligibilité ne sont pas réunies avec les réponses fournies.") +
+        '</span></div>';
+      // Rien à transmettre si l'aide est nulle : le bloc entier est masqué.
+      if (checkoutM) checkoutM.hidden = true;
+      return;
+    }
+    var montant = result.aide.total;
+    var arrondi = roundDown100(montant);
+    vEl.innerHTML = '<div class="tz-verdict">' +
+        '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="flex:0 0 auto;margin-top:2px"><path d="m5 12 5 5L20 7"/></svg>' +
+        '<span><b>' + "Vous êtes éligible à MaPrimeAdapt'" + '</b>' + (function(){
+        var CAT = { bleus:'très modestes', jaunes:'modestes' };
+        var MOTIFS = { senior_70plus:'70 ans ou plus', senior_60_69_gir:'60 à 69 ans avec évaluation GIR',
+                       handicap_50plus:"taux d'incapacité ≥ 50 %", handicap_pch:'bénéficiaire de la PCH' };
+        var e = result.eligibilite || {};
+        return 'Catégorie : <strong>' + (CAT[e.categorie] || e.categorie || '—') + '</strong>' +
+               (MOTIFS[e.motif] ? ' · condition retenue : ' + MOTIFS[e.motif] : '');
+      })() + '</span>' +
+      '</div>' +
+      '<div class="tz-amount"><div class="lbl">Aide estimée jusqu\'à</div>' +
+        '<div class="v">~ ' + arrondi.toLocaleString('fr-FR') + ' €</div>' +
+        // Traçabilité complète : chaque euro du total est justifié à l'écran.
+        (function(){
+          var t = result.travaux, ai = result.aide, cat = result.eligibilite.categorie;
+          var plafonne = t.coutEstime > t.plafond;
+          function ligne(k, v, cls){
+            return '<div class="r' + (cls ? ' ' + cls : '') + '"><span>' + k + '</span><b>' + v + '</b></div>';
+          }
+          return '<div class="tz-calc"><div class="h">Comment ce montant est calculé</div>' +
+            ligne('Travaux sélectionnés', fmt(t.coutEstime) + ' HT') +
+            (plafonne ? ligne('Coût retenu (plafond ' + fmt(t.plafond) + ')', fmt(t.coutRetenu)) : '') +
+            ligne('Catégorie de revenus', CAT_TAUX[cat] || cat) +
+            ligne('Taux appliqué', Math.round(ai.tauxApplique * 100) + ' %') +
+            ligne("Aide MaPrimeAdapt' travaux", fmt(ai.travaux)) +
+            ligne("Accompagnement AMO — forfait Anah", fmt(ai.amo)) +
+            ligne('Total calculé', fmt(ai.total), 'tot') +
+          '</div>';
+        })() +
+        '<div class="hint tz-hint-fine">Arrondi indicatif — le montant définitif est arrêté par l\u2019Anah à l\u2019instruction du dossier.</div>' +
+      '</div>';
+  }
+
+  function escapeHtml(s){
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){
+      return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' })[c];
+    });
+  }
+
+
+
+
+  /* Le brouillon est créé dès l'arrivée sur l'étape de transmission, pour que
+     le dossier transmis soit exactement celui qui a été affiché. */
+  function assurerBrouillon(){
+    try {
+      if (!window.RFDossiers) return null;
+      var draft = (RFDossiers.getOrCreateDraft || RFDossiers.createDraft)('autonomie', lastPayload || {}, lastResult);
+      if (draft && draft.id) localStorage.setItem('renofacile.dossierEnAttente', draft.id);
+      return draft;
+    } catch(e){ console.warn('Création dossier autonomie :', e); return null; }
+  }
+
+  /* ── Étape 7 — animation du calcul, puis passage automatique à l'étape 8 ──
+     Même rythme que le tunnel énergétique : 6 items à ~900 ms. */
+  var calcTimers = [];
+  function stopCalcAnimation(){ calcTimers.forEach(function(t){ clearTimeout(t); }); calcTimers = []; }
+  function startCalcAnimation(){
+    stopCalcAnimation();
+    var items   = document.querySelectorAll('#mpa-loader-checks .lc-item');
+    var circle  = el('mpa-loader-circle');
+    var pctEl   = el('mpa-loader-pct');
+    var titleEl = el('mpa-loader-title');
+    var subEl   = el('mpa-loader-sub');
+    if (!items.length || !circle) return;
+    var subs = [
+      'Sources : Base Adresse Nationale + IGN',
+      "Sources : critères d'éligibilité MaPrimeAdapt' (décret 2023-1104)",
+      'Sources : barèmes Anah publiés au JO',
+      'Sources : réseau des opérateurs AMO agréés',
+      'Sources : conseils départementaux (APA) et MDPH (PCH)',
+      'Sources : Guide Anah éd. février 2026, pp. 57-60'
+    ];
+    var DOT = '<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>';
+    var TICK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>';
+    items.forEach(function(it){
+      it.classList.remove('done','active');
+      it.querySelector('.ic').innerHTML = DOT;
+    });
+    circle.style.setProperty('--p','0%');
+    if (pctEl) pctEl.textContent = '0%';
+    if (titleEl) titleEl.textContent = 'Connexion aux bases officielles…';
+    if (subEl) subEl.textContent = 'Quelques secondes, ne fermez pas la fenêtre.';
+
+    var stepDur = 900;
+    items.forEach(function(it, i){
+      calcTimers.push(setTimeout(function(){
+        if (current !== 7) return;
+        items.forEach(function(x){ x.classList.remove('active'); });
+        it.classList.add('active');
+        it.querySelector('.ic').innerHTML = '<span class="spinner"></span>';
+        if (titleEl) titleEl.textContent = it.dataset.lbl;
+        if (subEl) subEl.textContent = subs[i] || '';
+      }, i * stepDur));
+      calcTimers.push(setTimeout(function(){
+        if (current !== 7) return;
+        it.classList.remove('active');
+        it.classList.add('done');
+        it.querySelector('.ic').innerHTML = TICK;
+        var pct = Math.round(((i+1) / items.length) * 100);
+        circle.style.setProperty('--p', pct + '%');
+        if (pctEl) pctEl.textContent = pct + '%';
+      }, (i + 1) * stepDur));
+    });
+    calcTimers.push(setTimeout(function(){
+      if (current !== 7) return;
+      if (titleEl) titleEl.textContent = 'Analyse terminée';
+      if (subEl) subEl.textContent = 'Affichage de votre estimation…';
+    }, items.length * stepDur));
+    calcTimers.push(setTimeout(function(){
+      if (current === 7) goTo(8);
+    }, items.length * stepDur + 600));
+  }
+
+  document.getElementById('go-results').addEventListener('click', function(){
+    // Le teaser est rendu par goTo(8) : source unique. On passe d'abord par le calcul.
+    persist();
+    goTo(7);
+  });
+
+
+  /* ── Transmission (même écran que le tunnel énergétique) ───────
+     Le brouillon est créé à l'arrivée sur l'étape (assurerBrouillon) ; il passe
+     à l'état « créé » au clic sur « Créer mon dossier ». */
+  function updateMpaCheckoutAmount(){
+    var amountEl = document.getElementById('mpa-roi-amount');
+    if (!amountEl || !lastResult) return;
+    var total = (lastResult.aide && lastResult.aide.total) || 0;
+    amountEl.textContent = Math.round(Number(total) || 0).toLocaleString('fr-FR') + ' €';
+    try { if (window.__rfLeadMagnet_mpa) window.__rfLeadMagnet_mpa(total); } catch(e){}
+  }
+  window.rfUpdateCheckoutAmount = updateMpaCheckoutAmount;
+
+  /* Récapitulatif de transmission : aucun montant relatif à RénoFacile. */
+  function updateRecapTransmission(){
+    var setTxt = function(id, v){ var e2 = document.getElementById(id); if (e2) e2.textContent = v; };
+    var lg = (lastPayload && lastPayload.logement) || {};
+    setTxt('tx-adresse', lg.adresse || '—');
+    var total = (lastResult && lastResult.aide && lastResult.aide.total) || 0;
+    setTxt('tx-aides', total ? Math.round(total).toLocaleString('fr-FR') + ' €' : '—');
+    if (window.RFTransmission){
+      RFTransmission.injectStyles();
+      var dept = lg.dept || (lg.codePostal ? String(lg.codePostal).slice(0, 2) : '')
+              || RFTransmission.deptFromDossier({ profile: { logement: lg } });
+      var pro = RFTransmission.renderProfessionnel(document.getElementById('rf-tx-pro'), 'autonomie', dept);
+      window.__rfPro = pro;
+      var dest = document.getElementById('tx-destinataire');
+      if (dest && pro) dest.textContent = pro.designe
+        ? pro.nom + ' (' + pro.role + ')'
+        : "l'accompagnateur agréé " + pro.role + ' désigné pour mon département';
+    }
+    assurerBrouillon();
+  }
+  window.rfUpdateRecapTransmission = updateRecapTransmission;
+
+  /* Transmission : le bouton n'est actif qu'avec le consentement explicite à
+     la transmission des données et l'acceptation des CGU. Jamais pré-coché. */
+  var mpaTos = document.getElementById('mpa-tos');
+  var mpaConsent = document.getElementById('mpa-transmission');
+  var mpaSubmit = document.getElementById('mpa-submit');
+
+  function validateMPA(){
+    if (!mpaSubmit) return;
+    var fn = (document.getElementById('mpa-firstname') || {}).value || '';
+    var ln = (document.getElementById('mpa-lastname') || {}).value || '';
+    var em = (document.getElementById('mpa-email') || {}).value || '';
+    var ok = fn.trim().length >= 2
+          && ln.trim().length >= 2
+          && /^\S+@\S+\.\S+$/.test(em.trim())
+          && !!(mpaTos && mpaTos.checked)
+          && !!(mpaConsent && mpaConsent.checked);
+    mpaSubmit.disabled = !ok;
+    mpaSubmit.style.opacity = ok ? '1' : '.55';
+    mpaSubmit.style.cursor = ok ? 'pointer' : 'not-allowed';
+  }
+  ['mpa-firstname','mpa-lastname','mpa-email','mpa-tos','mpa-transmission'].forEach(function(id){
+    var el2 = document.getElementById(id);
+    if (!el2) return;
+    el2.addEventListener('input', validateMPA);
+    el2.addEventListener('change', validateMPA);
+  });
+  validateMPA();
+
+  if (mpaSubmit) mpaSubmit.addEventListener('click', function(){
+    if (mpaSubmit.disabled) return;
+    var label = mpaSubmit.textContent;
+    mpaSubmit.disabled = true;
+    mpaSubmit.textContent = 'Transmission…';
+
+    /* Garde : un dossier n'est jamais transmis sans résultat calculé. Cascade —
+       dernier calcul en mémoire, puis estimation stockée, puis rejeu du moteur. */
+    var resoudreResultat = function(){
+      var ok = function(r){ return !!(r && r.aide && (r.aide.totalApresEcretement > 0 || r.aide.total > 0)); };
+      if (ok(lastResult)) return lastResult;
+      try {
+        var stored = JSON.parse(localStorage.getItem('renofacile.autonomie.result') || 'null');
+        if (stored && ok(stored.result)) return stored.result;
+      } catch(e){}
+      try {
+        var C2 = window.RFCompute;
+        if (C2 && C2.computeMprAdapt && lastPayload){
+          var r = C2.computeMprAdapt(lastPayload);
+          if (ok(r)) return r;
+        }
+      } catch(e){ console.warn('[Transmission autonomie] rejeu du moteur impossible :', e); }
+      return null;
+    };
+
+    var resultatValide = resoudreResultat();
+    if (!resultatValide){
+      console.error('[Transmission autonomie] résultat vide — création du dossier abandonnée');
+      mpaSubmit.disabled = false;
+      mpaSubmit.textContent = label;
+      var box = document.createElement('div');
+      box.setAttribute('role', 'alert');
+      box.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:2147483001;background:#FEF2F2;border:2px solid #DC2626;color:#7F1D1D;padding:16px 24px;border-radius:10px;max-width:420px;font:14px/1.5 "Public Sans",system-ui,sans-serif;box-shadow:0 12px 32px rgba(15,23,42,.18)';
+      box.innerHTML = '<strong>Impossible de transmettre votre dossier</strong><br />' +
+        "Votre aide MaPrimeAdapt' n'a pas pu être calculée. Reprenez le parcours depuis la première étape. " +
+        '<a href="parcours-autonomie.html?fresh=1" style="color:#0D9488;font-weight:600">Reprendre →</a>';
+      document.body.appendChild(box);
+      setTimeout(function(){ if (box.parentNode) box.parentNode.removeChild(box); }, 15000);
+      return;
+    }
+
+    try {
+      /* Identité : le compte sert au suivi du dossier, jamais à facturer. */
+      var prof = {};
+      try { prof = JSON.parse(localStorage.getItem('renofacile.profile') || '{}'); } catch(e){}
+      prof.firstname = (document.getElementById('mpa-firstname') || {}).value || prof.firstname;
+      prof.lastname  = (document.getElementById('mpa-lastname') || {}).value || prof.lastname;
+      prof.email     = (document.getElementById('mpa-email') || {}).value || prof.email;
+      prof.telephone = (document.getElementById('mpa-tel') || {}).value || prof.telephone;
+      localStorage.setItem('renofacile.profile', JSON.stringify(prof));
+
+      var dossierId = localStorage.getItem('renofacile.dossierEnAttente');
+      if (!dossierId && window.RFDossiers){
+        var d = (RFDossiers.getOrCreateDraft || RFDossiers.createDraft)('autonomie', lastPayload || {}, resultatValide);
+        dossierId = d && d.id;
+      }
+      // Le brouillon a pu être créé avant le dernier recalcul : on le réaligne.
+      if (window.RFDossiers && dossierId && RFDossiers.updateResult) RFDossiers.updateResult(dossierId, resultatValide);
+
+      var pro = window.__rfPro || null;
+      if (window.RFTransmission && dossierId){
+        RFTransmission.transmettre(dossierId, {
+          consentement: true,
+          partenaireNom: pro && pro.nom,
+          partenaireRole: pro && pro.role,
+          departement: pro && pro.departement,
+        });
+      }
+      localStorage.removeItem('renofacile.dossierEnAttente');
+
+      var succ = document.getElementById('mpa-success');
+      if (succ){
+        document.getElementById('mpa-signup').style.display = 'none';
+        var partEl = document.getElementById('mpa-succ-partenaire');
+        if (partEl) partEl.textContent = (pro && pro.nom) || 'Un accompagnateur agréé de votre département';
+        succ.classList.add('show');
+        succ.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      setTimeout(function(){
+        /* Le tableau de bord est la seule page qui traite ?transmis=1, et ces
+           tunnels ne créent ni client ni session : « Mes aides » renverrait
+           l'utilisateur sur un mur de connexion juste après son succès. */
+        location.href = 'dashboard.html?transmis=1' + (dossierId ? '&dossier=' + encodeURIComponent(dossierId) : '');
+      }, 2200);
+    } catch(err){ console.warn('Transmission autonomie :', err); location.href = 'dashboard.html'; }
+  });
+
+  bindStepperClicks();
+  goTo(1);
+})();
+</script>
+<script>
+/* Lead magnet MPA — capture email contre PDF récap.
+   Même comportement que le tunnel énergétique : validation email + consentement,
+   feedback d'erreur, succès simulé, stockage local en attendant le backend. */
+(function(){
+  'use strict';
+  var block   = document.getElementById('lead-magnet-mpa');
+  var amountE = document.getElementById('lead-magnet-mpa-amount');
+  var submit  = document.getElementById('lead-magnet-mpa-submit');
+  var email   = document.getElementById('lead-magnet-mpa-email');
+  var consent = document.getElementById('lead-magnet-mpa-consent');
+  var errBox  = document.getElementById('lead-magnet-mpa-error');
+  var form    = document.getElementById('lead-magnet-mpa-form');
+  var success = document.getElementById('lead-magnet-mpa-success');
+  if (!block || !submit) return;
+  var currentTotal = 0;
+
+  function show(total){
+    total = Math.round(Number(total) || 0);
+    if (total <= 0) return;
+    currentTotal = total;
+    amountE.textContent = total.toLocaleString('fr-FR') + ' €';
+    block.style.display = 'block';
+  }
+  window.__rfLeadMagnet_mpa = show;
+
+  /* Le montant suit la carte ROI : dès qu'elle est peuplée, le bloc s'affiche. */
+  var roi = document.getElementById('mpa-roi-amount');
+  if (roi){
+    var sync = function(){ show(parseInt((roi.textContent || '').replace(/[^0-9]/g, ''), 10)); };
+    sync();
+    new MutationObserver(sync).observe(roi, {childList:true, characterData:true, subtree:true});
+  }
+
+  submit.addEventListener('click', function(){
+    errBox.style.display = 'none';
+    var v = (email.value || '').trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || !consent.checked){ errBox.style.display = 'block'; return; }
+    submit.disabled = true;
+    submit.textContent = 'Envoi…';
+    setTimeout(function(){
+      form.style.display = 'none';
+      success.style.display = 'block';
+      /* TODO : brancher au vrai endpoint email/PDF quand le backend sera prêt. */
+      try {
+        var leads = JSON.parse(localStorage.getItem('renofacile.leads.mpa') || '[]');
+        leads.push({ email: v, timestamp: new Date().toISOString(), aide: currentTotal });
+        localStorage.setItem('renofacile.leads.mpa', JSON.stringify(leads));
+      } catch(e){}
+    }, 800);
+  });
+})();
+</script>
+<script src="_geo_ui.js"></script>
+<script src="_mar_ui.js"></script>
+</body>
+</html>

@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Administration — RénoFacile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --teal-50:#F0FDFA;--teal-100:#CCFBF1;--teal-200:#99F6E4;--teal-400:#2DD4BF;
+    --teal-600:#0D9488;--teal-700:#0F766E;--teal-800:#115E59;--teal-900:#134E4A;
+    --amber-50:#FFFBEB;--amber-500:#F59E0B;--amber-600:#D97706;
+    --slate-50:#F8FAFC;--slate-100:#F1F5F9;--slate-200:#E2E8F0;--slate-300:#CBD5E1;
+    --slate-400:#94A3B8;--slate-500:#64748B;--slate-600:#475569;--slate-700:#334155;
+    --slate-800:#1E293B;--slate-900:#0F172A;
+    --success-50:#ECFDF5;--success-600:#059669;
+    --warning-50:#FFFBEB;--warning-600:#D97706;
+    --danger-50:#FEF2F2;--danger-600:#DC2626;
+    --info-50:#EFF6FF;--info-600:#2563EB;
+    --bg:#F8FAFC;--surface:#FFFFFF;--border:#E2E8F0;
+    --font-sans:"Public Sans",system-ui,-apple-system,sans-serif;
+    --font-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+    --sidebar:240px;
+  }
+  *{box-sizing:border-box}
+  /* Le projet pilote la visibilité par l'attribut `hidden` : cette règle
+     l'emporte sur les classes qui déclarent leur propre `display`. */
+  [hidden]{display:none!important}html,body{margin:0;padding:0}
+  body{font-family:var(--font-sans);color:var(--slate-800);background:var(--bg);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
+
+  .layout{display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:100vh}
+  @media (max-width:880px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+  .sidebar{background:var(--slate-900);color:#fff;padding:20px 16px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh}
+  .brand{display:flex;align-items:center;gap:10px;padding:0 8px}
+  .brand-mark{width:28px;height:28px;border-radius:7px;background:var(--teal-600);display:grid;place-items:center}
+  .brand-name{font-weight:700;font-size:15px;color:#fff}
+  .brand-name .accent{color:var(--teal-400)}
+  .admin-badge{display:inline-flex;align-items:center;padding:3px 8px;background:var(--amber-500);color:#1E293B;font:600 10px var(--font-mono);letter-spacing:.04em;text-transform:uppercase;border-radius:4px;margin-left:auto}
+
+  .nav{display:flex;flex-direction:column;gap:2px;margin-top:8px}
+  .nav-section{padding:8px 12px 4px;font:600 10px var(--font-mono);color:var(--slate-400);letter-spacing:.06em;text-transform:uppercase}
+  .nav a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;color:var(--slate-300);font-size:13.5px;font-weight:500}
+  .nav a:hover{background:var(--slate-800);color:#fff}
+  .nav a.active{background:var(--teal-700);color:#fff}
+  .nav a svg{flex:0 0 auto;color:inherit;opacity:.8}
+  .nav a .count{margin-left:auto;font:500 11px var(--font-mono);color:var(--slate-400)}
+  .nav a.active .count{color:var(--teal-100)}
+  .me{margin-top:auto;padding:10px;background:var(--slate-800);border-radius:8px;display:flex;align-items:center;gap:10px;font-size:12.5px}
+  .me .av{width:28px;height:28px;border-radius:50%;background:var(--teal-600);display:grid;place-items:center;font:600 11px var(--font-sans);color:#fff}
+  .me .nm{color:#fff;font-weight:600;line-height:1.2}
+  .me .role{color:var(--slate-400);font-size:11px}
+  .me .logout{margin-left:auto;color:var(--slate-400);font-size:11px}
+  .me .logout:hover{color:#fff}
+
+  main{padding:24px 32px 48px;max-width:1280px;width:100%}
+  @media (max-width:640px){main{padding:18px 16px 36px}}
+  h1.page-title{margin:0 0 4px;font-size:26px;font-weight:700;letter-spacing:-.015em;color:var(--slate-900)}
+  .lead{margin:0 0 24px;color:var(--slate-600);font-size:14.5px}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:28px}
+  @media (max-width:780px){.kpis{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+  .kpi .lbl{font:500 11px var(--font-mono);color:var(--slate-500);letter-spacing:.04em;text-transform:uppercase}
+  .kpi .val{font:700 22px var(--font-sans);color:var(--slate-900);letter-spacing:-.01em;margin-top:4px}
+  .kpi .delta{font-size:12px;color:var(--slate-500);margin-top:2px}
+
+  .panel{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .panel-head{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);gap:12px;flex-wrap:wrap}
+  .panel-head h2{margin:0;font-size:16px;font-weight:700;letter-spacing:-.005em}
+  .panel-head .actions{display:flex;gap:8px;align-items:center}
+
+  .search{display:flex;align-items:center;gap:8px;background:var(--slate-50);border:1px solid var(--border);border-radius:8px;padding:7px 12px;min-width:240px}
+  .search input{flex:1;border:0;background:transparent;font-family:inherit;font-size:13.5px;color:var(--slate-800);outline:none}
+  .search svg{color:var(--slate-400);flex:0 0 auto}
+
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  thead th{text-align:left;padding:12px 20px;background:var(--slate-50);font:600 11px var(--font-mono);color:var(--slate-600);letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border)}
+  tbody td{padding:14px 20px;border-bottom:1px solid var(--border);vertical-align:middle}
+  tbody tr:hover{background:var(--slate-50);cursor:pointer}
+  tbody tr.selected{background:var(--teal-50)}
+  tbody tr:last-child td{border-bottom:0}
+  .client-nm{font-weight:600;color:var(--slate-900)}
+  .client-em{font-size:12.5px;color:var(--slate-500);margin-top:2px}
+
+  .pill{display:inline-block;padding:3px 9px;border-radius:999px;font:500 11px var(--font-mono);letter-spacing:.04em;text-transform:uppercase}
+  .pill.essentiel{background:var(--slate-100);color:var(--slate-700)}
+  .pill.pro{background:var(--teal-50);color:var(--teal-800)}
+  .pill.bailleur{background:var(--amber-50);color:var(--amber-600)}
+  .pill.actif{background:var(--success-50);color:var(--success-600)}
+  .pill.essai{background:var(--info-50);color:var(--info-600)}
+  .pill.churn{background:var(--danger-50);color:var(--danger-600)}
+
+  /* Badges & filtres statut dossier (workflow MPR) */
+  .dossier-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font:600 11px var(--font-mono);letter-spacing:.03em}
+  .dossier-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+
+  .filter-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center}
+  .filter-chips .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:#fff;font:500 12.5px var(--font-sans);color:var(--slate-700);cursor:pointer;transition:all .12s}
+  .filter-chips .chip:hover{background:var(--slate-50)}
+  .filter-chips .chip.active{background:var(--slate-900);color:#fff;border-color:var(--slate-900)}
+  .filter-chips .chip .cnt{display:inline-block;min-width:18px;padding:0 6px;text-align:center;background:rgba(15,23,42,.08);border-radius:999px;font:600 11px var(--font-mono)}
+  .filter-chips .chip.active .cnt{background:rgba(255,255,255,.15);color:#fff}
+  .filter-chips .chip-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+  /* Timeline historique dans le drawer */
+  .timeline{list-style:none;padding:0;margin:0;position:relative}
+  .timeline::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:1px;background:var(--border)}
+  .timeline li{position:relative;padding:0 0 14px 22px}
+  .timeline li::before{content:"";position:absolute;left:2px;top:6px;width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--slate-400)}
+  .timeline li.curr::before{background:var(--teal-600);border-color:var(--teal-600);box-shadow:0 0 0 4px rgba(15,118,110,.12)}
+  .timeline .tl-line{font-size:13px;color:var(--slate-800);font-weight:500}
+  .timeline .tl-meta{font-size:11.5px;color:var(--slate-500);margin-top:2px}
+  .timeline .tl-note{font-size:12.5px;color:var(--slate-700);margin-top:4px;background:var(--slate-50);padding:6px 10px;border-radius:6px;border-left:2px solid var(--slate-300)}
+
+  .status-changer{background:var(--slate-50);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+  .status-changer h4{margin:0 0 10px;font:600 13px var(--font-sans);color:var(--slate-700)}
+  .status-changer .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px;margin-bottom:10px}
+  .status-changer .opts button{padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer;font:500 12.5px var(--font-sans);color:var(--slate-700);text-align:left;transition:all .12s}
+  .status-changer .opts button:hover{background:var(--slate-50)}
+  .status-changer .opts button.curr{border-color:var(--teal-600);background:var(--teal-50);color:var(--teal-800);cursor:default}
+  .status-changer .note-input{width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--border);font:400 12.5px var(--font-sans);box-sizing:border-box;resize:vertical;min-height:38px}
+
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid var(--border);background:#fff;border-radius:8px;font-family:inherit;font-size:13px;font-weight:500;color:var(--slate-800);cursor:pointer;transition:all 120ms ease}
+  .btn:hover{border-color:var(--slate-400);background:var(--slate-50)}
+  .btn-primary{background:var(--teal-700);color:#fff;border-color:var(--teal-700)}
+  .btn-primary:hover{background:var(--teal-800);border-color:var(--teal-800)}
+  .btn-danger{color:var(--danger-600);border-color:#FCA5A5}
+  .btn-danger:hover{background:var(--danger-50)}
+
+  /* Drawer / panel détail client */
+  .overlay{position:fixed;inset:0;background:rgba(15,23,42,.4);z-index:50;display:none}
+  .overlay.open{display:block}
+  .drawer{position:fixed;right:0;top:0;bottom:0;width:560px;max-width:100vw;background:#fff;z-index:60;transform:translateX(100%);transition:transform 200ms ease;overflow-y:auto;box-shadow:-12px 0 24px rgba(15,23,42,.06)}
+  .drawer.open{transform:translateX(0)}
+  .drawer-head{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:2}
+  .drawer-head h2{margin:0;font-size:18px;font-weight:700}
+  .drawer-close{background:transparent;border:0;font-size:18px;cursor:pointer;color:var(--slate-500);padding:6px}
+  .drawer-body{padding:20px 24px}
+  .drawer-section{margin-bottom:24px}
+  .drawer-section h3{margin:0 0 10px;font:600 11px var(--font-mono);color:var(--slate-500);letter-spacing:.06em;text-transform:uppercase}
+  .info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13.5px}
+  .info-row:last-child{border-bottom:0}
+  .info-row .k{color:var(--slate-500)}
+  .info-row .v{color:var(--slate-900);font-weight:500}
+
+  .doc-list{display:flex;flex-direction:column;gap:8px}
+  .doc-card{background:var(--slate-50);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+  .doc-card .ic{width:32px;height:32px;border-radius:6px;background:#fff;border:1px solid var(--border);display:grid;place-items:center;font:700 9px var(--font-mono);color:var(--slate-600)}
+  .doc-card .ic.uploaded{background:var(--success-50);color:var(--success-600);border-color:var(--success-50)}
+  .doc-card .nm{flex:1;font-size:13.5px;font-weight:500}
+  .doc-card .pill-mini{font-size:10px;padding:2px 6px}
+
+  .upload-zone{border:2px dashed var(--teal-200);background:var(--teal-50);border-radius:10px;padding:16px;text-align:center;cursor:pointer;font-size:13px;color:var(--teal-800);transition:background 120ms ease}
+  .upload-zone:hover{background:#E0F2EF}
+
+  .empty{padding:48px 20px;text-align:center;color:var(--slate-500);font-size:14px}
+  .empty svg{color:var(--slate-300);margin-bottom:12px}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--slate-900);color:#fff;padding:12px 20px;border-radius:8px;font-size:13.5px;opacity:0;transition:opacity 200ms ease;pointer-events:none;z-index:100}
+  .toast.show{opacity:1}
+
+  /* Auth wall affiché si pas de session admin */
+  .auth-wall{position:fixed;inset:0;background:var(--slate-50);display:none;align-items:center;justify-content:center;z-index:999;padding:20px}
+  .auth-wall.show{display:flex}
+  .auth-wall .card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:32px 28px;max-width:380px;width:100%;box-shadow:0 12px 40px rgba(15,23,42,.08)}
+  .auth-wall h2{margin:0 0 6px;font-size:20px;color:var(--slate-900)}
+  .auth-wall .sub{font-size:13.5px;color:var(--slate-500);margin-bottom:18px}
+  .auth-wall .field{margin-bottom:12px}
+  .auth-wall label{display:block;font-size:12px;color:var(--slate-600);margin-bottom:4px;font-weight:500}
+  .auth-wall input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font:400 13.5px var(--font-sans);box-sizing:border-box}
+  .auth-wall input:focus{outline:none;border-color:var(--teal-600);box-shadow:0 0 0 3px rgba(15,118,110,.1)}
+  .auth-wall .btn-go{width:100%;padding:11px;background:var(--teal-700);color:#fff;border:0;border-radius:8px;font:600 14px var(--font-sans);cursor:pointer;margin-top:6px}
+  .auth-wall .btn-go:hover{background:var(--teal-800)}
+  .auth-wall .err{margin-top:10px;padding:9px 12px;background:#FEF2F2;border:1px solid #FCA5A5;color:var(--danger-600);border-radius:8px;font-size:12.5px;display:none}
+  .auth-wall .err.show{display:block}
+  .auth-wall .hint{margin-top:16px;padding:10px 12px;background:var(--slate-50);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--slate-600)}
+  .auth-wall .hint code{font:500 11.5px var(--font-mono);background:#fff;padding:1px 5px;border-radius:4px;border:1px solid var(--border)}
+  .auth-wall .switch{margin-top:10px;text-align:center;font-size:12.5px;color:var(--slate-500)}
+  .auth-wall .switch a{color:var(--teal-700);font-weight:500}
+</style>
+<link rel="stylesheet" href="_mobile_nav.css">
+<script src="_mobile_nav.js" defer></script>
+<script src="_geo.js"></script>
+</head>
+<body>
+
+<!-- Mur de connexion (affiché si pas de session admin) -->
+<div class="auth-wall" id="auth-wall">
+  <div class="card">
+    <h2>Accès administrateur</h2>
+    <div class="sub">Connexion requise pour gérer les clients et leurs dossiers.</div>
+    <form id="auth-form" autocomplete="on">
+      <div class="field">
+        <label for="auth-email">Email</label>
+        <input type="email" id="auth-email" placeholder="vous@exemple.fr" required autocomplete="username" />
+      </div>
+      <div class="field">
+        <label for="auth-pw">Mot de passe</label>
+        <input type="password" id="auth-pw" placeholder="••••••" required autocomplete="current-password" />
+      </div>
+      <button type="submit" class="btn-go">Se connecter</button>
+      <div class="err" id="auth-err"></div>
+    </form>
+      <div class="switch">
+      Vous êtes client ? <a href="dashboard.html">Aller à votre espace</a>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg></span>
+      <span class="brand-name">Réno<span class="accent">Facile</span></span>
+      <span class="admin-badge">Admin</span>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section">Gestion</div>
+      <a href="#clients" class="active" data-view="clients">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/></svg>
+        Clients <span class="count" id="count-clients">—</span>
+      </a>
+      <a href="#documents" data-view="documents">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
+        Documents <span class="count" id="count-docs">—</span>
+      </a>
+      <a href="#waitlist" data-view="waitlist">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        Liste d'attente <span class="count" id="count-waitlist">—</span>
+      </a>
+      <a href="#audit" data-view="audit">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Historique
+      </a>
+
+      <div class="nav-section" style="margin-top:8px">Outils</div>
+      <a href="index.html" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="m15 3 6 6"/><path d="M21 3v6h-6"/></svg>
+        Retour à l'accueil du site
+      </a>
+    </nav>
+
+    <div class="me">
+      <div class="av" id="me-av">A</div>
+      <div>
+        <div class="nm" id="me-name">Admin</div>
+        <div class="role" id="me-role">admin</div>
+      </div>
+      <a href="#" class="logout" id="btn-logout">Quitter</a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- VUE CLIENTS -->
+    <div id="view-clients">
+      <h1 class="page-title">Clients & dossiers</h1>
+      <p class="lead">Tous les clients RénoFacile et l'état de leur dossier.</p>
+
+      <div class="kpis">
+        <div class="kpi"><div class="lbl">Clients actifs</div><div class="val" id="kpi-actifs">—</div><div class="delta" id="kpi-actifs-d">—</div></div>
+        <div class="kpi"><div class="lbl">Dossiers transmis</div><div class="val" id="kpi-transmis">—</div><div class="delta">à un professionnel agréé</div></div>
+        <div class="kpi"><div class="lbl">Aides distribuées</div><div class="val" id="kpi-aides">—</div><div class="delta">cumulé depuis lancement</div></div>
+        <div class="kpi"><div class="lbl">Docs à traiter</div><div class="val" id="kpi-docs">—</div><div class="delta">en attente d'action</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Liste des clients</h2>
+          <div class="actions">
+            <div class="search">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input type="text" id="search" placeholder="Rechercher par nom, email, ville…" />
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-chips" id="filter-chips" aria-label="Filtrer par statut de dossier">
+          <!-- Chips injectés en JS depuis RFStore.DOSSIER_STATUSES -->
+        </div>
+
+        <table id="clients-table">
+          <thead>
+            <tr>
+              <th>Client</th>
+                <th>Logement</th>
+              <th>Aides estimées</th>
+              <th>Dossier</th>
+              <th>Inscription</th>
+            </tr>
+          </thead>
+          <tbody id="clients-tbody">
+            <tr><td colspan="6" class="empty">Chargement…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VUE DOCUMENTS -->
+    <div id="view-documents" hidden>
+      <h1 class="page-title">Documents à traiter</h1>
+      <p class="lead">Pièces fournies par les clients et dossiers générés en attente.</p>
+      <div class="panel">
+        <div class="panel-head"><h2>En attente de votre action</h2></div>
+        <div id="docs-list-wrap">
+          <div class="empty">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
+            <div>Aucun document en attente.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VUE LISTE D'ATTENTE GÉOGRAPHIQUE -->
+    <div id="view-waitlist" hidden>
+      <h1 class="page-title">Liste d'attente géographique</h1>
+      <p class="lead">Visiteurs hors zone active ayant demandé à être prévenus de l'ouverture du service dans leur région. Aucun paiement n'a été encaissé.</p>
+
+      <div class="kpis">
+        <div class="kpi"><div class="lbl">Inscrits au total</div><div class="val" id="rf-waitlist-kpi-total">—</div><div class="delta">toutes régions confondues</div></div>
+        <div class="kpi"><div class="lbl">Région la plus demandée</div><div class="val" id="rf-waitlist-kpi-region" style="font-size:18px">—</div><div class="delta" id="rf-waitlist-kpi-region-n">—</div></div>
+        <div class="kpi"><div class="lbl">Zones roadmap</div><div class="val" id="rf-waitlist-kpi-roadmap">—</div><div class="delta">ouverture T3 2026</div></div>
+        <div class="kpi"><div class="lbl">Hors périmètre</div><div class="val" id="rf-waitlist-kpi-blocked">—</div><div class="delta">reste du territoire</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Inscriptions</h2>
+          <button type="button" class="btn btn-primary" id="rf-waitlist-export">Exporter en CSV</button>
+        </div>
+        <table>
+          <thead><tr><th>Email</th><th>Code postal</th><th>Région</th><th>Tunnel</th><th>Inscription</th></tr></thead>
+          <tbody id="rf-waitlist-tbody"></tbody>
+        </table>
+        <div class="empty" id="rf-waitlist-empty" hidden>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div>Aucune inscription sur la liste d'attente.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VUE HISTORIQUE -->
+    <div id="view-audit" hidden>
+      <h1 class="page-title">Historique des actions admin</h1>
+      <p class="lead">Journal complet des actions effectuées par l'équipe (50 dernières).</p>
+      <div class="panel">
+        <table>
+          <thead>
+            <tr><th>Date</th><th>Admin</th><th>Action</th><th>Détails</th></tr>
+          </thead>
+          <tbody id="audit-tbody"><tr><td colspan="4" class="empty">Chargement…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- DRAWER CLIENT -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h2 id="d-title">Détail client</h2>
+    <button class="drawer-close" id="d-close">✕</button>
+  </div>
+  <div class="drawer-body" id="d-body"></div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script src="_demo_mode.js"></script>
+<script src="_storage.js"></script>
+<script>
+  // ─── Auth check — affiche un mur de login inline si pas de session admin ───
+  function setupAdminUI(){
+    const me = RFStore.getCurrentUser();
+    document.getElementById('me-name').textContent = me.email.split('@')[0];
+    document.getElementById('me-role').textContent = me.role === 'super_admin' ? 'super admin' : 'admin';
+    document.getElementById('me-av').textContent = (me.email[0] || 'A').toUpperCase();
+    document.getElementById('auth-wall').classList.remove('show');
+  }
+
+  function showAuthWall(){
+    document.getElementById('auth-wall').classList.add('show');
+    setTimeout(() => document.getElementById('auth-email').focus(), 80);
+  }
+
+  /* Le chargement des données est SUBORDONNÉ à l'authentification : rien
+     n'est injecté dans la page tant que la session admin n'est pas établie.
+     Un calque CSS n'est pas un contrôle d'accès — tant qu'il n'y a pas de
+     vérification côté serveur, ces consoles sont retirées du déploiement
+     (voir la règle 404 de vercel.json). */
+  if (RFStore.isAdmin()) {
+    setupAdminUI();
+    loadDashboard();
+  } else {
+    showAuthWall();
+  }
+
+  // Handler du formulaire de login inline (mur d'auth)
+  document.getElementById('auth-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errEl = document.getElementById('auth-err');
+    errEl.classList.remove('show');
+    try {
+      const email = document.getElementById('auth-email').value.trim();
+      const pw    = document.getElementById('auth-pw').value;
+      const { role } = await RFStore.login(email, pw);
+      if (role === 'admin' || role === 'super_admin') {
+        setupAdminUI();
+        loadDashboard();
+      } else {
+        // Client connecté par erreur sur ce formulaire
+        errEl.textContent = "Ce compte est un compte client. Utilisez un compte administrateur pour accéder à cette console.";
+        errEl.classList.add('show');
+        RFStore.logout();
+      }
+    } catch(err){
+      errEl.textContent = err.message || 'Connexion impossible.';
+      errEl.classList.add('show');
+    }
+  });
+
+  document.getElementById('btn-logout').addEventListener('click', (e) => {
+    e.preventDefault();
+    RFStore.logout();
+    showAuthWall();
+    // Vide le formulaire pour qu'il soit prêt à une nouvelle saisie
+    document.getElementById('auth-email').value = '';
+    document.getElementById('auth-pw').value = '';
+  });
+
+  // ─── Navigation views ───────────────────────────────────────────────────
+  document.querySelectorAll('.nav a[data-view]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const view = a.dataset.view;
+      document.querySelectorAll('.nav a').forEach(x => x.classList.remove('active'));
+      a.classList.add('active');
+      ['clients','documents','waitlist','audit'].forEach(v => {
+        document.getElementById('view-' + v).hidden = v !== view;
+      });
+      if (view === 'audit') loadAudit();
+      if (view === 'documents') loadDocsWaiting();
+    });
+  });
+
+  // ─── Toast helper ───────────────────────────────────────────────────────
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2400);
+  }
+
+  // ─── Formatters ─────────────────────────────────────────────────────────
+  function fmtEUR(n){ if (!n || isNaN(n)) return '—'; return new Intl.NumberFormat('fr-FR').format(Math.round(n)) + ' €'; }
+  function fmtDate(d){ if (!d) return '—'; return new Date(d).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', year:'numeric'}); }
+  function initials(c){ return ((c.firstname||'?')[0] + (c.lastname||'')[0]).toUpperCase(); }
+  function fullname(c){ return ((c.firstname||'') + ' ' + (c.lastname||'')).trim() || c.email; }
+
+  // ─── État de filtre courant ─────────────────────────────────────────────
+  let currentFilter = 'all'; // 'all' ou une clé de DOSSIER_STATUSES
+  let currentSearch = '';
+
+  // ─── KPIs et liste clients ──────────────────────────────────────────────
+  async function loadDashboard() {
+    const stats = await RFStore.getStats();
+    document.getElementById('kpi-actifs').textContent = stats.activeClients;
+    document.getElementById('kpi-actifs-d').textContent = `${stats.dossiersActifs} dossier${stats.dossiersActifs > 1 ? 's' : ''} en cours`;
+    document.getElementById('kpi-transmis').textContent = stats.dossiersTransmis;
+    document.getElementById('kpi-aides').textContent = fmtEUR(stats.totalAides);
+    document.getElementById('kpi-docs').textContent = stats.documentsAFournir;
+    document.getElementById('count-clients').textContent = stats.totalClients;
+    document.getElementById('count-docs').textContent = stats.totalDocuments;
+
+    await renderChips();
+    const clients = await applyFilters();
+    renderClients(clients);
+  }
+
+  // ─── Chips filtre : un par statut + "Tous" ──────────────────────────────
+  async function renderChips() {
+    const counts = await RFStore.countByDossierStatus();
+    const chipsWrap = document.getElementById('filter-chips');
+    const total = counts._total || 0;
+    let html = `<button class="chip ${currentFilter==='all'?'active':''}" data-st="all">
+      Tous <span class="cnt">${total}</span>
+    </button>`;
+    RFStore.DOSSIER_STATUSES.forEach(s => {
+      const n = counts[s.key] || 0;
+      html += `<button class="chip ${currentFilter===s.key?'active':''}" data-st="${s.key}" title="${s.help}">
+        <span class="chip-dot" style="background:${s.color}"></span>${s.label} <span class="cnt">${n}</span>
+      </button>`;
+    });
+    chipsWrap.innerHTML = html;
+    chipsWrap.querySelectorAll('.chip').forEach(b => {
+      b.addEventListener('click', async () => {
+        currentFilter = b.dataset.st;
+        await renderChips();
+        const clients = await applyFilters();
+        renderClients(clients);
+      });
+    });
+  }
+
+  // ─── Combine filtre statut + recherche ──────────────────────────────────
+  async function applyFilters() {
+    const all = await RFStore.listClients();
+    let filtered = all;
+    if (currentFilter !== 'all') {
+      filtered = filtered.filter(c => (c.dossierStatus || 'nouveau') === currentFilter);
+    }
+    if (currentSearch) {
+      const q = currentSearch.toLowerCase();
+      filtered = filtered.filter(c => {
+        const blob = [c.email, c.firstname, c.lastname, c.address || '', c.logement && c.logement.type || ''].join(' ').toLowerCase();
+        return blob.includes(q);
+      });
+    }
+    return filtered;
+  }
+
+  function dossierBadge(c) {
+    const m = RFStore.getStatusMeta(c.dossierStatus || 'nouveau');
+    return `<span class="dossier-badge" style="background:${m.bg};color:${m.color}">${m.label}</span>`;
+  }
+
+  function renderClients(clients) {
+    const tbody = document.getElementById('clients-tbody');
+    if (!clients.length) {
+      tbody.innerHTML = `<tr><td colspan="6" class="empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        <div>${currentFilter==='all' && !currentSearch ? "Aucun client pour l'instant. Vos clients apparaîtront ici à mesure qu'ils s'inscrivent." : 'Aucun client ne correspond à ces critères.'}</div>
+      </td></tr>`;
+      return;
+    }
+    tbody.innerHTML = clients.map(c => `
+      <tr data-id="${c.id}">
+        <td>
+          <div class="client-nm">${fullname(c)}</div>
+          <div class="client-em">${c.email}</div>
+        </td>
+        <td>${c.logement ? [(c.logement.type), (c.logement.surface && c.logement.surface+' m²'), (c.logement.year)].filter(Boolean).join(' · ') : '—'}</td>
+        <td><b>${fmtEUR(c.aids && c.aids.totalAides)}</b></td>
+        <td>${dossierBadge(c)}</td>
+        <td>${fmtDate(c.createdAt)}</td>
+      </tr>
+    `).join('');
+    tbody.querySelectorAll('tr').forEach(tr => {
+      tr.addEventListener('click', () => openClient(tr.dataset.id));
+    });
+  }
+
+  document.getElementById('search').addEventListener('input', async (e) => {
+    currentSearch = e.target.value.trim();
+    const clients = await applyFilters();
+    renderClients(clients);
+  });
+
+  // ─── Drawer détail client ───────────────────────────────────────────────
+  async function openClient(id) {
+    const c = await RFStore.getClient(id);
+    if (!c) return;
+    const docs = await RFStore.listDocuments(id);
+    document.getElementById('d-title').textContent = fullname(c);
+    document.getElementById('d-body').innerHTML = `
+      <div class="drawer-section">
+        <h3>Identité &amp; dossier</h3>
+        <div class="info-row"><span class="k">Email</span><span class="v">${c.email}</span></div>
+        <div class="info-row"><span class="k">Statut compte</span><span class="v"><span class="pill ${c.status||'actif'}">${c.status === 'churn' ? 'Inactif' : 'Actif'}</span></span></div>
+        <div class="info-row"><span class="k">Statut dossier</span><span class="v">${dossierBadge(c)}</span></div>
+        <div class="info-row"><span class="k">Inscrit le</span><span class="v">${fmtDate(c.createdAt)}</span></div>
+      </div>
+
+      <div class="drawer-section">
+        <h3>Cycle de vie du dossier</h3>
+        <div class="status-changer">
+          <h4>Changer le statut</h4>
+          <div class="opts">
+            ${RFStore.DOSSIER_STATUSES.map(s => `
+              <button type="button" data-set-status="${s.key}" class="${(c.dossierStatus||'nouveau')===s.key?'curr':''}" title="${s.help}">
+                <span class="chip-dot" style="background:${s.color};margin-right:6px"></span>${s.label}
+              </button>
+            `).join('')}
+          </div>
+          <textarea class="note-input" id="status-note" placeholder="Note (facultative) — visible dans la timeline. Ex : « Avis d'imposition reçu, dossier prêt à déposer. »"></textarea>
+        </div>
+        <h4 style="font:600 13px var(--font-sans);color:var(--slate-700);margin:14px 0 8px">Historique</h4>
+        <ul class="timeline">
+          ${(c.dossierStatusHistory || []).map((h, i) => {
+            const meta = RFStore.getStatusMeta(h.to);
+            const fromMeta = h.from ? RFStore.getStatusMeta(h.from) : null;
+            return `<li class="${i===0?'curr':''}">
+              <div class="tl-line"><span class="dossier-badge" style="background:${meta.bg};color:${meta.color}">${meta.label}</span>${fromMeta ? ' <span style="color:var(--slate-400)">depuis</span> ' + fromMeta.label : ''}</div>
+              <div class="tl-meta">${fmtDate(h.at)} · par ${h.by}</div>
+              ${h.note ? `<div class="tl-note">${h.note}</div>` : ''}
+            </li>`;
+          }).join('') || '<li class="tl-meta">Aucun historique.</li>'}
+        </ul>
+      </div>
+      <div class="drawer-section">
+        <h3>Projet de rénovation</h3>
+        <div class="info-row"><span class="k">Adresse</span><span class="v">${c.address || '—'}</span></div>
+        <div class="info-row"><span class="k">Logement</span><span class="v">${c.logement ? [(c.logement.type), (c.logement.surface && c.logement.surface+' m²'), (c.logement.year && 'année '+c.logement.year)].filter(Boolean).join(' · ') : '—'}</span></div>
+        <div class="info-row"><span class="k">Énergie</span><span class="v">${c.logement && c.logement.heat || '—'}</span></div>
+        <div class="info-row"><span class="k">RFR</span><span class="v">${fmtEUR(c.foyer && c.foyer.rfr)}</span></div>
+        <div class="info-row"><span class="k">Aides estimées</span><span class="v"><b>${fmtEUR(c.aids && c.aids.totalAides)}</b></span></div>
+      </div>
+      <div class="drawer-section">
+        <h3>Documents du dossier (${docs.length})</h3>
+        <div class="doc-list">
+          ${docs.length ? docs.map(d => `
+            <div class="doc-card">
+              <div class="ic ${d.statut === 'valide' || d.statut === 'signe' ? 'uploaded' : ''}">${d.type === 'piece' ? 'PJ' : 'DOC'}</div>
+              <div class="nm">${d.nom}</div>
+              <span class="pill pill-mini ${d.statut === 'valide' ? 'actif' : d.statut === 'a_fournir' ? 'essentiel' : 'essai'}">${d.statut === 'valide' ? 'Validé' : d.statut === 'a_fournir' ? 'À fournir' : d.statut === 'pret' ? 'Prêt' : d.statut === 'signe' ? 'Signé' : d.statut}</span>
+            </div>
+          `).join('') : '<div style="color:var(--slate-500);font-size:13px">Aucun document encore.</div>'}
+        </div>
+        <div style="margin-top:14px">
+          <label class="upload-zone" for="upload-doc">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="vertical-align:-4px;margin-right:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+            Uploader un dossier généré pour ce client
+          </label>
+          <input type="file" id="upload-doc" hidden accept=".pdf,.jpg,.png" />
+        </div>
+      </div>
+      <div class="drawer-section">
+        <button class="btn btn-danger" id="btn-delete">Supprimer ce client</button>
+      </div>
+    `;
+    openDrawer();
+    document.getElementById('upload-doc').addEventListener('change', async (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      await RFStore.saveDocument({
+        clientId: id, type: 'dossier', code: 'custom',
+        nom: f.name, statut: 'pret',
+        metadata: { size: f.size, mime: f.type, fakeStorage: 'demo (localStorage)' }
+      });
+      toast(`« ${f.name} » uploadé dans le compte de ${fullname(c)}.`);
+      openClient(id); // recharge
+      loadDashboard();
+    });
+    document.getElementById('btn-delete').addEventListener('click', async () => {
+      if (!confirm(`Supprimer définitivement le compte de ${fullname(c)} et tous ses documents ?`)) return;
+      await RFStore.deleteClient(id);
+      closeDrawer(); loadDashboard();
+      toast(`Compte de ${fullname(c)} supprimé.`);
+    });
+
+    // ─── Changement de statut du dossier ──────────────────────────────────
+    document.querySelectorAll('#d-body [data-set-status]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const newStatus = btn.dataset.setStatus;
+        const cur = c.dossierStatus || 'nouveau';
+        if (newStatus === cur) return;
+        const note = (document.getElementById('status-note').value || '').trim() || null;
+        try {
+          await RFStore.updateDossierStatus(id, newStatus, note);
+          const meta = RFStore.getStatusMeta(newStatus);
+          toast(`Statut → « ${meta.label} »`);
+          openClient(id);       // recharge le drawer
+          await renderChips();  // recharge les compteurs
+          const list = await applyFilters();
+          renderClients(list);  // recharge la table
+        } catch(err){
+          toast('Erreur : ' + err.message);
+        }
+      });
+    });
+  }
+
+  function openDrawer(){
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('drawer').classList.add('open');
+  }
+  function closeDrawer(){
+    document.getElementById('overlay').classList.remove('open');
+    document.getElementById('drawer').classList.remove('open');
+  }
+  document.getElementById('d-close').addEventListener('click', closeDrawer);
+  document.getElementById('overlay').addEventListener('click', closeDrawer);
+
+  // ─── Vue docs en attente ────────────────────────────────────────────────
+  async function loadDocsWaiting() {
+    const docs = (await RFStore.listDocuments()).filter(d => d.statut === 'a_fournir' || d.statut === 'en_cours');
+    const wrap = document.getElementById('docs-list-wrap');
+    if (!docs.length) {
+      wrap.innerHTML = `<div class="empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
+        <div>Aucun document en attente. Tout est traité !</div>
+      </div>`;
+      return;
+    }
+    const clients = await RFStore.listClients();
+    wrap.innerHTML = '<table><thead><tr><th>Client</th><th>Document</th><th>Statut</th><th>Reçu le</th></tr></thead><tbody>' +
+      docs.map(d => {
+        const c = clients.find(x => x.id === d.clientId);
+        return `<tr><td>${c ? fullname(c) : '—'}</td><td>${d.nom}</td><td><span class="pill ${d.statut==='valide'?'actif':'essai'}">${d.statut}</span></td><td>${fmtDate(d.createdAt)}</td></tr>`;
+      }).join('') + '</tbody></table>';
+  }
+
+  // ─── Vue audit ──────────────────────────────────────────────────────────
+  async function loadAudit() {
+    const log = await RFStore.getAuditLog(50);
+    const tbody = document.getElementById('audit-tbody');
+    if (!log.length) {
+      tbody.innerHTML = '<tr><td colspan="4" class="empty">Aucune action enregistrée pour l\'instant.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = log.map(e => `
+      <tr>
+        <td style="font-family:var(--font-mono);font-size:12px">${new Date(e.timestamp).toLocaleString('fr-FR')}</td>
+        <td>${e.admin}</td>
+        <td>${e.action}</td>
+        <td style="font-family:var(--font-mono);font-size:12px;color:var(--slate-500)">${JSON.stringify(e.details)}</td>
+      </tr>
+    `).join('');
+  }
+
+  // Aucun appel de boot : loadDashboard() n'est déclenché qu'après
+  // authentification effective, plus haut dans ce script.
+</script>
+
+<script>
+/* Liste d'attente géographique — lecture, KPI et export CSV. */
+(function initWaitlistTab(){
+  'use strict';
+  if (!window.RFGeo) return;
+  var esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); };
+  var setTxt = function(id, v){ var el = document.getElementById(id); if (el) el.textContent = v; };
+  var TUNNELS = { ENERGETIQUE: 'Énergétique', MPA: 'Autonomie', LHI: 'Habitat dégradé' };
+
+  function render(){
+    var list = RFGeo.getWaitlist().slice().sort(function(a, b){ return b.ts - a.ts; });
+    var roadmapRegions = Object.keys(RFGeo.ZONES_ROADMAP);
+    var parRegion = {}, roadmap = 0, blocked = 0;
+
+    list.forEach(function(r){
+      parRegion[r.region] = (parRegion[r.region] || 0) + 1;
+      if (roadmapRegions.indexOf(r.region) !== -1) roadmap++; else blocked++;
+    });
+    var top = Object.keys(parRegion).sort(function(a, b){ return parRegion[b] - parRegion[a]; })[0];
+
+    setTxt('count-waitlist', list.length);
+    setTxt('rf-waitlist-kpi-total', list.length);
+    setTxt('rf-waitlist-kpi-region', top || '—');
+    setTxt('rf-waitlist-kpi-region-n', top ? parRegion[top] + (parRegion[top] > 1 ? ' inscrits' : ' inscrit') : '—');
+    setTxt('rf-waitlist-kpi-roadmap', roadmap);
+    setTxt('rf-waitlist-kpi-blocked', blocked);
+
+    var tbody = document.getElementById('rf-waitlist-tbody');
+    var empty = document.getElementById('rf-waitlist-empty');
+    if (!tbody) return;
+    if (empty) empty.hidden = list.length > 0;
+    tbody.innerHTML = list.map(function(r){
+      return '<tr>' +
+        '<td>' + esc(r.email) + '</td>' +
+        '<td>' + (esc(r.codePostal) || '—') + '</td>' +
+        '<td>' + esc(r.region) + '</td>' +
+        '<td>' + esc(TUNNELS[r.tunnel] || r.tunnel || '—') + '</td>' +
+        '<td>' + new Date(r.ts).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) + '</td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  var exportBtn = document.getElementById('rf-waitlist-export');
+  if (exportBtn) exportBtn.addEventListener('click', function(){
+    var list = RFGeo.getWaitlist();
+    var csv = 'email;code_postal;region;tunnel;date\n' + list.map(function(r){
+      return [r.email, r.codePostal, r.region, r.tunnel, new Date(r.ts).toISOString()].join(';');
+    }).join('\n');
+    var url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'renofacile-liste-attente-' + Date.now() + '.csv';
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

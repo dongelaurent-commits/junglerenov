@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Mentions légales, CGU, politique de confidentialité, guides MaPrimeRénov' et CEE, glossaire de la rénovation énergétique." />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0F766E" />
+<link rel="canonical" href="https://renofacile.fr/informations" />
+<!-- Open Graph (Facebook, LinkedIn, Slack, Discord) -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="RénoFacile" />
+<meta property="og:title" content="Informations légales et guides · RénoFacile" />
+<meta property="og:description" content="Tout savoir sur RénoFacile : modèle, indépendance, sources officielles, guide des aides." />
+<meta property="og:url" content="https://renofacile.fr/informations" />
+<meta property="og:image" content="https://renofacile.fr/og-image.png" />
+<meta property="og:locale" content="fr_FR" />
+<!-- Twitter card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Informations légales et guides · RénoFacile" />
+<meta name="twitter:description" content="Tout savoir sur RénoFacile : modèle, indépendance, sources officielles, guide des aides." />
+<meta name="twitter:image" content="https://renofacile.fr/og-image.png" />
+<title>Informations — RénoFacile</title>
+<style>
+  :root{
+    --teal-50:#F0FDFA;--teal-100:#CCFBF1;--teal-600:#0D9488;--teal-700:#0F766E;--teal-800:#115E59;
+    --amber-500:#F59E0B;--amber-600:#D97706;
+    --slate-50:#F8FAFC;--slate-100:#F1F5F9;--slate-200:#E2E8F0;--slate-300:#CBD5E1;
+    --slate-500:#64748B;--slate-600:#475569;--slate-700:#334155;--slate-900:#0F172A;
+    --bg:#F8FAFC;--surface:#FFFFFF;--border:#E2E8F0;--text:#1E293B;
+    --shadow-sm:0 1px 2px rgba(15,23,42,.04),0 1px 3px rgba(15,23,42,.06);
+    --shadow-md:0 4px 6px -1px rgba(15,23,42,.06),0 2px 4px -2px rgba(15,23,42,.04);
+    --font-sans:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  html{scroll-behavior:smooth;scroll-padding-top:80px}
+  *{box-sizing:border-box}
+  /* Le projet pilote la visibilité par l'attribut `hidden` : cette règle
+     l'emporte sur les classes qui déclarent leur propre `display`. */
+  [hidden]{display:none!important}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-sans);
+    font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--teal-700);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .container{max-width:1200px;margin:0 auto;padding:0 32px}
+  @media (max-width:720px){.container{padding:0 20px}}
+
+  /* Header */
+  header.site{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);
+    backdrop-filter:saturate(140%) blur(12px);border-bottom:1px solid var(--border)}
+  .topbar{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:var(--text)}
+  .brand-mark{width:32px;height:32px;border-radius:8px;background:var(--teal-700);
+    display:grid;place-items:center;color:#fff;font-weight:700;font-size:13px;font-family:var(--font-mono)}
+  nav.primary{display:flex;gap:28px}
+  nav.primary a{color:var(--slate-700);font-weight:500;font-size:15px}
+  nav.primary a:hover{color:var(--teal-700);text-decoration:none}
+  .header-cta{display:flex;gap:10px;align-items:center}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:8px;
+    font-weight:600;font-size:14px;cursor:pointer;transition:all .15s;border:1px solid transparent;
+    text-decoration:none;font-family:inherit;line-height:1}
+  .btn-primary{background:var(--teal-700);color:#fff}
+  .btn-primary:hover{background:var(--teal-800);text-decoration:none}
+  .btn-ghost{background:transparent;color:var(--slate-700);border-color:var(--border)}
+  .btn-ghost:hover{background:var(--slate-50);text-decoration:none}
+  @media (max-width:880px){nav.primary{display:none}}
+
+  /* Page hero */
+  .page-hero{padding:48px 0 24px;border-bottom:1px solid var(--border);background:#fff}
+  .page-hero .crumbs{font-size:13px;color:var(--slate-500);margin-bottom:12px;font-family:var(--font-mono);
+    text-transform:uppercase;letter-spacing:.04em}
+  .page-hero .crumbs a{color:var(--slate-500)}
+  .page-hero h1{font-size:40px;line-height:1.1;letter-spacing:-.02em;margin:0 0 8px;font-weight:700}
+  .page-hero .lede{color:var(--slate-600);font-size:18px;max-width:65ch;margin:0}
+
+  /* Layout: TOC + content */
+  main.layout{padding:48px 0 80px;display:grid;grid-template-columns:240px 1fr;gap:64px;max-width:1200px;margin:0 auto}
+  @media (max-width:920px){main.layout{grid-template-columns:1fr;gap:24px;padding:32px 0 64px}}
+
+  aside.toc{position:sticky;top:88px;align-self:start;font-size:14px;border-left:1px solid var(--border);padding-left:20px}
+  aside.toc h6{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--slate-500);margin:0 0 12px;font-weight:600}
+  aside.toc ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+  aside.toc a{color:var(--slate-600);display:block;padding:4px 0}
+  aside.toc a:hover{color:var(--teal-700);text-decoration:none}
+  aside.toc a.active{color:var(--teal-700);font-weight:600}
+  @media (max-width:920px){aside.toc{display:none}}
+
+  article.doc{max-width:720px;font-size:16px;color:var(--slate-700)}
+  article.doc h2{font-size:26px;letter-spacing:-.01em;margin:48px 0 12px;color:var(--slate-900);font-weight:700;scroll-margin-top:88px}
+  article.doc h2:first-child{margin-top:0}
+  article.doc h3{font-size:18px;margin:28px 0 8px;color:var(--slate-900);font-weight:600}
+  article.doc p{margin:0 0 16px;text-wrap:pretty}
+  article.doc ul,article.doc ol{margin:0 0 16px;padding-left:22px}
+  article.doc li{margin-bottom:6px}
+  article.doc strong{color:var(--slate-900);font-weight:600}
+  article.doc .meta{font-size:13px;color:var(--slate-500);font-family:var(--font-mono);margin-bottom:32px;
+    padding:10px 14px;background:var(--slate-50);border-radius:8px;display:inline-block}
+  article.doc .callout{background:var(--teal-50);border:1px solid var(--teal-100);border-radius:12px;
+    padding:18px 20px;margin:24px 0;color:var(--teal-800)}
+  article.doc .callout strong{color:var(--teal-800)}
+
+  /* Page switch tabs */
+  .doc-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:32px;padding:6px;background:var(--slate-100);
+    border-radius:12px;width:fit-content;max-width:100%;overflow-x:auto}
+  .doc-tabs button{padding:8px 14px;border-radius:8px;border:none;background:transparent;cursor:pointer;
+    font:600 13px var(--font-sans);color:var(--slate-600);white-space:nowrap}
+  .doc-tabs button:hover{color:var(--slate-900)}
+  .doc-tabs button.active{background:#fff;color:var(--teal-700);box-shadow:var(--shadow-sm)}
+
+  .doc-page{display:none}
+  .doc-page.active{display:block}
+
+  /* Contact form */
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:24px}
+  @media (max-width:720px){.contact-grid{grid-template-columns:1fr}}
+  .contact-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px}
+  .contact-card h3{margin-top:0}
+  .contact-card .icon{width:36px;height:36px;border-radius:8px;background:var(--teal-50);
+    color:var(--teal-700);display:grid;place-items:center;margin-bottom:12px}
+
+  /* Footer (compact, identical visual to homepage) */
+  footer.site{background:var(--slate-900);color:#94A3B8;padding:48px 0 24px;margin-top:24px}
+  footer.site .foot-grid{display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:40px;padding-bottom:32px;
+    border-bottom:1px solid #1E293B}
+  @media (max-width:880px){footer.site .foot-grid{grid-template-columns:1fr 1fr;gap:32px}}
+  footer.site h5{color:#fff;font-size:13px;font-weight:600;margin:0 0 14px;letter-spacing:.02em}
+  footer.site ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;font-size:14px}
+  footer.site a{color:#94A3B8}
+  footer.site a:hover{color:#fff;text-decoration:none}
+  footer.site .brand{color:#fff;margin-bottom:14px}
+  footer.site .foot-bottom{padding-top:24px;display:flex;justify-content:space-between;font-size:13px;flex-wrap:wrap;gap:16px}
+  footer.site .foot-bottom .links{display:flex;gap:20px;flex-wrap:wrap}
+
+/* Respect de « réduire les animations ». */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+/* Focus visible — les règles `outline:none` + halo `teal-100` donnaient
+   1,13:1 pour un seuil de 3:1. Contour rétabli, halo conservé. */
+:where(input,select,textarea,button,a,[tabindex]):focus-visible{
+  outline:2px solid var(--teal-700)!important;outline-offset:2px!important;
+}
+.suggest > *:focus-visible,.suggest .item:focus-visible,.suggest li:focus-visible{
+  outline:2px solid var(--teal-700)!important;outline-offset:-2px!important;
+}
+</style>
+  <script src="_analytics.js" defer></script>
+</head>
+<body>
+
+<header class="site">
+  <div class="container topbar">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">RF</span>
+      <span>RénoFacile</span>
+    </a>
+    <nav class="primary">
+      <a href="index.html#fonctionnement">Fonctionnement</a>
+      <a href="index.html#aides">Aides</a>
+      <a href="annuaire-artisans.html">Pour les pros</a>
+    </nav>
+    <div class="header-cta">
+      <a href="login.html" class="btn btn-ghost">Se connecter</a>
+      <a href="choix-parcours.html" class="btn btn-primary">Mon diagnostic</a>
+    </div>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="crumbs"><a href="index.html">Accueil</a> · <span id="crumb">Information</span></div>
+    <h1 id="page-title">Information</h1>
+    <p class="lede" id="page-lede"></p>
+  </div>
+</section>
+
+<main class="layout">
+  <aside class="toc">
+    <h6>Sur cette page</h6>
+    <ul id="toc-list"></ul>
+  </aside>
+
+  <div>
+    <div class="doc-tabs" role="tablist" id="tabs"></div>
+
+    <!-- ========== MENTIONS LÉGALES ========== -->
+    <article class="doc doc-page" data-page="mentions" data-title="Mentions légales" data-lede="Informations légales relatives à l'éditeur du site rénofacile.fr.">
+      <div class="meta">Dernière mise à jour : [DATE DE MISE EN LIGNE]</div>
+
+      <h2 id="editeur">Éditeur du site</h2>
+      <p>Le site <strong>rénofacile.fr</strong> est édité par <strong>[RAISON SOCIALE EXACTE — ex. Norakt SAS]</strong>, [forme juridique] au capital de <strong>[MONTANT] €</strong>, immatriculée au RCS de [VILLE] sous le numéro <strong>[SIREN À RENSEIGNER]</strong>, dont le siège social est situé au <strong>[ADRESSE COMPLÈTE DU SIÈGE]</strong>.</p>
+      <p>N° TVA intracommunautaire : <strong>[N° TVA INTRA À RENSEIGNER]</strong> — N° SIRET : <strong>[SIRET À RENSEIGNER]</strong> — Code APE : <strong>[CODE APE — typiquement 6311Z ou 7022Z]</strong>.</p>
+      <p>Directeur de la publication : <strong>[NOM PRÉNOM DU DIRIGEANT]</strong>, [fonction].</p>
+      <p style="background:#FFFBEB;border:1px solid #FCD34D;border-radius:8px;padding:12px 14px;font-size:13px;color:#92400E;margin-top:14px">
+        ⚠ <strong>À COMPLÉTER AVANT LA MISE EN LIGNE</strong> — les informations ci-dessus doivent correspondre exactement à l'entité juridique réelle qui édite le site (article 6 III-1 de la LCEN du 21 juin 2004). L'inexactitude expose à 75 000 € d'amende et 1 an de prison.
+      </p>
+
+      <h2 id="hebergement">Hébergement</h2>
+      <p>Le site est hébergé par <strong>[NOM DE L'HÉBERGEUR — ex. OVHcloud, Scaleway, Vercel]</strong>, dont le siège est situé à <strong>[ADRESSE HÉBERGEUR]</strong>.</p>
+      <p>Coordonnées de contact : <strong>[CONTACT HÉBERGEUR — téléphone ou URL support]</strong></p>
+
+      <h2 id="propriete">Propriété intellectuelle</h2>
+      <p>L'ensemble du contenu de ce site (textes, graphismes, logos, vidéos, sons, photographies, code source) est la propriété exclusive de Norakt SAS ou de ses partenaires, et est protégé par le droit français et international de la propriété intellectuelle.</p>
+      <p>Toute reproduction, représentation, modification, publication, transmission, dénaturation, totale ou partielle du site ou de son contenu, par quelque procédé que ce soit, et sur quelque support que ce soit est interdite sans autorisation écrite préalable.</p>
+
+      <h2 id="responsabilite">Limitation de responsabilité</h2>
+      <p>Les estimations d'aides présentées sur RénoFacile sont fournies à titre indicatif sur la base des barèmes officiels en vigueur (MaPrimeRénov', CEE, éco-PTZ). Elles ne constituent pas une décision d'attribution. Seuls les organismes publics compétents (Anah, services de l'État) peuvent confirmer le montant définitif des aides.</p>
+      <p>RénoFacile ne saurait être tenue responsable des éventuels écarts entre les estimations communiquées et les montants effectivement attribués.</p>
+
+      <h2 id="signaler">Signaler un contenu</h2>
+      <p>Pour signaler un contenu illicite ou exercer un droit de réponse : <a href="#" data-goto="contact">contact@renofacile.fr</a></p>
+    </article>
+
+    <!-- ========== CGU ========== -->
+    <article class="doc doc-page" data-page="cgu" data-title="Conditions générales d'utilisation" data-lede="Règles d'usage de la plateforme RénoFacile pour les particuliers et les bailleurs.">
+      <div class="meta">Version 1.0 — En vigueur depuis le [DATE DE MISE EN LIGNE]</div>
+
+      <h2 id="objet">1. Objet</h2>
+      <p>Les présentes Conditions Générales d'Utilisation (CGU) ont pour objet de définir les modalités selon lesquelles RénoFacile met à disposition de ses Utilisateurs sa plateforme d'accompagnement à la rénovation énergétique, accessible à l'adresse rénofacile.fr.</p>
+
+      <h2 id="services">2. Description des services</h2>
+      <p>RénoFacile propose un service d'accompagnement comprenant :</p>
+      <ul>
+        <li>Un diagnostic en ligne permettant d'estimer l'éligibilité à différentes aides publiques (MaPrimeRénov', CEE, éco-PTZ, aides locales) ;</li>
+        <li>La constitution et le suivi des dossiers d'aides ;</li>
+        <li>L'accès à l'annuaire officiel ADEME des artisans certifiés RGE (~50 000 entreprises, mis à jour quotidiennement par les organismes de qualification) ;</li>
+        <li>Un espace personnel permettant de centraliser les documents, devis et factures.</li>
+      </ul>
+      <div class="callout"><strong>Indépendance.</strong> RénoFacile ne perçoit aucune commission de la part des artisans référencés sur le résultat de leurs chantiers, aucun pourcentage des aides obtenues, aucune rétribution des énergéticiens. <strong>Le service est gratuit pour l'Utilisateur</strong> (article 4) : la rémunération de RénoFacile est versée par le professionnel agréé qui reprend le dossier transmis, au titre d'un contrat distinct auquel l'Utilisateur n'est pas partie. Aucune commission d'artisan, aucune publicité, aucune revente de données. Cet engagement est ferme et opposable à RénoFacile par ses utilisateurs.</div>
+
+      <h2 id="perimetre">3. Périmètre du service RénoFacile</h2>
+      <p>RénoFacile est un service d'assistance administrative au montage de dossiers d'aides à la rénovation de l'habitat. RénoFacile <strong>n'est pas agréé Mon Accompagnateur Rénov' (MAR)</strong> par l'Agence nationale de l'habitat (Anah), et n'exerce aucune mission d'accompagnement technique ni d'audit énergétique réglementaire.</p>
+      <p>Lorsque votre projet nécessite l'intervention d'un Mon Accompagnateur Rénov' (rénovation d'ampleur MaPrimeRénov' Parcours accompagné), d'une Assistance à Maîtrise d'Ouvrage (MaPrimeAdapt') ou d'un opérateur agréé Anah (Ma Prime Logement Décent), cette prestation est <strong>à votre charge</strong> et fait l'objet d'un contrat distinct entre vous et le professionnel agréé de votre choix. L'annuaire officiel est consultable sur <a href="https://france-renov.gouv.fr/mon-accompagnateur-renov" target="_blank" rel="noopener noreferrer">france-renov.gouv.fr</a>.</p>
+      <p>Le service RénoFacile couvre exclusivement l'accompagnement administratif décrit à l'article 4. Il n'inclut ni les honoraires du Mon Accompagnateur Rénov', de l'AMO ou de l'opérateur agréé, ni le coût des travaux, ni celui de l'audit énergétique réglementaire.</p>
+      <div class="callout"><strong>Ordre de grandeur.</strong> Un Mon Accompagnateur Rénov' facture entre 500 et 2 000 €, dont une prime Anah dédiée couvre jusqu'à 2 000 € selon votre profil de revenus : 100 % pour les ménages très modestes (Bleus), 80 % pour les modestes (Jaunes), 40 % pour les intermédiaires (Violets), 20 % pour les ménages supérieurs (Roses). Pour MaPrimeAdapt' et Ma Prime Logement Décent, la rémunération de l'opérateur est intégrée au dispositif d'aide : aucun reste à charge.</div>
+
+      <h2 id="gratuite">4. Gratuité du service et transmission du dossier</h2>
+
+      <h3>4.1 Un service gratuit pour l'Utilisateur</h3>
+      <p><strong>RénoFacile est gratuit pour l'Utilisateur.</strong> La Plateforme ne vend rien au particulier : aucun paiement, aucun abonnement, aucune saisie de moyen de paiement n'est demandé, ni au moment du diagnostic, ni à aucune étape ultérieure. Aucune facture n'est émise à l'Utilisateur. Les présentes CGU ne constituent donc pas un contrat de vente à distance : il n'y a ni prix, ni droit de rétractation applicable, faute d'engagement financier de l'Utilisateur.</p>
+
+      <h3>4.2 Ce que couvre le service</h3>
+      <p>Sans contrepartie financière de votre part, la Plateforme vous donne accès à :</p>
+      <ul>
+        <li>le calcul détaillé de vos aides éligibles, ligne par ligne ;</li>
+        <li>votre espace personnel et le suivi de votre dossier jusqu'au versement ;</li>
+        <li>les documents personnalisés téléchargeables (attestations, récapitulatifs, dossiers pré-remplis) ;</li>
+        <li>la transmission de votre dossier à un professionnel agréé, avec votre consentement ;</li>
+        <li>l'assistance par email pendant toute la durée du dossier.</li>
+      </ul>
+
+      <h3>4.3 Comment RénoFacile est rémunéré</h3>
+      <p>RénoFacile est rémunéré par le <strong>professionnel agréé</strong> (Mon Accompagnateur Rénov', AMO ou opérateur agréé Anah) auquel le dossier est transmis, au titre du travail de montage qui lui est livré. Cette relation est <strong>strictement professionnelle</strong>, régie par un contrat distinct conclu hors de la Plateforme, et n'emporte aucune conséquence financière pour l'Utilisateur. RénoFacile ne perçoit aucune commission sur le montant des travaux, aucun pourcentage des aides obtenues, et ne vend aucune donnée de contact.</p>
+
+      <h3>4.4 Transmission du dossier à un professionnel agréé</h3>
+      <p>À l'issue du parcours, le dossier peut être transmis à un professionnel agréé du département de l'Utilisateur, aux seules fins de dépôt et de suivi de la demande d'aides auprès de l'Anah. <strong>Cette transmission n'a lieu qu'avec le consentement explicite de l'Utilisateur</strong>, recueilli par une case à cocher non pré-cochée mentionnant le destinataire et la finalité (RGPD, art. 6-1-a). Le consentement peut être retiré à tout moment depuis l'espace personnel, sans frais ni justification (RGPD, art. 7-3).</p>
+
+      <h3>4.5 Prestation du professionnel agréé</h3>
+      <p>L'accompagnement réalisé par ce professionnel peut faire l'objet d'une prestation à sa charge ou à celle de l'Utilisateur, selon le dispositif mobilisé. Son montant est communiqué à l'Utilisateur <strong>par le professionnel lui-même, par écrit, avant tout engagement</strong>. RénoFacile n'est pas partie à ce contrat et n'en perçoit aucune part.</p>
+
+      <h3>4.6 Non-cumul avec les aides publiques</h3>
+      <p>Le service RénoFacile n'est ni déductible des aides calculées, ni cumulable avec elles : il s'agit d'un service d'accompagnement privé, distinct des aides Anah et ADEME auxquelles vous pouvez être éligible.</p>
+
+      <h2 id="obligations">5. Obligations de l'Utilisateur</h2>
+      <p>L'Utilisateur s'engage à fournir des informations exactes lors du diagnostic et de la constitution des dossiers. Toute déclaration sciemment erronée pouvant constituer une fraude aux aides publiques engage la responsabilité exclusive de l'Utilisateur.</p>
+
+      <h2 id="resiliation">6. Suspension et résiliation</h2>
+      <p>RénoFacile se réserve le droit de suspendre ou résilier le compte d'un Utilisateur en cas de manquement grave aux présentes CGU, notamment en cas de fraude avérée ou de comportement portant atteinte aux artisans partenaires.</p>
+
+      <h2 id="mediation">7. Médiation à la consommation</h2>
+      <p>Conformément aux articles L612-1 et suivants du Code de la consommation, et en cas de litige avec RénoFacile, vous avez la possibilité de recourir gratuitement à un médiateur de la consommation après avoir tenté de résoudre le différend par une réclamation écrite auprès de notre service client (contact@renofacile.fr).</p>
+      <p><strong>Médiateur référencé</strong> : <strong>[NOM ET COORDONNÉES DU MÉDIATEUR — à choisir parmi les médiateurs agréés CECMC]</strong>. Vous pouvez le saisir en ligne ou par courrier.</p>
+      <p>Vous pouvez également avoir recours à la plateforme européenne de règlement en ligne des litiges (RLL) : <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a></p>
+
+      <h2 id="droit">8. Droit applicable et juridiction compétente</h2>
+      <p>Les présentes CGU sont soumises au droit français. En cas de litige, et après tentative de résolution amiable et de médiation, le tribunal compétent sera celui du domicile du défendeur ou, au choix du consommateur, celui du lieu où il demeurait au moment de la conclusion du contrat ou de la survenance du fait dommageable (article R631-3 du Code de la consommation).</p>
+    </article>
+
+    <!-- ========== CONFIDENTIALITÉ ========== -->
+    <article class="doc doc-page" data-page="privacy" data-title="Politique de confidentialité" data-lede="Comment nous traitons vos données personnelles, dans le respect du RGPD.">
+      <div class="meta">Conforme RGPD — Mise à jour [DATE DE MISE EN LIGNE]</div>
+
+      <h2 id="responsable">Responsable du traitement</h2>
+      <p>Le responsable de traitement est <strong>[RAISON SOCIALE DE L'ÉDITEUR]</strong>. Pour exercer vos droits ou pour toute question relative à vos données personnelles, écrivez à <strong>contact@renofacile.fr</strong>.</p>
+
+      <h2 id="donnees">Quelles données collectons-nous ?</h2>
+      <ul>
+        <li><strong>Données de diagnostic</strong> : adresse du logement, surface, année de construction, type de chauffage, consommation, composition du foyer, revenu fiscal de référence (saisi mais non transmis sans votre accord).</li>
+        <li><strong>Données de compte</strong> : nom, prénom, e-mail, téléphone.</li>
+        <li><strong>Documents téléversés</strong> : avis d'imposition, DPE, devis, factures.</li>
+        <li><strong>Données de navigation</strong> : adresse IP, type de navigateur, pages consultées (cookies de mesure d'audience).</li>
+      </ul>
+
+      <h2 id="finalites">Finalités du traitement</h2>
+      <ul>
+        <li>Calculer vos droits aux aides publiques (base légale : exécution du contrat) ;</li>
+        <li>Préparer et transmettre vos dossiers aux organismes compétents, avec votre consentement explicite (base légale : consentement) ;</li>
+        <li>Vous mettre en relation avec des artisans RGE de votre zone (base légale : exécution du contrat) ;</li>
+        <li>Améliorer le service et mesurer l'audience (base légale : intérêt légitime).</li>
+      </ul>
+
+      <h2 id="duree">Durée de conservation</h2>
+      <ul>
+        <li><strong>Données de compte et de diagnostic</strong> : conservées pendant toute la durée de suivi de vos dossiers, puis pendant <strong>3 ans après votre dernière activité</strong> (intérêt légitime — prospection commerciale, recommandation CNIL).</li>
+        <li><strong>Documents téléversés (devis, avis d'imposition, factures)</strong> : conservés pendant <strong>5 ans après la fin du contrat</strong> (Code de commerce art. L123-22).</li>
+        <li><strong>Preuves de consentement à la transmission</strong> : conservées <strong>5 ans</strong> à compter du retrait ou de la clôture du dossier (charge de la preuve, RGPD art. 7-1).</li>
+        <li><strong>Données de navigation (cookies de mesure d'audience)</strong> : 13 mois maximum (recommandation CNIL).</li>
+      </ul>
+      <p>Si vous demandez la suppression de votre compte, vos données sont supprimées sous 30 jours, à l'exception des documents soumis à obligation comptable (facturation).</p>
+
+      <h2 id="droits">Vos droits</h2>
+      <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, d'effacement, de portabilité, de limitation et d'opposition. Vous pouvez les exercer depuis votre espace personnel ou en écrivant à <strong>contact@renofacile.fr</strong>. Réponse sous 1 mois maximum (art. 12-15 RGPD).</p>
+      <p>Vous disposez également du droit d'introduire une réclamation auprès de la <strong>CNIL</strong> (<a href="https://www.cnil.fr" target="_blank" rel="noopener">cnil.fr</a>).</p>
+
+      <h2 id="partage">Avec qui partageons-nous vos données ?</h2>
+      <p>Vos données ne sont <strong>jamais revendues</strong>. Elles peuvent être transmises, avec votre accord explicite et au cas par cas :</p>
+      <ul>
+        <li><strong>à un professionnel agréé</strong> (Mon Accompagnateur Rénov', AMO ou opérateur agréé Anah) du département du logement, aux seules fins du dépôt et du suivi de votre demande d'aides. Cette transmission repose sur votre <strong>consentement explicite</strong> (RGPD art. 6-1-a), recueilli par une case à cocher non pré-cochée indiquant le destinataire et la finalité. Les données transmises sont celles du dossier : identité, coordonnées, caractéristiques du logement, situation de revenus et travaux envisagés. Vous pouvez retirer ce consentement à tout moment depuis votre espace personnel (RGPD art. 7-3) ; le professionnel cesse alors de traiter votre dossier ;</li>
+        <li>aux organismes instructeurs des aides (Anah, obligés CEE) pour la constitution de votre dossier ;</li>
+        <li>à un artisan RGE pour la transmission d'une demande de devis ;</li>
+        <li>à nos sous-traitants techniques (hébergement, e-mail) qui agissent sous notre contrôle.</li>
+      </ul>
+    </article>
+
+    <!-- ========== COOKIES ========== -->
+    <article class="doc doc-page" data-page="cookies" data-title="Gestion des cookies" data-lede="Liste détaillée des traceurs utilisés et paramétrage de votre consentement.">
+      <div class="meta">Mise à jour [DATE DE MISE EN LIGNE]</div>
+
+      <h2 id="essentiels">Cookies essentiels</h2>
+      <p>Indispensables au fonctionnement du site (session, panier, sécurité). Ils sont déposés sans consentement préalable. Durée : durée de la session ou 13 mois maximum.</p>
+
+      <h2 id="mesure">Mesure d'audience</h2>
+      <p>Nous utilisons <strong>Matomo</strong>, hébergé en France, configuré en mode anonymisé (IP tronquée, pas de cross-site). Aucun transfert hors UE. Conservation : 13 mois.</p>
+
+      <h2 id="parametrer">Paramétrer</h2>
+      <p>Vous pouvez à tout moment retirer ou modifier votre consentement depuis le bandeau ou le bouton ci-dessous.</p>
+      <p><a href="#" class="btn btn-ghost" onclick="alert('Bandeau de consentement (placeholder)');return false;">Modifier mes préférences cookies</a></p>
+    </article>
+
+    <!-- ========== À PROPOS ========== -->
+    <article class="doc doc-page" data-page="about" data-title="À propos de RénoFacile" data-lede="Pourquoi nous existons, comment nous travaillons, qui nous sommes.">
+      <h2 id="mission">Notre mission</h2>
+      <p>Permettre à chaque foyer français de rénover son logement <strong>sans se perdre</strong> dans les aides — et sans céder son numéro à des plateformes opaques.</p>
+      <p>Nous sommes nés d'un constat simple : 9 ménages sur 10 abandonnent leur projet de rénovation à l'étape des démarches administratives. Pas par manque d'argent, mais par excès de complexité. RénoFacile a été conçu pour absorber cette complexité dans un outil clair, indépendant et économique.</p>
+
+      <h2 id="histoire">Un outil indépendant, porté par un groupe spécialisé</h2>
+      <p>RénoFacile est édité par <strong>[RAISON SOCIALE DE L'ÉDITEUR — ex. Norakt SAS]</strong>, dont l'expertise du domaine numérique et des données publiques nous permet de maintenir un outil rigoureux et à jour des évolutions réglementaires.</p>
+      <p>Notre indépendance est structurelle : nous ne percevons aucune commission sur les chantiers, aucun pourcentage des aides obtenues, aucun lead vendu, aucune rétribution des énergéticiens. Le service est gratuit pour vous — notre rémunération vient du professionnel agréé qui reprend votre dossier.</p>
+
+      <h2 id="chiffres">Nos engagements concrets</h2>
+      <ul>
+        <li><strong>Aucune commission, jamais.</strong> Notre seule source de revenus est la rémunération versée par le professionnel agréé qui reprend le dossier. Nous publierons chaque année la décomposition de notre chiffre d'affaires.</li>
+        <li><strong>Aucun démarchage.</strong> Vos coordonnées ne sortent jamais de la plateforme sans votre clic explicite. Pas d'appel sortant, pas de SMS commercial, pas de cession de données.</li>
+        <li><strong>Aucun lead vendu.</strong> Quand vous contactez un artisan, c'est vous qui décidez quelles informations partager. Le contact reste sous votre contrôle.</li>
+        <li><strong>Sources officielles documentées.</strong> Tous nos calculs s'appuient sur les barèmes publiés par l'Anah (MaPrimeRénov' 2026), l'ATEE (CEE), service-public.fr (éco-PTZ — fiche F19905) et le Code général des impôts (TVA art. 279-0 bis). Les références sont publiques et consultables sur les sites officiels.</li>
+      </ul>
+
+      <h2 id="creation-compte-mpr">Pouvez-vous créer mon compte MaPrimeRénov' à ma place ?</h2>
+      <p><strong>Non, et c'est la règle pour tous les acteurs du marché.</strong> Le guide officiel Anah 2026 (édition février 2026, pages 10 et 13) l'indique explicitement :</p>
+      <blockquote style="border-left:3px solid var(--teal-700);padding:8px 14px;background:var(--slate-50);font-size:13.5px;color:var(--slate-700);margin:10px 0">
+        « Le mandataire ne peut pas créer le compte du demandeur à sa place. Le demandeur doit créer personnellement son compte en ligne puis désigner le mandataire. »
+      </blockquote>
+      <p>Cette règle a été renforcée en 2026 pour lutter contre la fraude massive au CEE et à MPR observée en 2023-2024. À la création d'un compte, une vérification d'identité est obligatoire (FranceConnect+ ou code par courrier à votre adresse fiscale) — cette étape ne peut techniquement pas être automatisée par un tiers.</p>
+      <p><strong>Ce que nous faisons pour vous — de bout en bout :</strong></p>
+      <ul>
+        <li><b>Avant :</b> guide illustré pas à pas et tuto vidéo de 2 minutes pour la création de votre compte, checklist des pièces à préparer.</li>
+        <li><b>Pendant la création :</b> support par email si vous rencontrez le moindre blocage.</li>
+        <li><b>Après :</b> une fois le compte créé, vous nous désignez comme <em>mandataire administratif</em> (2 clics — nous vous envoyons les captures d'écran). Nous préparons alors votre dossier, déposons vos pièces, répondons aux demandes de compléments de l'Anah et suivons le versement — sans jamais accéder à vos fonds qui restent versés directement sur votre compte bancaire.</li>
+        <li><b>Tout au long :</b> emails de suivi automatiques à chaque étape franchie (dépôt effectué, dossier accepté, prime versée) et timeline visuelle dans votre espace RénoFacile.</li>
+      </ul>
+      <p>Vous n'êtes jamais seul face à l'administration — c'est le sens même de notre service.</p>
+      <p><strong>Attention aux offres trop belles pour être vraies :</strong> tout acteur qui vous propose de « créer votre compte MPR en un clic » enfreint les règles Anah et vous expose à des risques de fraude ou de blocage de dossier. Renseignez-vous toujours sur le SIRET du mandataire et vérifiez qu'il n'est pas signalé pour pratiques abusives.</p>
+      <p style="font-size:12.5px;color:var(--slate-500)">Source : Guide Anah « Les aides financières en 2026 », édition février 2026, pages 10 et 13.</p>
+
+      <h2 id="duree-creation-compte">Combien de temps prend la création de mon compte MaPrimeRénov' ?</h2>
+      <p><strong>Environ 5 minutes avec FranceConnect+</strong> — la voie la plus rapide. Vous vous connectez avec vos identifiants Impôts, Ameli ou La Poste, et votre compte est créé instantanément.</p>
+      <p><strong>5 à 7 jours si vous choisissez le code par courrier.</strong> L'Anah vous envoie un courrier à votre adresse fiscale avec un code à saisir. C'est la voie à privilégier si vous n'avez pas de compte Impôts / Ameli / La Poste actif.</p>
+      <p>Une fois votre compte créé, il vous suffit de nous désigner comme mandataire (2 clics dans votre espace MPR) et nous prenons tout en charge. Vous n'aurez plus jamais besoin de retourner sur maprimerenov.gouv.fr par vous-même.</p>
+
+      <h2 id="equipe">Comment RénoFacile fonctionne</h2>
+      <p>RénoFacile est un outil <strong>100 % self-service alimenté par l'intelligence artificielle</strong>. Nous n'employons pas d'équipe de conseillers en rénovation : tous nos calculs et recommandations sont produits par un moteur logiciel qui croise les sources officielles en temps réel et qui se met à jour automatiquement à chaque évolution réglementaire.</p>
+      <p>Le produit est conçu, maintenu et opéré par les équipes techniques du groupe Norakt — ingénierie logicielle, design, relation client. C'est cette automatisation du calcul et du montage qui nous permet de rendre le service gratuit pour vous : nous sommes rémunérés par le professionnel agréé qui reprend le dossier, au titre du travail que nous lui livrons.</p>
+      <p>Pour les cas atypiques (rénovations d'ampleur nécessitant un Mon Accompagnateur Rénov' agréé, situations fiscales particulières, copropriétés), nous vous redirigeons vers votre conseiller France Rénov' et l'annuaire officiel des MAR — c'est un service public, gratuit, et c'est leur métier.</p>
+    </article>
+
+    <!-- ========== INDÉPENDANCE ========== -->
+    <article class="doc doc-page" data-page="independance" data-title="Notre indépendance" data-lede="Pourquoi RénoFacile ne peut structurellement pas vous arnaquer — et comment le vérifier.">
+      <h2 id="modele">Notre modèle économique</h2>
+      <p>RénoFacile est rémunéré d'une seule manière :</p>
+      <ul>
+        <li>Une <strong>rémunération versée par le professionnel agréé</strong> qui reprend le dossier transmis — jamais par le particulier, qui ne règle rien. Elle couvre le montage et le suivi pendant 12 mois. Le diagnostic et l'estimation des aides restent gratuits, sans création de compte.</li>
+      </ul>
+      <p><strong>Nous ne touchons aucune commission</strong> sur les chantiers, aucun pourcentage des aides obtenues, aucun lead vendu, aucune rétribution des énergéticiens. Cette indépendance est inscrite dans nos CGU.</p>
+
+      <h2 id="garde-fous">Nos garde-fous</h2>
+      <ul>
+        <li><strong>Calculs basés sur sources officielles uniquement.</strong> Notre moteur s'appuie exclusivement sur les barèmes publiés par l'Anah (MaPrimeRénov'), l'ATEE (CEE), Service Public (éco-PTZ) et les services locaux pour les aides territoriales. Chaque résultat cite ses sources.</li>
+        <li><strong>Veille réglementaire automatisée.</strong> Nos algorithmes détectent les modifications des arrêtés et instructions officielles. Les barèmes sont mis à jour sous 7 jours après chaque évolution.</li>
+        <li><strong>Tests automatisés à chaque mise à jour.</strong> Plus de 300 cas types sont rejoués automatiquement à chaque modification. Si un test échoue, la fonctionnalité concernée est désactivée le temps de la correction.</li>
+        <li><strong>Recoupement par une batterie de tests.</strong> Le moteur de calcul est rejoué sur 139 cas types à chaque modification : chaque cas énonce une règle du barème, et un seul échec bloque la mise à jour.</li>
+        <li><strong>Redirection assumée vers le service public.</strong> Pour les cas atypiques ou marginaux, nous renvoyons explicitement vers votre conseiller France Rénov' (<b>0 808 800 700</b>, gratuit). Nous ne prétendons pas remplacer un conseiller humain — nous absorbons la complexité administrative.</li>
+        <li><strong>Annuaire artisans ouvert.</strong> Les artisans non-abonnés (sans étiquette « Pro ») apparaissent gratuitement dès qu'ils sont RGE et qu'ils ont 3 avis vérifiés. Le statut payant Pro n'apporte pas de classement préférentiel — uniquement un enrichissement de fiche.</li>
+        <li><strong>Vérification trimestrielle des artisans.</strong> Chaque artisan référencé est revérifié tous les 3 mois (RGE actif, attestation décennale, K-bis).</li>
+        <li><strong>Score artisan transparent.</strong> Nos critères de classement sont publics : ils dépendent de la note utilisateur, du taux de réponse, de l'ancienneté et de la pertinence par rapport au projet — jamais d'une contrepartie commerciale.</li>
+      </ul>
+
+      <h2 id="audit">Comment vérifier ?</h2>
+      <ul>
+        <li><strong>Transparence financière annuelle.</strong> À partir de notre premier exercice complet, nous publierons chaque année la décomposition de nos revenus (particuliers vs artisans), auditée par un cabinet comptable indépendant.</li>
+        <li><strong>Sources publiques pour chaque calcul.</strong> Tout calcul d'aide est accompagné d'un lien vers la source officielle utilisée (arrêté ministériel, instruction Anah, fiche CEE de l'ATEE).</li>
+        <li><strong>Algorithmes documentés.</strong> Nos méthodes de calcul sont décrites publiquement dans notre documentation technique, consultable à l'URL <code>/methodologie</code>.</li>
+      </ul>
+    </article>
+
+    <!-- ========== CONTACT ========== -->
+    <article class="doc doc-page" data-page="contact" data-title="Nous contacter" data-lede="Email pour les questions produit, France Rénov' pour les questions de rénovation.">
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l9 6 9-6"/><rect x="3" y="5" width="18" height="14" rx="2"/></svg></div>
+          <h3>Questions générales</h3>
+          <p>Pour toute question sur le service, votre dossier, le fonctionnement de la plateforme. Nous vous répondons par email.</p>
+          <p><strong>bonjour@renofacile.fr</strong></p>
+        </div>
+        <div class="contact-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6Z"/></svg></div>
+          <h3>Question sur l'éligibilité aux aides ?</h3>
+          <p>Notre outil calcule vos droits selon les barèmes officiels, mais il ne se substitue pas à un conseiller humain pour les cas atypiques ou les rénovations d'ampleur. Pour ces situations, nous vous orientons vers le service public dédié — c'est leur métier, c'est indépendant, et c'est entièrement gratuit.</p>
+          <p><strong>France Rénov' — 0 808 800 700</strong> (gratuit)<br>Du lundi au vendredi, 9h–18h</p>
+          <p style="font-size:13px;color:var(--slate-500);margin-top:8px">Pour les rénovations d'ampleur (audit énergétique + au moins 2 gestes d'isolation + saut de 2 classes DPE), un <em>Mon Accompagnateur Rénov' (MAR)</em> agréé par l'Anah est obligatoire. Vous choisissez votre MAR dans l'annuaire officiel sur <a href="https://www.france-renov.gouv.fr" target="_blank" rel="noopener" style="color:var(--teal-700)">france-renov.gouv.fr</a>. Ses honoraires sont partiellement couverts par le <b>forfait d'accompagnement MaPrimeRénov'</b> (1 200 à 2 000 € selon vos revenus).</p>
+        </div>
+        <div class="contact-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <h3>Vous êtes artisan</h3>
+          <p>Pour rejoindre l'annuaire ou échanger sur le programme partenaires. Nous vous répondons par email.</p>
+          <p><strong>pros@renofacile.fr</strong> · <a href="espace-artisan.html">Espace artisan →</a></p>
+        </div>
+        <div class="contact-card">
+          <div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4 2 7-6.5-4.5L5.5 20l2-7L2 9h7z"/></svg></div>
+          <h3>Presse &amp; partenaires</h3>
+          <p>Médias, institutions, collectivités, candidatures.</p>
+          <p><strong>presse@renofacile.fr</strong></p>
+        </div>
+      </div>
+
+      <h2 id="adresse" style="margin-top:48px">Adresse postale</h2>
+      <p>RénoFacile — édité par <strong>Norakt SAS</strong><br>[ADRESSE DU SIÈGE À RENSEIGNER]</p>
+    </article>
+
+    <!-- ========== GUIDES (placeholder réel) ========== -->
+    <article class="doc doc-page" data-page="guide-mpr" data-title="Guide MaPrimeRénov' 2026" data-lede="Tout ce qu'il faut savoir pour comprendre et optimiser MaPrimeRénov'.">
+      <h2 id="quoi">Qu'est-ce que MaPrimeRénov' ?</h2>
+      <p>MaPrimeRénov' est l'aide principale de l'État pour la rénovation énergétique. Versée par l'<strong>Anah</strong>, elle remplace depuis 2020 le crédit d'impôt transition énergétique (CITE) et l'aide « Habiter Mieux Agilité ».</p>
+
+      <h2 id="bareme">Barème 2026</h2>
+      <p>Le montant dépend de deux choses : vos <strong>revenus</strong> (4 catégories : bleu, jaune, violet, rose) et le <strong>type de travaux</strong>. Quelques exemples pour un foyer « jaune » (revenus modestes) en maison individuelle :</p>
+      <ul>
+        <li>Isolation des combles : <strong>jusqu'à 25 €/m²</strong></li>
+        <li>Pompe à chaleur air/eau : <strong>jusqu'à 4 000 €</strong></li>
+        <li>Chaudière biomasse : <strong>jusqu'à 7 500 €</strong></li>
+        <li>Rénovation globale (parcours « accompagné ») : <strong>jusqu'à 30 000 €</strong></li>
+      </ul>
+
+      <h2 id="conditions">Conditions à remplir</h2>
+      <ul>
+        <li>Logement de plus de 15 ans (ou 2 ans pour le remplacement de chaudière fioul) ;</li>
+        <li>Résidence principale, occupée au moins 8 mois/an ;</li>
+        <li>Travaux réalisés par un artisan certifié <strong>RGE</strong> ;</li>
+        <li>Demande déposée <strong>avant</strong> le début des travaux (délai d'instruction : 4 à 8 semaines).</li>
+      </ul>
+
+      <div class="callout"><strong>Astuce RénoFacile.</strong> MaPrimeRénov' est cumulable avec les CEE et l'éco-PTZ. C'est en empilant ces trois dispositifs qu'on atteint les 60–70 % de prise en charge dont parlent souvent les médias.</div>
+
+      <h2 id="parcours">Geste simple ou parcours accompagné ?</h2>
+      <p>Depuis 2024, MaPrimeRénov' distingue deux parcours :</p>
+      <ul>
+        <li><strong>Parcours par geste (mono-geste)</strong> : un seul travail (ex. isolation des combles, PAC, fenêtres). Plus rapide, montants plafonnés par geste. RénoFacile peut déposer ce parcours à votre place via mandat.</li>
+        <li><strong>Parcours accompagné (rénovation d'ampleur)</strong> : audit énergétique + bouquet de travaux pour un saut d'au moins 2 classes DPE. Montants beaucoup plus élevés (jusqu'à 32&nbsp;000&nbsp;€ d'aide MaPrimeRénov' — ménages très modestes, gain d'au moins 3 classes, plafond de dépense 40&nbsp;000&nbsp;€ HT), <strong>accompagnement par un Mon Accompagnateur Rénov' (MAR) obligatoire</strong>. Le MAR dépose le dossier pour vous ; nous vous aidons à choisir un MAR de qualité dans l'annuaire officiel Anah.</li>
+      </ul>
+      <p style="background:var(--teal-50);border:1px solid var(--teal-100);border-radius:8px;padding:14px 16px;font-size:14px;color:var(--teal-900)">
+        <strong>RénoFacile n'est pas un MAR agréé</strong> — nous sommes un outil de calcul, de constitution de dossier et d'accompagnement. Pour le Parcours accompagné, vous devez désigner un MAR indépendant (architecte, bureau d'études thermiques, association agréée). Annuaire officiel : <a href="https://france-renov.gouv.fr/annuaires-professionnels/accompagnant" target="_blank" rel="noopener" style="color:var(--teal-700);font-weight:600">france-renov.gouv.fr/annuaires-professionnels/accompagnant</a>.
+      </p>
+    
+      <h2 id="mar-non-inclus">Qu'est-ce qu'un Mon Accompagnateur Rénov' et quel est son coût&nbsp;?</h2>
+      <p>Le Mon Accompagnateur Rénov' (MAR) est un professionnel agréé par l'Agence nationale de l'habitat dont l'intervention est <strong>obligatoire</strong> pour les rénovations d'ampleur, c'est-à-dire le parcours MaPrimeRénov' accompagné. Il réalise l'audit énergétique réglementaire, valide le scénario de travaux et suit votre chantier.</p>
+      <p><strong>RénoFacile n'est pas agréé MAR</strong> : nous ne pouvons donc pas remplir ce rôle. Notre service, gratuit pour vous, couvre l'accompagnement administratif de votre dossier — constitution, dépôt, suivi, relations avec l'Anah. Le MAR est un métier distinct, réglementé, qui vous facturera séparément entre 500 et 2 000 €, <strong>dont jusqu'à 2 000 € pris en charge par une prime Anah dédiée</strong> selon votre profil de revenus.</p>
+      <p>Pour trouver un Mon Accompagnateur Rénov' près de chez vous : <a href="https://france-renov.gouv.fr/mon-accompagnateur-renov" target="_blank" rel="noopener noreferrer">annuaire officiel France Rénov'</a>.</p>
+      <p>À noter : pour MaPrimeAdapt', l'Assistance à Maîtrise d'Ouvrage est également obligatoire, mais sa rémunération est intégrée au dispositif — aucun coût supplémentaire. Même principe pour l'opérateur agréé de Ma Prime Logement Décent.</p>
+    </article>
+
+    <article class="doc doc-page" data-page="guide-cee" data-title="Guide CEE 2026" data-lede="Les Certificats d'Économies d'Énergie (CEE), aussi appelés « primes énergie », expliqués simplement.">
+      <h2 id="principe">Le principe</h2>
+      <p>Les fournisseurs d'énergie (TotalEnergies, EDF, Engie, etc.) sont obligés par la loi de financer des économies d'énergie chez les particuliers. En échange, ils reçoivent des <strong>certificats</strong>. C'est ce qui finance les fameuses « primes énergie » que vous voyez en publicité.</p>
+
+      <h2 id="cumulable">Cumulable avec MaPrimeRénov' ?</h2>
+      <p><strong>Oui, dans 95 % des cas.</strong> CEE et MaPrimeRénov' visent les mêmes travaux mais sont financés par des canaux différents : impôts vs. fournisseurs d'énergie. Cumuler les deux est non seulement autorisé, c'est l'intérêt même du dispositif.</p>
+
+      <h2 id="vigilance">Pourquoi tant de pubs agressives ?</h2>
+      <p>Parce que les CEE sont attribués au <strong>premier qui dépose le dossier</strong> — d'où la course à la signature des plateformes commerciales. Cela donne lieu à des dérives bien connues : démarchage téléphonique abusif, devis surévalués pour absorber la prime, travaux mal faits.</p>
+      <div class="callout"><strong>Notre position.</strong> RénoFacile négocie pour vous la meilleure offre CEE auprès d'<em>obligés</em> non-démarcheurs. Vous gardez le contrôle, l'artisan reste celui de votre choix.</div>
+
+      <h2 id="bareme">Montants indicatifs (foyer modeste)</h2>
+      <ul>
+        <li>Isolation combles perdus : <strong>11 €/m²</strong> environ</li>
+        <li>Isolation rampants : <strong>13 €/m²</strong></li>
+        <li>Pompe à chaleur air/eau : <strong>4 500 €</strong></li>
+        <li>Chaudière biomasse performante : <strong>4 500 €</strong></li>
+      </ul>
+    </article>
+
+    <article class="doc doc-page" data-page="guide-dpe" data-title="Calendrier DPE F & G" data-lede="Quand votre logement devient-il interdit à la location ? Tout le calendrier officiel.">
+      <h2 id="calendrier">Le calendrier officiel</h2>
+      <p>La loi Climat & Résilience (2021) a programmé un retrait progressif des « passoires thermiques » du marché locatif :</p>
+      <ul>
+        <li><strong>Depuis le 1ᵉʳ janvier 2025</strong> : interdiction de louer un logement classé <strong>G</strong>.</li>
+        <li><strong>1ᵉʳ janvier 2028</strong> : interdiction de louer un logement classé <strong>F</strong>.</li>
+        <li><strong>1ᵉʳ janvier 2034</strong> : interdiction de louer un logement classé <strong>E</strong>.</li>
+      </ul>
+      <p>L'« interdiction » signifie que le logement ne peut plus faire l'objet d'un nouveau bail ni d'un renouvellement tant qu'il reste dans la classe concernée.</p>
+
+      <h2 id="exceptions">Exceptions et nuances</h2>
+      <ul>
+        <li>Les <strong>baux en cours</strong> ne sont pas rompus automatiquement.</li>
+        <li>Les <strong>contraintes architecturales</strong> ou patrimoniales peuvent faire l'objet d'une dérogation (cas étudié par la commission départementale).</li>
+        <li>Les <strong>copropriétés</strong> bénéficient d'un délai supplémentaire si la rénovation dépend d'une décision collective bloquée.</li>
+      </ul>
+
+      <div class="callout"><strong>Bailleurs.</strong> Si votre logement est en F ou G, le passage à E est en général atteignable avec deux gestes : isolation + changement de chauffage. Coût moyen : 18 000 €, dont 11 000 € d'aides pour un propriétaire bailleur.</div>
+    </article>
+
+    <article class="doc doc-page" data-page="glossaire" data-title="Glossaire de la rénovation" data-lede="Le vocabulaire de la rénovation énergétique, en clair.">
+      <h2 id="ademe">ADEME</h2><p>Agence de la transition écologique. Établissement public qui produit les barèmes officiels et les coefficients utilisés pour calculer les performances énergétiques.</p>
+      <h2 id="anah">Anah</h2><p>Agence Nationale de l'Habitat. Verseur officiel de MaPrimeRénov'.</p>
+      <h2 id="cee">CEE</h2><p>Certificat d'Économies d'Énergie. Voir <a href="#" data-goto="guide-cee">le guide CEE</a>.</p>
+      <h2 id="dpe">DPE</h2><p>Diagnostic de Performance Énergétique. Note de A à G attribuée à un logement, valable 10 ans, obligatoire pour vendre ou louer.</p>
+      <h2 id="ept">Éco-PTZ</h2><p>Éco-prêt à taux zéro. Permet d'emprunter jusqu'à 50 000 € sans intérêts pour financer le reste à charge des travaux.</p>
+      <h2 id="mar">Mon Accompagnateur Rénov' (MAR)</h2><p>Acteur agréé par l'Anah chargé d'accompagner techniquement et administrativement les ménages dans le « parcours accompagné » de MaPrimeRénov'. Obligatoire pour toute rénovation d'ampleur (audit + ≥ 2 gestes d'isolation + saut ≥ 2 classes DPE). Choisi librement par le ménage dans l'<a href="https://france-renov.gouv.fr/annuaires-professionnels/accompagnant" target="_blank" rel="noopener" style="color:var(--teal-700)">annuaire officiel</a>. Ses honoraires (1 500 à 3 000 €) sont partiellement couverts par le forfait d'accompagnement MPR (1 200 à 2 000 € selon revenus). <em>RénoFacile n'est pas un MAR agréé</em> ; nous vous aidons à en choisir un.</p>
+      <h2 id="rge">RGE</h2><p>Reconnu Garant de l'Environnement. Mention obligatoire de l'artisan pour que vos travaux ouvrent droit aux aides.</p>
+    </article>
+
+    <article class="doc doc-page" data-page="presse" data-title="Espace presse" data-lede="Pour toute demande presse, écrivez-nous.">
+      <h2 id="contact">Contact presse</h2>
+      <p>Pour toute demande d'information, d'interview ou de visuels, écrivez à <strong>contact@renofacile.fr</strong> avec la mention <em>« presse »</em> en objet. Nous vous répondons par email.</p>
+
+      <h2 id="kit">Documents disponibles sur demande</h2>
+      <ul>
+        <li>Logo et identité graphique (SVG, PNG)</li>
+        <li>Présentation produit (PDF)</li>
+        <li>Synthèse de notre méthode de calcul et de nos sources</li>
+      </ul>
+
+      <h2 id="modele">Notre modèle</h2>
+      <p>RénoFacile est un service d'accompagnement à la rénovation énergétique fondé sur un principe d'indépendance : <strong>pas de commission sur les aides obtenues, pas de revente de leads, pas de partenariat rémunéré avec les énergéticiens.</strong> Le service est gratuit pour vous — notre seul revenu est la rémunération versée par le professionnel agréé qui reprend votre dossier.</p>
+      <p>Nous publions chaque année un rapport de transparence sur la composition de notre chiffre d'affaires et le nombre de dossiers traités.</p>
+    </article>
+
+  </div>
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <div class="brand">
+          <span class="brand-mark">RF</span><span>RénoFacile</span>
+        </div>
+        <p style="font-size:14px;max-width:34ch;margin:0">L'accompagnement indépendant à la rénovation énergétique.</p>
+      </div>
+      <div>
+        <h5>Plateforme</h5>
+        <ul>
+          <li><a href="choix-parcours.html">Diagnostic</a></li>
+          <li><a href="index.html#aides">Aides &amp; subventions</a></li>
+          <li><a href="annuaire-artisans.html">Annuaire artisans</a></li>
+          </ul>
+      </div>
+      <div>
+        <h5>Pour les pros</h5>
+        <ul>
+          <li><a href="espace-artisan.html">Programme artisans</a></li>
+          <li><a href="espace-artisan.html#pricing">Tarifs Pro &amp; Premium</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Ressources</h5>
+        <ul>
+          <li><a href="page-info.html?p=guide-mpr">Guide MaPrimeRénov'</a></li>
+          <li><a href="page-info.html?p=guide-cee">Guide CEE</a></li>
+          <li><a href="page-info.html?p=guide-dpe">Calendrier DPE</a></li>
+          <li><a href="page-info.html?p=glossaire">Glossaire</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Société</h5>
+        <ul>
+          <li><a href="page-info.html?p=about">À propos</a></li>
+          <li><a href="page-info.html?p=independance">Notre indépendance</a></li>
+          <li><a href="page-info.html?p=presse">Presse</a></li>
+          <li><a href="page-info.html?p=contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© 2026 RénoFacile · Site édité par Norakt</div>
+      <div class="links">
+        <a href="page-info.html?p=mentions">Mentions légales</a>
+        <a href="page-info.html?p=cgu">CGU</a>
+        <a href="page-info.html?p=privacy">Politique de confidentialité</a>
+        <a href="page-info.html?p=cookies">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Tab definitions: order = display order
+  const PAGES = [
+    {id:'mentions', label:'Mentions légales', group:'legal'},
+    {id:'cgu', label:'CGU', group:'legal'},
+    {id:'privacy', label:'Confidentialité', group:'legal'},
+    {id:'cookies', label:'Cookies', group:'legal'},
+    {id:'about', label:'À propos', group:'about'},
+    {id:'independance', label:'Indépendance', group:'about'},
+    {id:'contact', label:'Contact', group:'about'},
+    {id:'presse', label:'Presse', group:'about'},
+    {id:'guide-mpr', label:"Guide MaPrimeRénov'", group:'guide'},
+    {id:'guide-cee', label:'Guide CEE', group:'guide'},
+    {id:'guide-dpe', label:'Calendrier DPE', group:'guide'},
+    {id:'glossaire', label:'Glossaire', group:'guide'},
+  ];
+
+  const tabsEl = document.getElementById('tabs');
+  PAGES.forEach(p => {
+    const b = document.createElement('button');
+    b.textContent = p.label; b.dataset.target = p.id;
+    b.addEventListener('click', () => activate(p.id, true));
+    tabsEl.appendChild(b);
+  });
+
+  function buildToc(pageEl){
+    const list = document.getElementById('toc-list');
+    list.innerHTML = '';
+    pageEl.querySelectorAll('h2[id]').forEach(h => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#'+h.id; a.textContent = h.textContent;
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById(h.id).scrollIntoView({behavior:'smooth', block:'start'});
+        history.replaceState(null,'','#'+h.id);
+      });
+      li.appendChild(a); list.appendChild(li);
+    });
+  }
+
+  function activate(id, pushUrl){
+    const target = document.querySelector(`.doc-page[data-page="${id}"]`);
+    if (!target) return;
+    document.querySelectorAll('.doc-page').forEach(el => el.classList.remove('active'));
+    target.classList.add('active');
+    document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.target === id));
+    document.getElementById('page-title').textContent = target.dataset.title;
+    document.getElementById('page-lede').textContent = target.dataset.lede;
+    document.getElementById('crumb').textContent = target.dataset.title;
+    document.title = `RénoFacile — ${target.dataset.title}`;
+    buildToc(target);
+    if (pushUrl) {
+      const url = new URL(location.href);
+      url.searchParams.set('p', id);
+      url.hash = '';
+      history.replaceState(null,'',url);
+    }
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // Internal cross-links (data-goto inside docs)
+  document.body.addEventListener('click', e => {
+    const a = e.target.closest('a[data-goto]');
+    if (a) { e.preventDefault(); activate(a.dataset.goto, true); }
+  });
+
+  // Initial page from query string
+  const initial = new URLSearchParams(location.search).get('p') || 'mentions';
+  activate(initial, false);
+</script>
+
+</body>
+</html>

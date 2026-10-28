@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/styles.css">
+  <script src="_ds/junglerenov-design-system-fc00822c-9a4f-4aa5-96e5-e2f9567f58f8/_ds_bundle.js"></script>
+  <script src="lib/jr-logo.js"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon-couleur-32.svg">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon-couleur-180.svg">
+</helmet>
+<div ref="{{ rootRef }}" data-surface="dark" class="jr-on-dark" style="background: var(--jr-ink, #123A2E);">
+<x-import component-from-global-scope="JungleRenovDesignSystem_fc0082.SiteHeader" links="{{ links }}" cta="{{ cta }}" on-navigate="{{ navigate }}" dc-props="{{ hdrProps }}" hint-size="100%,72px"></x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1280px&quot;,&quot;height&quot;:&quot;80px&quot;},&quot;mode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;public&quot;,&quot;tunnel&quot;,&quot;espace&quot;,&quot;admin&quot;],&quot;default&quot;:&quot;public&quot;,&quot;tsType&quot;:&quot;'public'|'tunnel'|'espace'|'admin'&quot;},&quot;current&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { ds: !!window.JungleRenovDesignSystem_fc0082, user: null, w: window.innerWidth };
+  rootRef = React.createRef();
+  componentDidMount() {
+    this.onW = () => this.setState({ w: window.innerWidth }); window.addEventListener('resize', this.onW);
+    this.readUser();
+    const lg = () => { if (!window.jrColorLogo || !this.rootRef.current) return setTimeout(lg, 50); window.jrColorLogo(this.rootRef.current, { selector: 'header a[aria-label] > span', tone: 'inverse', symbol: () => (this.rootRef.current && this.rootRef.current.offsetWidth < 960 ? 28 : 32), height: (s) => s }); };
+    lg();
+    const bg = () => {
+      const r = this.rootRef.current; if (!r) return setTimeout(bg, 60);
+      const IV = '#F4F1E8', PO = '#8FD14F', LINE = '#34554A';
+      const fix = () => {
+        r.querySelectorAll('header nav a').forEach(a => {
+          a.style.color = a.__jrHover ? PO : IV; a.style.fontSize = '17px'; a.style.whiteSpace = 'nowrap'; a.style.flexShrink = '0';
+          const row = a.closest('nav').style.flexDirection !== 'column'; if (row) a.style.padding = r.offsetWidth < 960 ? '0 4px' : r.offsetWidth < 1040 ? '0 8px' : '0 12px';
+          if (a.closest('nav').style.flexDirection === 'column') a.style.borderTopColor = LINE;
+          if (!a.__jrH) { a.__jrH = true; a.addEventListener('mouseenter', () => { a.__jrHover = true; a.style.color = PO; }); a.addEventListener('mouseleave', () => { a.__jrHover = false; a.style.color = IV; }); }
+        });
+        const b = r.querySelector('header button[aria-expanded]'); if (!b) return;
+        if (!b.__jrSO) { b.__jrSO = new MutationObserver(() => { if (b.style.background !== 'transparent') b.style.background = 'transparent'; if (b.style.color !== 'rgb(244, 241, 232)') b.style.color = IV; }); b.__jrSO.observe(b, { attributes: true, attributeFilter: ['style'] }); }
+        const open = b.getAttribute('aria-expanded') === 'true', key = open ? 'x' : 'b';
+        if (b.__jrBurger === key && b.querySelector('[data-jr-burger]') && ![...b.children].some(c => !c.hasAttribute('data-jr-burger') && c.style.display !== 'none')) return; b.__jrBurger = key;
+        b.setAttribute('aria-label', open ? 'Fermer le menu' : 'Menu');
+        Object.assign(b.style, { width: '48px', height: '48px', minHeight: '48px', padding: '0', background: 'transparent', color: IV, border: '0', justifyContent: 'center' });
+        const d = open ? 'M6 6l12 12M18 6L6 18' : 'M4 7h16M4 12h16M4 17h16';
+        [...b.children].forEach(c => { if (!c.hasAttribute('data-jr-burger')) c.style.display = 'none'; });
+        let s = b.querySelector('[data-jr-burger]');
+        if (!s) { s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('data-jr-burger', ''); s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('width', '28'); s.setAttribute('height', '28'); s.setAttribute('aria-hidden', 'true'); s.innerHTML = '<path fill="none" stroke="#F4F1E8" stroke-width="1.5" stroke-linecap="round"/>'; b.appendChild(s); }
+        s.firstChild.setAttribute('d', d);
+      };
+      fix(); new MutationObserver(fix).observe(r, { childList: true, subtree: true, attributes: true, attributeFilter: ['aria-expanded'] });
+    };
+    bg();
+    if (!this.state.ds) this.t = setInterval(() => { if (window.JungleRenovDesignSystem_fc0082) { clearInterval(this.t); this.setState({ ds: true }); } }, 50);
+  }
+  componentWillUnmount() { clearInterval(this.t); window.removeEventListener('resize', this.onW); }
+  readUser() {
+    try {
+      const s = JSON.parse(localStorage.getItem('junglerenov.session') || 'null');
+      if (!s) return this.setState({ user: null });
+      let first = s.firstname || '';
+      if (!first) { const p = JSON.parse(localStorage.getItem('junglerenov.profile') || '{}'); first = p.firstname || p.prenom || ''; }
+      this.setState({ user: { role: s.role, first } });
+    } catch (_) {}
+  }
+  logout = () => {
+    try { if (window.RFStore && RFStore.logout) RFStore.logout(); else localStorage.removeItem('junglerenov.session'); } catch (_) {}
+    location.href = 'index.dc.html';
+  };
+  renderVals() {
+    const mode = this.props.mode || 'public';
+    const cur = this.props.current || '';
+    const DS = window.JungleRenovDesignSystem_fc0082;
+    const h = React.createElement;
+    const u = this.state.user;
+    const home = u ? (u.role === 'super_admin' ? 'super-admin.dc.html' : u.role === 'admin' ? 'admin.dc.html' : 'dashboard.dc.html') : 'login.dc.html';
+    let links, cta = null;
+    if (mode === 'espace') {
+      links = [
+        { id: 'dashboard', label: 'Tableau de bord', href: 'dashboard.dc.html' },
+        { id: 'mes-aides', label: 'Mes aides', href: 'mes-aides.dc.html' },
+        { id: 'mes-documents', label: 'Mes documents', href: 'mes-documents.dc.html' },
+        { id: 'annuaire-artisans', label: 'Artisans', href: 'annuaire-artisans.dc.html' },
+        { id: 'mon-profil', label: 'Mon profil', href: 'mon-profil.dc.html' },
+      ];
+      /* Entre 860 et 1179 px, la barre latérale porte déjà ces liens : l'en-tête n'en garde aucun, pour ne jamais déborder. */
+      if (this.state.w >= 860 && this.state.w < 1180) links = [];
+      if (DS) cta = h(DS.Button, { variant: 'on-dark-secondary', onClick: this.logout, style: { whiteSpace: 'nowrap', minHeight: 48 } }, 'Se déconnecter');
+    } else if (mode === 'tunnel') {
+      links = [{ id: 'accueil-retour', label: this.props.backLabel || 'Retour à l’accueil', href: this.props.backHref || 'index.dc.html' }];
+    } else if (mode === 'admin') {
+      links = [];
+      if (DS) cta = h(DS.Button, { variant: 'on-dark-secondary', onClick: this.logout, style: { whiteSpace: 'nowrap', minHeight: 48 } }, 'Se déconnecter');
+    } else {
+      links = [
+        { id: 'fonctionnement', label: 'Fonctionnement', href: 'index.dc.html#fonctionnement' },
+        { id: 'glossaire-aides', label: 'Aides', href: 'glossaire-aides.dc.html' },
+        { id: 'faq', label: 'FAQ', href: 'index.dc.html#faq' },
+        { id: 'compte', label: u ? 'Mon espace' : 'Se connecter', href: home },
+      ];
+      if (DS) cta = u
+        ? h(DS.Button, { variant: 'on-dark-secondary', onClick: this.logout, style: { whiteSpace: 'nowrap', minHeight: 48 } }, 'Se déconnecter')
+        : h(DS.Button, { variant: 'on-dark', href: 'choix-parcours.dc.html', style: { whiteSpace: 'nowrap', minHeight: 48 } }, 'Estimer mes aides');
+    }
+    links = links.map(l => ({ ...l, current: l.id === cur }));
+    return {
+      rootRef: this.rootRef, links, cta, hdrProps: { style: { background: 'var(--jr-ink, #123A2E)', borderBottom: 0 } },
+      navigate: (x) => {
+        if (x === 'accueil') { location.href = 'index.dc.html'; return; }
+        const l = links.find(k => k.id === x);
+        location.href = l ? l.href : x;
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

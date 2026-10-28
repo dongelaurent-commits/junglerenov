@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="Connectez-vous à votre espace RénoFacile pour retrouver votre diagnostic, vos aides et vos documents." />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0F766E" />
+<link rel="canonical" href="https://renofacile.fr/login" />
+<!-- Open Graph (Facebook, LinkedIn, Slack, Discord) -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="RénoFacile" />
+<meta property="og:title" content="Connexion · RénoFacile" />
+<meta property="og:description" content="Accédez à votre espace personnel pour suivre votre projet de rénovation." />
+<meta property="og:url" content="https://renofacile.fr/login" />
+<meta property="og:image" content="https://renofacile.fr/og-image.png" />
+<meta property="og:locale" content="fr_FR" />
+<!-- Twitter card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Connexion · RénoFacile" />
+<meta name="twitter:description" content="Accédez à votre espace personnel pour suivre votre projet de rénovation." />
+<meta name="twitter:image" content="https://renofacile.fr/og-image.png" />
+<title>Connexion — RénoFacile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --teal-50:#F0FDFA;--teal-100:#CCFBF1;--teal-200:#99F6E4;--teal-400:#2DD4BF;
+    --teal-600:#0D9488;--teal-700:#0F766E;--teal-800:#115E59;--teal-900:#134E4A;
+    --amber-500:#F59E0B;
+    --slate-50:#F8FAFC;--slate-100:#F1F5F9;--slate-200:#E2E8F0;--slate-300:#CBD5E1;
+    --slate-400:#94A3B8;--slate-500:#64748B;--slate-600:#475569;--slate-700:#334155;
+    --slate-800:#1E293B;--slate-900:#0F172A;
+    --danger-50:#FEF2F2;--danger-600:#DC2626;
+    --bg:#F8FAFC;--surface:#FFFFFF;--border:#E2E8F0;
+    --font-sans:"Public Sans",system-ui,-apple-system,sans-serif;
+    --font-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  /* Le projet pilote la visibilité par l'attribut `hidden` : cette règle
+     l'emporte sur les classes qui déclarent leur propre `display`. */
+  [hidden]{display:none!important}html,body{margin:0;padding:0}
+  body{font-family:var(--font-sans);color:var(--slate-800);background:var(--bg);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;-webkit-font-smoothing:antialiased}
+  a{color:var(--teal-700);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  .card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:40px;width:100%;max-width:420px;box-shadow:0 1px 3px rgba(15,23,42,.06)}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+  .brand-mark{width:38px;height:38px;border-radius:10px;background:var(--teal-700);display:grid;place-items:center}
+  .brand-name{font-weight:700;font-size:20px;letter-spacing:-.01em}
+  .brand-name .accent{color:var(--teal-700)}
+
+  h1{margin:0 0 6px;font-size:22px;font-weight:700;letter-spacing:-.01em}
+  .lead{margin:0 0 24px;color:var(--slate-600);font-size:14.5px}
+
+  label{display:block;font-size:13px;font-weight:500;color:var(--slate-700);margin-bottom:6px}
+  input{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:14.5px;color:var(--slate-900);background:#fff;transition:border-color 120ms ease,box-shadow 120ms ease}
+  input:focus{outline:none;border-color:var(--teal-700);box-shadow:0 0 0 3px var(--teal-100)}
+  .field{margin-bottom:16px}
+  .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;font-size:13px}
+  .row label{display:inline-flex;align-items:center;gap:8px;margin:0;cursor:pointer;color:var(--slate-600)}
+  .row input[type="checkbox"]{width:auto;margin:0}
+  .row a{font-size:13px}
+
+  .btn{display:block;width:100%;padding:13px 16px;border:0;border-radius:8px;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;transition:background 120ms ease}
+  .btn-primary{background:var(--teal-700);color:#fff}
+  .btn-primary:hover{background:var(--teal-800)}
+  .btn-primary:disabled{background:var(--slate-300);cursor:not-allowed}
+
+  .alert{padding:12px 14px;border-radius:8px;font-size:13.5px;margin-bottom:16px;display:none}
+  .alert.error{background:var(--danger-50);color:var(--danger-600);border:1px solid #FCA5A5}
+  .alert.success{background:var(--teal-50);color:var(--teal-800);border:1px solid var(--teal-200)}
+  .alert.info{background:#EFF6FF;color:#1E40AF;border:1px solid #BFDBFE}
+
+  .divider{height:1px;background:var(--border);margin:24px 0;position:relative}
+  .divider span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;padding:0 12px;font-size:12px;color:var(--slate-400)}
+
+  .help{margin-top:18px;text-align:center;font-size:13px;color:var(--slate-500)}
+
+  .back-home{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--slate-500);margin-top:24px;text-align:center;justify-content:center;width:100%}
+
+/* Respect de « réduire les animations ». */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+/* Focus visible — les règles `outline:none` + halo `teal-100` donnaient
+   1,13:1 pour un seuil de 3:1. Contour rétabli, halo conservé. */
+:where(input,select,textarea,button,a,[tabindex]):focus-visible{
+  outline:2px solid var(--teal-700)!important;outline-offset:2px!important;
+}
+.suggest > *:focus-visible,.suggest .item:focus-visible,.suggest li:focus-visible{
+  outline:2px solid var(--teal-700)!important;outline-offset:-2px!important;
+}
+</style>
+  <script src="_analytics.js" defer></script>
+</head>
+<body>
+
+<div class="card" role="main">
+  <a class="brand" href="index.html" style="text-decoration:none;color:inherit">
+    <span class="brand-mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg></span>
+    <span class="brand-name">Réno<span class="accent">Facile</span></span>
+  </a>
+
+  <h1>Connexion à votre espace</h1>
+  <p class="lead">Retrouvez votre dossier, vos aides et vos documents.</p>
+
+  <div id="alert" class="alert" role="alert"></div>
+
+  <form id="loginForm" novalidate>
+    <div class="field">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" autocomplete="email" required placeholder="vous@exemple.com" />
+    </div>
+    <div class="field">
+      <label for="password">Mot de passe</label>
+      <input type="password" id="password" name="password" autocomplete="current-password" required placeholder="••••••••" />
+    </div>
+    <div class="row">
+      <label><input type="checkbox" id="remember" checked /> Se souvenir de moi</label>
+      <a href="#" onclick="alert('Réinitialisation à venir. Pour le moment, contactez : contact@renofacile.fr');return false;">Mot de passe oublié ?</a>
+    </div>
+    <button type="submit" class="btn btn-primary" id="submit">Se connecter</button>
+  </form>
+
+  <div class="divider"><span>ou</span></div>
+
+  <a href="onboarding-diagnostic.html" class="btn btn-primary" style="background:#fff;color:var(--teal-700);border:1px solid var(--teal-700);text-align:center;text-decoration:none">Pas encore de compte ? Estimer mes aides</a>
+
+  <a class="back-home" href="index.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+    Retour à l'accueil du site
+  </a>
+</div>
+
+<script src="_demo_mode.js"></script>
+<script src="_storage.js"></script>
+<script>
+  const form = document.getElementById('loginForm');
+  const alertBox = document.getElementById('alert');
+  const submitBtn = document.getElementById('submit');
+
+  function showAlert(type, msg){
+    alertBox.className = 'alert ' + type;
+    alertBox.textContent = msg;
+    alertBox.style.display = 'block';
+  }
+  function hideAlert(){
+    alertBox.style.display = 'none';
+  }
+
+  // Si déjà connecté, propose de continuer OU de se déconnecter
+  // (utile pour basculer entre compte client et admin sans tourner en rond)
+  const existing = RFStore.getCurrentUser();
+  if (existing) {
+    showAlert('info',
+      'Vous êtes déjà connecté avec ' + existing.email +
+      ' (' + (existing.role === 'super_admin' ? 'super admin'
+            : existing.role === 'admin' ? 'admin' : 'client') + ').'
+    );
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;gap:8px;margin-top:10px';
+    wrap.innerHTML =
+      '<button type="button" id="btn-continue" class="btn-primary" style="flex:1;padding:10px 14px;border:0;border-radius:8px;background:#0F766E;color:#fff;cursor:pointer;font-weight:600">Continuer comme ' + existing.email.split('@')[0] + '</button>' +
+      '<button type="button" id="btn-switch"   class="btn-secondary" style="flex:1;padding:10px 14px;border:1px solid #0F766E;border-radius:8px;background:#fff;color:#0F766E;cursor:pointer;font-weight:600">Changer de compte</button>';
+    alertBox.appendChild(wrap);
+    document.getElementById('btn-continue').addEventListener('click', () => redirectByRole(existing.role));
+    document.getElementById('btn-switch').addEventListener('click', () => {
+      RFStore.logout();
+      location.reload();
+    });
+    // Masque le formulaire tant que l'utilisateur n'a pas tranché
+    form.style.display = 'none';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideAlert();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Connexion en cours…';
+    try {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const { user, role } = await RFStore.login(email, password);
+      showAlert('success', 'Connexion réussie. Redirection…');
+      setTimeout(() => redirectByRole(role), 400);
+    } catch (err) {
+      showAlert('error', err.message || 'Connexion impossible.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Se connecter';
+    }
+  });
+
+  function redirectByRole(role){
+    if (role === 'super_admin') { window.location.href = 'super-admin.html'; return; }
+    if (role === 'admin')       { window.location.href = 'admin.html'; return; }
+    // Client : si on a un ?return=<url>, on y retourne (cas où le guard a renvoyé ici)
+    const params = new URLSearchParams(window.location.search);
+    const ret = params.get('return');
+    if (ret){
+      // Sécurité : on accepte uniquement des paths internes (pas d'URL externe)
+      try {
+        const decoded = decodeURIComponent(ret);
+        if (decoded.startsWith('/') || /^[a-z0-9_-]+\.html(\?|#|$)/i.test(decoded)){
+          window.location.href = decoded;
+          return;
+        }
+      } catch {}
+    }
+    window.location.href = 'dashboard.html';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="Trois parcours d'aides à la rénovation : énergétique, adaptation à la perte d'autonomie, logement dégradé. Choisissez le vôtre." />
+<title>Choisir mon parcours — RénoFacile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --teal-50:#F0FDFA;--teal-100:#CCFBF1;--teal-600:#0D9488;--teal-700:#0F766E;
+    --teal-800:#115E59;--teal-900:#134E4A;
+    --slate-50:#F8FAFC;--slate-100:#F1F5F9;--slate-200:#E2E8F0;--slate-300:#CBD5E1;
+    --slate-400:#94A3B8;--slate-500:#64748B;--slate-600:#475569;--slate-700:#334155;
+    --slate-800:#1E293B;--slate-900:#0F172A;
+    --bg:#F8FAFC;--surface:#FFFFFF;--border:#E2E8F0;
+    --font-sans:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --font-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  /* Le projet pilote la visibilité par l'attribut `hidden` : cette règle
+     l'emporte sur les classes qui déclarent leur propre `display`. */
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{font-family:var(--font-sans);color:var(--slate-800);background:var(--bg);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:var(--teal-700);text-decoration:none}
+  a:hover{color:var(--teal-800);text-decoration:underline}
+  header.simple{height:64px;border-bottom:1px solid var(--border);background:#fff;display:flex;align-items:center;position:sticky;top:0;z-index:10}
+  header.simple .row{max-width:1200px;width:100%;margin:0 auto;padding:0 32px;display:flex;justify-content:space-between;align-items:center}
+  .brand{display:flex;align-items:center;gap:12px;color:inherit}
+  .brand:hover{text-decoration:none}
+  .brand-mark{width:30px;height:30px;border-radius:8px;background:var(--teal-700);display:grid;place-items:center}
+  .brand-name{font-weight:700;font-size:17px;letter-spacing:-.01em}
+  .brand-name .accent{color:var(--teal-700)}
+  .help{font-size:13px;color:var(--slate-500)}
+  .help a{color:var(--slate-500);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+  .help a:hover{color:var(--slate-700);text-decoration:none}
+  main{max-width:1120px;margin:0 auto;padding:64px 32px 88px}
+  .head{max-width:680px;margin:0 0 44px}
+  .eyebrow{font:600 12px var(--font-mono);color:var(--teal-700);letter-spacing:.08em;text-transform:uppercase}
+  h1{font-size:38px;font-weight:700;letter-spacing:-.025em;line-height:1.15;margin:12px 0 14px;text-wrap:balance}
+  .sub{color:var(--slate-600);font-size:17px;margin:0;text-wrap:pretty}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  @media (max-width:960px){.grid{grid-template-columns:1fr}h1{font-size:30px}main{padding:44px 24px 64px}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:30px 26px;display:flex;flex-direction:column;gap:12px;color:inherit;transition:border-color .15s ease,transform .12s ease,box-shadow .15s ease}
+  a.card:hover{border-color:var(--teal-700);transform:translateY(-2px);box-shadow:0 8px 22px rgba(15,118,110,.09);text-decoration:none;color:inherit}
+  .card h2{margin:0;font-size:20px;font-weight:600;letter-spacing:-.01em}
+  .card p{margin:0;color:var(--slate-600);font-size:14.5px;line-height:1.6}
+  .card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+  .card li{position:relative;padding-left:17px;font-size:13.5px;color:var(--slate-600);line-height:1.45}
+  .card li::before{content:"";position:absolute;left:2px;top:7px;width:6px;height:6px;border-radius:50%;background:var(--teal-700)}
+  .card .tag{align-self:flex-start;margin-top:auto;padding:6px 12px;border-radius:7px;background:var(--teal-50);color:var(--teal-800);font:600 12px var(--font-mono)}
+  .go{display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:14.5px;color:var(--teal-700)}
+  .card .go{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;margin-top:20px!important;padding:12px 20px!important;background:#0F766E!important;color:#fff!important;border-radius:10px!important;font-size:14.5px!important;font-weight:600!important;text-decoration:none!important;transition:background 150ms ease,transform 100ms ease,box-shadow 150ms ease!important;box-shadow:0 2px 6px rgba(15,118,110,.15)!important;width:100%!important;box-sizing:border-box!important}
+  .card:hover .go,.card .go:hover{background:#115E59!important;transform:translateY(-1px)!important;box-shadow:0 4px 12px rgba(15,118,110,.25)!important;color:#fff!important;text-decoration:none!important}
+  .card .go svg{transition:transform 150ms ease!important;color:#fff!important;stroke:#fff!important}
+  .card:hover .go svg,.card .go:hover svg{transform:translateX(3px)!important}
+  .btn-glossaire-secondary,.btn-glossaire-secondary:link,.btn-glossaire-secondary:visited,.btn-glossaire-secondary:hover,.btn-glossaire-secondary:active{display:inline-flex!important;align-items:center!important;gap:10px!important;padding:12px 24px!important;background:#fff!important;color:#0F766E!important;border:1.5px solid #0F766E!important;border-radius:10px!important;font-size:14.5px!important;font-weight:600!important;text-decoration:none!important;transition:background 150ms ease,color 150ms ease,transform 100ms ease!important;cursor:pointer!important}
+  .btn-glossaire-secondary:hover{background:#F0FDFA!important;color:#115E59!important;border-color:#115E59!important;transform:translateY(-1px)!important;text-decoration:none!important}
+  .btn-glossaire-secondary svg{color:currentColor!important;stroke:currentColor!important}
+  .foot{margin-top:40px;padding:18px 20px;background:#fff;border:1px solid var(--border);border-radius:12px;font-size:13.5px;color:var(--slate-600);line-height:1.6}
+  .foot b{color:var(--slate-800)}
+
+/* Respect de « réduire les animations ». */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+/* Focus visible — les règles `outline:none` + halo `teal-100` donnaient
+   1,13:1 pour un seuil de 3:1. Contour rétabli, halo conservé. */
+:where(input,select,textarea,button,a,[tabindex]):focus-visible{
+  outline:2px solid var(--teal-700)!important;outline-offset:2px!important;
+}
+.suggest > *:focus-visible,.suggest .item:focus-visible,.suggest li:focus-visible{
+  outline:2px solid var(--teal-700)!important;outline-offset:-2px!important;
+}
+</style>
+<script src="_demo_mode.js"></script>
+<script>
+/* Point de passage propre : à chaque arrivée sur cette page en développement local,
+   les dossiers de test précédents sont purgés — quel que soit le chemin emprunté
+   ensuite vers un tunnel, on repart d'un tableau de bord vide.
+   `?keep=1` court-circuite la purge pour tester les scénarios multi-dossiers.
+   En production, ce bloc ne s'exécute pas : renofacile.dossiers représente de
+   vrais dossiers et survit toujours. */
+(function resetDossiersInDemo(){
+  try {
+    if (!window.rfIsDemoStaging || !window.rfIsDemoStaging()) return;
+    if (new URLSearchParams(location.search).get('keep') === '1') return;
+    ['renofacile.dossiers','renofacile.pendingDossier','renofacile.autonomie.result',
+     'renofacile.indigne.result','renofacile.profile','renofacile.currentStep',
+     'renofacile.ownerType','renofacile.bailleur','renofacile.bailleurCase',
+     'renofacile.bailleurRental','renofacile.bailleurLegal',
+     'renofacile.hasCoproCollectifs','renofacile.copro','renofacile.returnTo'
+    ].forEach(function(k){ try { localStorage.removeItem(k); } catch(_) {} });
+  } catch (_) {}
+})();
+</script>
+<script src="_analytics.js" defer></script>
+</head>
+<body>
+<header class="simple">
+  <div class="row">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg></span>
+      <span class="brand-name">Réno<span class="accent">Facile</span></span>
+    </a>
+    <div class="help"><a href="index.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Retour à l'accueil</a></div>
+  </div>
+</header>
+
+<main data-screen-label="00 Choix du parcours">
+  <div class="head">
+    <div class="eyebrow">Trois parcours</div>
+    <h1>Quel est votre projet&nbsp;?</h1>
+    <p class="sub">RénoFacile couvre les trois grands types de projets financés par l'Anah. Choisissez celui qui correspond à votre situation — le diagnostic est gratuit et sans création de compte.</p>
+  </div>
+
+  <div class="grid">
+    <a class="card" href="onboarding-diagnostic.html?fresh=1" data-type="energetique">
+      <h2>Rénovation énergétique</h2>
+      <p>Réduire votre facture et gagner en confort thermique.</p>
+      <ul>
+        <li>Isolation, chauffage, ventilation, solaire</li>
+        <li>MaPrimeRénov' par geste ou rénovation d'ampleur</li>
+        <li>Aides régionales Grand Est incluses</li>
+      </ul>
+      <span class="tag">MaPrimeRénov' · CEE · éco-PTZ</span>
+      <span class="go">Estimer mes aides <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+    </a>
+
+    <a class="card" href="parcours-autonomie.html?fresh=1" data-type="autonomie">
+      <h2>Adaptation à la perte d'autonomie</h2>
+      <p>Rester chez soi en sécurité, à tout âge.</p>
+      <ul>
+        <li>Douche de plain-pied, monte-escalier, accessibilité</li>
+        <li>Jusqu'à 70 % des travaux financés</li>
+        <li>Dès 70 ans, ou 60 ans avec GIR, ou en situation de handicap</li>
+      </ul>
+      <span class="tag">MaPrimeAdapt' · APA · PCH</span>
+      <span class="go">Estimer mon aide <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+    </a>
+
+    <a class="card" href="parcours-indigne.html?fresh=1" data-type="indigne">
+      <h2>Logement dégradé ou insalubre</h2>
+      <p>Remettre en état un logement en mauvais état.</p>
+      <ul>
+        <li>Rénovation lourde, sécurité, salubrité</li>
+        <li>Jusqu'à 80 % des travaux financés</li>
+        <li>Occupants, bailleurs et copropriétés sous arrêté</li>
+      </ul>
+      <span class="tag">Ma Prime Logement Décent · Anah LHI</span>
+      <span class="go">Estimer mes aides <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+    </a>
+  </div>
+
+  <div style="text-align:center;margin-top:40px;padding-top:32px;border-top:1px solid var(--slate-100,#F1F5F9)">
+    <p style="font-size:14.5px;color:var(--slate-600,#475569);margin:0 0 16px">Vous voulez comprendre les aides avant de vous lancer&nbsp;?</p>
+    <a href="glossaire-aides.html" class="btn-glossaire-secondary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>Consulter le glossaire complet des aides</span><span aria-hidden="true">→</span></a>
+  </div>
+
+  <div class="foot">
+    <b>Plusieurs projets à la fois&nbsp;?</b> C'est fréquent — les aides sont cumulables et les plafonds sont dissociés. Commencez par le parcours principal&nbsp;: vous pourrez lancer les autres estimations depuis vos résultats.
+  </div>
+</main>
+</body>
+</html>

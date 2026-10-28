@@ -1,0 +1,1162 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mon profil — RénoFacile</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --teal-50:#F0FDFA;--teal-100:#CCFBF1;--teal-700:#0F766E;--teal-800:#115E59;--teal-900:#134E4A;
+    --amber-500:#F59E0B;
+    --slate-50:#F8FAFC;--slate-100:#F1F5F9;--slate-200:#E2E8F0;--slate-300:#CBD5E1;
+    --slate-400:#94A3B8;--slate-500:#64748B;--slate-600:#475569;--slate-700:#334155;--slate-800:#1E293B;
+    --success-50:#ECFDF5;--success-600:#059669;
+    --danger-50:#FEF2F2;--danger-600:#DC2626;
+    --bg:#F8FAFC;--surface:#FFFFFF;--border:#E2E8F0;
+    --font-sans:"Public Sans",system-ui,-apple-system,sans-serif;
+    --font-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+    --sidebar:280px;
+  }
+  *{box-sizing:border-box}
+  /* Le projet pilote la visibilité par l'attribut `hidden` : cette règle
+     l'emporte sur les classes qui déclarent leur propre `display`. */
+  [hidden]{display:none!important}html,body{margin:0;padding:0}
+  body{font-family:var(--font-sans);color:var(--slate-800);background:var(--bg);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
+
+  .layout{display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:100vh}
+  @media (max-width:880px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+  .sidebar{background:#fff;border-right:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .brand{display:flex;align-items:center;gap:12px;padding:0 8px}
+  .brand-mark{width:30px;height:30px;border-radius:8px;background:var(--teal-700);display:grid;place-items:center}
+  .brand-name{font-weight:700;font-size:17px}
+  .nav{display:flex;flex-direction:column;gap:2px}
+  .nav-section{padding:8px 12px 4px;font:600 11px var(--font-mono);color:var(--slate-400);letter-spacing:.06em;text-transform:uppercase}
+  .nav a{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;color:var(--slate-700);font-size:14px;font-weight:500}
+  .nav a:hover{background:var(--slate-100)}
+  .nav a.active{background:var(--teal-50);color:var(--teal-800)}
+  .nav a.active svg{color:var(--teal-700)}
+  .nav a svg{color:var(--slate-400);flex:0 0 auto}
+  .me{margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:10px}
+  .me .av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--teal-100),#2DD4BF);display:grid;place-items:center;color:var(--teal-900);font:600 12px var(--font-sans)}
+  .me .nm{font-size:13.5px;font-weight:600;line-height:1.2}
+  .me .em{font-size:12px;color:var(--slate-500)}
+
+  main{padding:32px 40px 80px;max-width:880px;width:100%}
+  @media (max-width:640px){main{padding:24px 20px 60px}}
+  .breadcrumb{font:500 12px var(--font-mono);color:var(--slate-500);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+  h1.page-title{font-size:28px;font-weight:700;letter-spacing:-.02em;margin:0 0 6px}
+  .lead{margin:0 0 28px;color:var(--slate-600);font-size:15.5px;max-width:60ch}
+
+  .block{background:#fff;border:1px solid var(--border);border-radius:14px;margin-bottom:14px;overflow:hidden}
+  .block-head{padding:18px 22px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:14px}
+  .block-head h2{margin:0;font-size:16px;font-weight:600;color:var(--slate-900);display:flex;align-items:center;gap:12px}
+  .block-head h2 .ic{width:34px;height:34px;border-radius:9px;background:var(--teal-50);color:var(--teal-700);display:grid;place-items:center;flex:0 0 auto}
+  .block-head .sum{font-size:13.5px;color:var(--slate-500);margin-top:2px}
+  .block-head .chev{color:var(--slate-400);transition:transform 200ms ease}
+  .block.open .chev{transform:rotate(180deg);color:var(--teal-700)}
+  .block-body{padding:0 22px 20px;display:none}
+  .block.open .block-body{display:block}
+
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+  .field-label{font-size:13px;font-weight:500;color:var(--slate-700)}
+  .field-help{font-size:12.5px;color:var(--slate-500)}
+  .input,.select{width:100%;font:400 14.5px var(--font-sans);padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:#fff;color:var(--slate-800)}
+  .input:focus,.select:focus{outline:none;border-color:var(--teal-700);box-shadow:0 0 0 4px var(--teal-100)}
+  .row-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:640px){.row-2{grid-template-columns:1fr}}
+
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:14px}
+  .tile{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;text-align:left;font:inherit;color:inherit}
+  .tile:hover{border-color:var(--slate-300)}
+  .tile.selected{border-color:var(--teal-700);background:var(--teal-50);box-shadow:0 0 0 1px var(--teal-700)}
+  .tile .nm{font-weight:600;font-size:14px;display:block}
+  .tile .ds{display:block;color:var(--slate-500);font-size:12.5px;margin-top:2px}
+
+  .works-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+  @media (max-width:640px){.works-grid{grid-template-columns:1fr}}
+  .work-check{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid var(--border);border-radius:9px;background:#fff;cursor:pointer;font-size:14px}
+  .work-check:hover{border-color:var(--slate-400)}
+  .work-check input{accent-color:var(--teal-700);width:16px;height:16px;flex:0 0 auto}
+
+  .btn{display:inline-flex;align-items:center;gap:8px;font:500 14px var(--font-sans);padding:10px 16px;border-radius:9px;border:1px solid transparent;line-height:1}
+  .btn-primary{background:var(--teal-700);color:#fff}
+  .btn-primary:hover{background:var(--teal-800)}
+  .btn-secondary{background:#fff;color:var(--slate-800);border-color:var(--border)}
+  .btn-secondary:hover{border-color:var(--slate-400)}
+  .btn-ghost{background:transparent;color:var(--slate-700)}
+  .btn-danger{background:#fff;color:var(--danger-600);border-color:#FECACA}
+  .btn-danger:hover{background:var(--danger-50)}
+
+  .block-actions{display:flex;justify-content:flex-end;gap:8px;padding-top:6px;border-top:1px dashed var(--border)}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--slate-900);color:#fff;padding:12px 20px;border-radius:10px;font:500 13.5px var(--font-sans);box-shadow:0 8px 24px rgba(15,23,42,.18);z-index:1000;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+
+  .account-block{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px;margin-top:24px}
+  .account-block h2{margin:0 0 14px;font-size:16px;font-weight:600;color:var(--slate-900)}
+  .account-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);font-size:14px}
+  .account-row:last-of-type{border:0}
+  .account-row .l{color:var(--slate-500)}
+  .account-row .v{font-weight:600;color:var(--slate-900)}
+
+  .summary-card{background:#F0FDFA;border:1px solid var(--teal-100);border-radius:12px;padding:14px 18px;margin-bottom:24px;display:flex;gap:14px;align-items:center}
+  .summary-card .ic{width:36px;height:36px;border-radius:9px;background:#fff;color:var(--teal-700);display:grid;place-items:center;flex:0 0 auto}
+  .summary-card .h{font-weight:600;font-size:14px;color:var(--teal-900)}
+  .summary-card .s{font-size:13px;color:var(--teal-900);opacity:.85;font-family:var(--font-mono)}
+  .dos-table{width:100%;border-collapse:collapse;font-size:13.5px}
+  .dos-table th{text-align:left;padding:9px 10px;font:600 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--slate-500);border-bottom:1px solid var(--border)}
+  .dos-table td{padding:11px 10px;border-bottom:1px solid var(--border);color:var(--slate-700)}
+  .dos-table tr:last-child td{border-bottom:0}
+  .dos-table .num{font:600 13.5px var(--font-mono);color:var(--slate-900);white-space:nowrap}
+  .dos-badge{display:inline-block;padding:3px 9px;border-radius:6px;font:600 11px var(--font-mono);letter-spacing:.04em;text-transform:uppercase}
+  .dos-badge.actif{background:var(--teal-50);color:var(--teal-800)}
+  .dos-empty{color:var(--slate-500);font-size:13.5px;margin:0}
+
+/* ══════════════════════════════════════════════════════════════════
+   Repli mobile — DÉLIBÉRÉMENT EN FIN DE FEUILLE.
+   La media query qui replie la barre latérale était déclarée AVANT la
+   règle de base `.sidebar{display:flex}` : à spécificité égale c'est la
+   dernière déclarée qui gagne, la barre restait affichée et poussait la
+   page à 654 px de large. Ne pas remonter ce bloc.
+   `:not(.open)` est indispensable, sinon le tiroir mobile ne s'ouvre
+   plus. `minmax(0,1fr)` remplace `1fr`, qui ne descend jamais sous la
+   largeur minimale de son contenu — un seul tableau large suffisait à
+   élargir toute la page.
+   ══════════════════════════════════════════════════════════════════ */
+@media (max-width:880px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .sidebar:not(.open){display:none}
+  .layout > main,.layout > .main{min-width:0;max-width:100%;overflow-x:hidden}
+  .layout table{display:block;overflow-x:auto;max-width:100%}
+}
+/* Respect de « réduire les animations » — neuf animations déclarées, dont un
+   badge en pulsation infinie que rien n'arrêtait. */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+/* Focus visible — les règles `outline:none` + halo `teal-100` donnaient
+   1,13:1 pour un seuil de 3:1. Contour rétabli, halo conservé. */
+:where(input,select,textarea,button,a,[tabindex]):focus-visible{
+  outline:2px solid var(--teal-700)!important;outline-offset:2px!important;
+}
+.suggest > *:focus-visible,.suggest .item:focus-visible,.suggest li:focus-visible{
+  outline:2px solid var(--teal-700)!important;outline-offset:-2px!important;
+}
+</style>
+  <script src="_travaux_catalog.js"></script>
+  <script src="_analytics.js" defer></script>
+<link rel="stylesheet" href="_mobile_nav.css">
+<script src="_mobile_nav.js" defer></script>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg></span>
+      <span class="brand-name">Réno<span style="color:var(--teal-700)">Facile</span></span>
+    </a>
+
+    <div class="total-widget" id="rf-aides-widget">
+      <div class="lbl">Aides estimées</div>
+      <div class="val" id="rf-aides-val">—</div>
+      <div class="sub" id="rf-aides-sub">Diagnostic à compléter</div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section" >Mon parcours</div>
+      <a href="dashboard.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg> Mon projet</a>
+      <a href="mes-aides.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg> Mes aides</a>
+      <a href="mes-documents.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg> Mes documents</a>
+      <div class="nav-section" style="margin-top:8px">Outils</div>
+      <a href="annuaire-artisans.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg> Annuaire artisans</a>
+      <a href="glossaire-aides.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg> Comprendre les aides</a>
+      <div class="nav-section" style="margin-top:8px">Compte</div>
+      <a href="mon-profil.html" class="active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg> Mon profil</a>
+      <a href="page-info.html?p=contact"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg> Paramètres</a>
+
+      <div class="exit" style="margin-top:6px;padding-top:14px;border-top:1px solid var(--border)">
+        <a href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg> Retour à l'accueil du site</a>
+      </div>
+    </nav>
+
+    <div class="me">
+      <div class="av" id="rf-me-av">RF</div>
+      <div>
+        <div class="nm" id="rf-me-name">Mon compte</div>
+        <div class="em" id="rf-me-plan">—</div>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="breadcrumb">Compte · Mon profil</div>
+    <h1 class="page-title">Mon profil &amp; mon dossier</h1>
+    <p class="lead">Modifiez vos informations à tout moment. Toute modification déclenche un recalcul automatique de vos aides.</p>
+
+    <div class="summary-card">
+      <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m5 12 5 5L20 7"/></svg></div>
+      <div>
+        <div class="h" id="sum-h">Aides estimées</div>
+        <div class="s" id="sum-s">Cliquez sur un bloc ci-dessous pour modifier, puis Enregistrer.</div>
+      </div>
+    </div>
+
+    <!-- 1. Mon logement -->
+    <div class="block open" data-b="logement">
+      <div class="block-head" onclick="toggleBlock(this)">
+        <h2><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg></span> Mon logement</h2>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="block-body">
+        <div class="field"><label class="field-label" for="p-addr">Adresse complète</label><input class="input" id="p-addr" placeholder="14 rue Pasteur, 69100 Villeurbanne" /></div>
+        <div class="field"><label class="field-label">Type de logement</label>
+          <div class="tiles">
+            <button type="button" class="tile" data-r="type" data-v="Maison individuelle"><div><span class="nm">Maison individuelle</span><span class="ds">Pavillon, fermette, longère…</span></div></button>
+            <button type="button" class="tile" data-r="type" data-v="Appartement"><div><span class="nm">Appartement</span><span class="ds">En copropriété ou monopropriété</span></div></button>
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="field"><label class="field-label" for="p-surf">Surface habitable (m²)</label><input class="input" id="p-surf" type="number" placeholder="110" /></div>
+          <div class="field"><label class="field-label" for="p-year">Année de construction</label><input class="input" id="p-year" type="number" placeholder="1972" /></div>
+        </div>
+        <div class="row-2">
+          <div class="field"><label class="field-label">Département</label><div id="p-dept" style="font:600 14px var(--font-mono);color:var(--slate-800);padding:10px 0">—</div></div>
+          <div class="field"><label class="field-label">Intercommunalité / EPCI</label><div id="p-epci" style="font:600 14px var(--font-sans);color:var(--slate-800);padding:10px 0">—</div></div>
+        </div>
+        <div class="field" id="p-dpe-row"><label class="field-label">Classe DPE actuelle</label><div id="p-dpe" style="font:600 14px var(--font-mono);color:var(--slate-800);padding:10px 0">—</div></div>
+        <div class="field" id="p-heat-row"><label class="field-label">Énergie principale de chauffage</label>
+          <div class="tiles">
+            <button type="button" class="tile" data-r="heat" data-v="gaz"><div><span class="nm">Gaz</span></div></button>
+            <button type="button" class="tile" data-r="heat" data-v="fioul"><div><span class="nm">Fioul</span></div></button>
+            <button type="button" class="tile" data-r="heat" data-v="electrique"><div><span class="nm">Électrique</span></div></button>
+            <button type="button" class="tile" data-r="heat" data-v="bois"><div><span class="nm">Bois</span></div></button>
+          </div>
+        </div>
+        <div class="block-actions"><button class="btn btn-primary" data-save="logement">Enregistrer</button></div>
+      </div>
+    </div>
+
+    <!-- 2. Ma situation -->
+    <div class="block" data-b="situation">
+      <div class="block-head" onclick="toggleBlock(this)">
+        <h2><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></span> Ma situation</h2>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="block-body">
+        <div class="field"><label class="field-label">Vous êtes…</label>
+          <div class="tiles">
+            <button type="button" class="tile" data-r="status" data-v="Occupant"><div><span class="nm">Occupant</span><span class="ds">Vous habitez ce logement</span></div></button>
+            <button type="button" class="tile" data-r="status" data-v="Bailleur"><div><span class="nm">Bailleur</span><span class="ds">Vous le louez</span></div></button>
+            <button type="button" class="tile" data-r="status" data-v="Acheteur"><div><span class="nm">Acheteur en projet</span><span class="ds">Compromis en cours</span></div></button>
+          </div>
+        </div>
+        <div class="field"><label class="field-label">Votre priorité</label>
+          <div class="tiles">
+            <button type="button" class="tile" data-r="prio" data-v="Économies"><div><span class="nm">Économies</span></div></button>
+            <button type="button" class="tile" data-r="prio" data-v="Confort"><div><span class="nm">Confort</span></div></button>
+            <button type="button" class="tile" data-r="prio" data-v="Écologie"><div><span class="nm">Écologie</span></div></button>
+            <button type="button" class="tile" data-r="prio" data-v="Conformité"><div><span class="nm">Mise en conformité</span></div></button>
+          </div>
+        </div>
+        <div class="block-actions"><button class="btn btn-primary" data-save="situation">Enregistrer</button></div>
+      </div>
+    </div>
+
+    <!-- 3. Foyer fiscal -->
+    <div class="block" data-b="foyer">
+      <div class="block-head" onclick="toggleBlock(this)">
+        <h2><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v20"/><path d="M17 6c0-2-2-3-5-3S7 4 7 6c0 5 10 4 10 9 0 2-2 3-5 3s-5-1-5-3"/></svg></span> Mon foyer fiscal</h2>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="block-body">
+        <div class="row-2">
+          <div class="field"><label class="field-label" for="p-rfr">Revenu fiscal de référence</label><input class="input" id="p-rfr" placeholder="48 200 €" /><span class="field-help">Ligne 25 de votre avis d'imposition</span></div>
+          <div class="field"><label class="field-label" for="p-parts">Personnes au foyer</label>
+            <select class="select" id="p-parts"><option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6+</option></select>
+          </div>
+        </div>
+        <div class="field"><label class="field-label" for="p-region">Région</label>
+          <select class="select" id="p-region">
+            <option>Auvergne-Rhône-Alpes</option><option>Bourgogne-Franche-Comté</option><option>Bretagne</option>
+            <option>Centre-Val de Loire</option><option>Corse</option><option>Grand Est</option>
+            <option>Hauts-de-France</option><option>Île-de-France</option><option>Normandie</option>
+            <option>Nouvelle-Aquitaine</option><option>Occitanie</option><option>Pays de la Loire</option>
+            <option>Provence-Alpes-Côte d'Azur</option><option>DROM-COM</option>
+          </select>
+        </div>
+        <div class="block-actions"><button class="btn btn-primary" data-save="foyer">Enregistrer</button></div>
+      </div>
+    </div>
+
+    <!-- 4. Travaux envisagés -->
+    <div class="block" data-b="travaux">
+      <div class="block-head" onclick="toggleBlock(this)">
+        <h2><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m14.7 6.3 3 3M3 17l10-10 4 4L7 21H3v-4Z"/></svg></span> Mes travaux envisagés</h2>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="block-body">
+        <div class="works-grid" id="works">
+          <label class="work-check"><input type="checkbox" value="combles" /> Isolation combles</label>
+          <label class="work-check"><input type="checkbox" value="ite" /> Isolation murs (ITE)</label>
+          <label class="work-check"><input type="checkbox" value="pac_aireau" /> Pompe à chaleur air/eau</label>
+          <label class="work-check"><input type="checkbox" value="biomasse" /> Chaudière biomasse</label>
+          <label class="work-check"><input type="checkbox" value="menuiseries" /> Menuiseries</label>
+          <label class="work-check"><input type="checkbox" value="vmc_df" /> VMC double flux</label>
+        </div>
+        <div class="block-actions"><button class="btn btn-primary" data-save="travaux">Enregistrer</button></div>
+      </div>
+    </div>
+
+    <!-- Compte -->
+    <div class="account-block">
+      <h2>Données du compte</h2>
+      <div class="account-row"><span class="l">E-mail</span><span class="v" id="ac-email">—</span></div>
+      <div class="account-row"><span class="l">Statut du dossier</span><span class="v" id="ac-sub-status">—</span></div>
+      <div class="account-row"><span class="l">Accompagnateur</span><span class="v" id="ac-partenaire">—</span></div>
+
+      <!-- Refaire ma simulation -->
+      <div class="account-row" style="border:0;padding-top:18px;flex-direction:column;align-items:flex-start;gap:10px">
+        <button class="btn btn-secondary" id="reset-dossier" style="border:1px solid var(--border)">Refaire mon diagnostic</button>
+        <div style="font-size:12px;color:var(--slate-500);line-height:1.5">
+          Réinitialise vos données de diagnostic (logement, foyer, travaux) pour refaire votre diagnostic. <b>Vos dossiers, vos pièces téléversées et vos signatures sont conservés.</b>
+        </div>
+      </div>
+
+      <!-- Retrait du consentement à la transmission (RGPD art. 7-3) -->
+      <div class="account-row" style="border:0;padding-top:14px;flex-direction:column;align-items:flex-start;gap:10px" id="cancel-wrap">
+        <button class="btn btn-danger" id="revoke-transmission" style="background:#fff;color:var(--danger-600);border:1px solid var(--danger-600)">Retirer mon consentement à la transmission</button>
+        <div style="font-size:12px;color:var(--slate-500);line-height:1.5">
+          Votre accompagnateur cesse de traiter votre dossier. Votre espace et vos données restent accessibles ici. L'utilisation de RénoFacile est gratuite : il n'y a rien à résilier.
+        </div>
+      </div>
+
+      <!-- Suppression de compte (RGPD) -->
+      <div class="account-row" style="border:0;padding-top:14px">
+        <a href="mailto:contact@renofacile.fr?subject=Suppression%20de%20mon%20compte%20R%C3%A9noFacile&body=Bonjour%2C%0A%0AJe%20souhaite%20supprimer%20d%C3%A9finitivement%20mon%20compte%20et%20toutes%20les%20donn%C3%A9es%20associ%C3%A9es%20(droit%20%C3%A0%20l%27oubli%20-%20RGPD).%0A%0AMerci%20de%20me%20confirmer%20la%20bonne%20suppression.%0A%0ACordialement%2C" style="font-size:12px;color:var(--danger-600);text-decoration:none">Supprimer définitivement mon compte →</a>
+      </div>
+    </div>
+    <div class="account-block" id="dos-block">
+      <h2>Mes dossiers</h2>
+      <div id="dos-table-host"></div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast">Modification enregistrée</div>
+
+<script>
+  const PROFILE_KEY = 'renofacile.profile';
+  function get(){ try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}'); } catch { return {}; } }
+  function save(patch){
+    const next = { ...get(), ...patch, updatedAt: Date.now() };
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(next));
+    return next;
+  }
+  function toast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2400);
+  }
+  function toggleBlock(head){ head.parentElement.classList.toggle('open'); }
+
+  // Tile single-select dans chaque bloc
+  document.querySelectorAll('[data-r]').forEach(t => {
+    t.addEventListener('click', () => {
+      const grp = t.dataset.r;
+      document.querySelectorAll(`[data-r="${grp}"]`).forEach(x => x.classList.remove('selected'));
+      t.classList.add('selected');
+    });
+  });
+
+  // Pré-remplissage
+  function prefill(){
+    const p = get();
+    // Localisation Grand Est (lecture seule — modifiable via le diagnostic)
+    const EPCI_LABELS = (window.RFCompute && window.RFCompute.EPCI_GRAND_EST) || {};
+    const DEPT_LABELS = (window.RFCompute && window.RFCompute.DEPTS_GRAND_EST) || {};
+    const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v || '—'; };
+    const lg = p.logement || {};
+    setTxt('p-dept', lg.dept ? (DEPT_LABELS[lg.dept] ? lg.dept + ' — ' + DEPT_LABELS[lg.dept] : lg.dept) : null);
+    setTxt('p-epci', lg.epci ? (EPCI_LABELS[lg.epci] ? EPCI_LABELS[lg.epci].nom : lg.epci) : null);
+    setTxt('p-dpe',  lg.dpeCurrent || lg.dpe || null);
+    if (p.address) document.getElementById('p-addr').value = p.address;
+    if (p.logement){
+      if (p.logement.type) document.querySelectorAll('[data-r="type"]').forEach(t => t.classList.toggle('selected', t.dataset.v === p.logement.type));
+      if (p.logement.surface) document.getElementById('p-surf').value = p.logement.surface;
+      if (p.logement.year) document.getElementById('p-year').value = p.logement.year;
+      if (p.logement.heat) document.querySelectorAll('[data-r="heat"]').forEach(t => t.classList.toggle('selected', t.dataset.v === p.logement.heat));
+    }
+    if (p.situation){
+      if (p.situation.status) document.querySelectorAll('[data-r="status"]').forEach(t => t.classList.toggle('selected', t.dataset.v === p.situation.status));
+      if (p.situation.priorite) document.querySelectorAll('[data-r="prio"]').forEach(t => t.classList.toggle('selected', t.dataset.v === p.situation.priorite));
+    }
+    if (p.foyer){
+      if (p.foyer.rfr) document.getElementById('p-rfr').value = p.foyer.rfr.toLocaleString('fr-FR') + ' €';
+      if (p.foyer.parts){
+        const sel = document.getElementById('p-parts');
+        sel.selectedIndex = Math.max(0, Math.min(5, p.foyer.parts - 1));
+      }
+      if (p.foyer.region) document.getElementById('p-region').value = p.foyer.region;
+    }
+    if (p.travaux){
+      document.querySelectorAll('#works input').forEach(c => { c.checked = p.travaux.includes(c.value); });
+    }
+    // Account
+    if (p.email) document.getElementById('ac-email').textContent = p.email;
+    // Sidebar identité
+    if (p.firstname || p.lastname){
+      const fn = p.firstname || '';
+      const ln = p.lastname || '';
+      // La sidebar de cette page utilise les ids rf-* (comme le dashboard).
+      const meName = document.getElementById('rf-me-name');
+      const meAv   = document.getElementById('rf-me-av');
+      if (meName) meName.textContent = (fn + ' ' + ln).trim() || 'Mon compte';
+      if (meAv)   meAv.textContent = ((fn[0] || '?') + (ln[0] || '')).toUpperCase();
+    }
+    // Summary card
+    if (p.aids && p.aids.travaux){
+      const sh = document.getElementById('sum-h');
+      const ss = document.getElementById('sum-s');
+      if (sh) sh.textContent = 'Aides estimées : ' + Math.round(p.aids.totalAides || 0).toLocaleString('fr-FR') + ' €';
+      if (ss) ss.textContent = 'Sur un projet estimé de ' + Math.round(p.aids.travaux.totalTTC || 0).toLocaleString('fr-FR') + ' € TTC';
+    }
+  }
+
+  /* ───── Garde-fou modification post-signature ─────
+     Si l'utilisateur a déjà signé électroniquement un dossier MPR/CEE, on
+     l'avertit que modifier ses données ne mettra PAS à jour ce dossier (le
+     PDF signé reste figé via signedSnapshots[]). Il peut quand même corriger
+     une typo ou contacter le support pour faire un avenant. */
+  function checkPostSignatureWarning(block){
+    const impactsDossiers = ['logement', 'foyer', 'travaux'];
+    if (!impactsDossiers.includes(block)) return true; // pas de warning
+    const cur = get();
+    const signed = Array.isArray(cur.signedDossiers) ? cur.signedDossiers : [];
+    // Filtre les helpers (tva, eptz) — eux ne sont jamais "signés", seuls mpr/cee comptent
+    const signedMandates = signed.filter(id => id === 'mpr' || id === 'cee');
+    if (signedMandates.length === 0) return true; // aucun dossier impacté
+
+    const names = { mpr: "MaPrimeRénov'", cee: 'CEE (Prime énergie)' };
+    const list = signedMandates.map(id => names[id] || id).join(' et ');
+    const what = { logement: 'adresse / surface du logement', foyer: 'revenus du foyer', travaux: 'liste des travaux' }[block];
+
+    const msg =
+      "⚠️ Modification après signature\n\n" +
+      "Vous avez signé électroniquement votre dossier " + list + ".\n\n" +
+      "Modifier votre " + what + " ne mettra PAS à jour ce dossier. " +
+      "Le PDF signé reste figé tel quel pour conserver sa valeur légale.\n\n" +
+      "• Si c'est une correction mineure (typo, oubli) : cliquez OK.\n" +
+      "• Si vous avez déménagé, changé de revenus ou ajouté des travaux : " +
+      "contactez le support pour faire un avenant (contact@renofacile.fr).\n\n" +
+      "Confirmer la modification ?";
+    return confirm(msg);
+  }
+
+  // Enregistrement par bloc
+  document.querySelectorAll('[data-save]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const block = btn.dataset.save;
+      if (!checkPostSignatureWarning(block)) {
+        toast('Modification annulée.');
+        return;
+      }
+      const cur = get();
+      if (block === 'logement'){
+        save({
+          address: document.getElementById('p-addr').value || cur.address,
+          logement: {
+            ...(cur.logement || {}),
+            type:    document.querySelector('[data-r="type"].selected')?.dataset.v || cur.logement?.type,
+            surface: +document.getElementById('p-surf').value || cur.logement?.surface,
+            year:    +document.getElementById('p-year').value || cur.logement?.year,
+            heat:    document.querySelector('[data-r="heat"].selected')?.dataset.v || cur.logement?.heat,
+          },
+        });
+      }
+      if (block === 'situation'){
+        save({
+          situation: {
+            ...(cur.situation || {}),
+            status:   document.querySelector('[data-r="status"].selected')?.dataset.v || cur.situation?.status,
+            priorite: document.querySelector('[data-r="prio"].selected')?.dataset.v   || cur.situation?.priorite,
+          },
+        });
+      }
+      if (block === 'foyer'){
+        const rfr = +(document.getElementById('p-rfr').value || '').replace(/\D/g,'') || cur.foyer?.rfr;
+        const partsIdx = document.getElementById('p-parts').selectedIndex;
+        save({
+          foyer: {
+            ...(cur.foyer || {}),
+            rfr,
+            parts: partsIdx + 1,
+            region: document.getElementById('p-region').value,
+          },
+        });
+      }
+      if (block === 'travaux'){
+        const works = [...document.querySelectorAll('#works input:checked')].map(c => c.value);
+        save({ travaux: works });
+      }
+      // ───── Recalcul automatique des aides si paramètre impactant changé ─────
+      // Blocs qui modifient le calcul : logement (surface/heat), foyer (rfr/parts/region),
+      // travaux (sélection). Situation (status/priorité) est informatif.
+      const impactsAids = ['logement', 'foyer', 'travaux', 'situation'];
+      let newTotal = null;
+      let oldTotal = null;
+      if (impactsAids.includes(block) && window.RFCompute){
+        try {
+          oldTotal = (get().aids && get().aids.totalAides) || 0;
+          const recomputed = window.RFCompute.recomputeFromProfile();
+      /* Le recalcul peut changer les mises en garde (nouveau territoire, nouveaux revenus) : on les montre. */
+      if (window.RFAlertes && recomputed){
+        try {
+          let box = document.getElementById('rf-alertes');
+          if (!box){
+            box = document.createElement('div'); box.id = 'rf-alertes';
+            const main = document.querySelector('main') || document.body;
+            main.insertBefore(box, main.firstChild);
+          }
+          RFAlertes.rendre(recomputed, box);
+        } catch (e) { console.warn('Alertes :', e); }
+      }
+          // Patch le profil avec les nouvelles aides
+          save({ aids: recomputed });
+          newTotal = recomputed.totalAides;
+          // Rafraîchit les widgets sidebar (rf-aides-val) + carte résumé (sum-h)
+          if (typeof window.RFRefreshWidgets === 'function') window.RFRefreshWidgets();
+        } catch(e){ console.warn('Recalcul aides après save :', e); }
+      }
+
+      // Toast contextuel
+      const fmt = n => Math.round(n).toLocaleString('fr-FR') + ' €';
+      if (newTotal !== null){
+        const diff = newTotal - oldTotal;
+        const arrow = diff > 0 ? '↑' : (diff < 0 ? '↓' : '=');
+        const signed = (diff > 0 ? '+' : '') + fmt(diff).replace(' €', ' €');
+        toast('Aides recalculées : ' + fmt(newTotal) + ' (' + arrow + ' ' + signed + ')');
+      } else {
+        toast('Modifications enregistrées.');
+      }
+      prefill();
+    });
+  });
+
+  document.getElementById('reset-dossier').addEventListener('click', () => {
+    if (!confirm("Refaire votre diagnostic ?\n\nVos données de diagnostic (logement, foyer, travaux, aides estimées) seront effacées et vous serez redirigé(e) vers le parcours diagnostic.\n\nVos dossiers, vos pièces téléversées et vos signatures électroniques sont conservés.")){
+      return;
+    }
+    // Reset PARTIEL : on conserve identité, signatures, statuts de pièces.
+    // On efface uniquement ce qui relève de la simulation diagnostic.
+    const cur = get();
+    const preserved = {
+      // Identité (sera redemandée mais utile au cas où l'utilisateur ne refait pas tout)
+      firstname:           cur.firstname,
+      lastname:            cur.lastname,
+      email:               cur.email,
+      // Documents/signatures (l'utilisateur ne perd pas son travail)
+      signatures:          cur.signatures,
+      signedDossiers:      cur.signedDossiers,
+      statutPieces:        cur.statutPieces,
+      // Marqueur de reset
+      simulationResetAt:   new Date().toISOString(),
+      updatedAt:           Date.now(),
+    };
+    // Supprimer les clés undefined pour rester propre dans localStorage
+    Object.keys(preserved).forEach(k => preserved[k] === undefined && delete preserved[k]);
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(preserved));
+    toast('Simulation réinitialisée. Redirection…');
+    setTimeout(() => { location.href = 'onboarding-diagnostic.html'; }, 1000);
+  });
+
+  /* Statut du dossier — il n'y a plus ni abonnement ni échéance : ce qui
+     pilote le parcours est l'état administratif du dossier transmis. */
+  function renderDossierStatus(){
+    const el = document.getElementById('ac-sub-status');
+    const elP = document.getElementById('ac-partenaire');
+    let dernier = null;
+    try {
+      const actifs = (window.RFDossiers && RFDossiers.getActifs && RFDossiers.getActifs()) || [];
+      dernier = actifs.length ? actifs[actifs.length - 1] : null;
+    } catch (e) {}
+    if (!el) return;
+    if (!dernier){
+      el.innerHTML = '<span style="color:var(--slate-500)">Diagnostic en cours — aucun dossier transmis</span>';
+      if (elP) elP.textContent = '—';
+      return;
+    }
+    const statut = (window.RFTransmission && RFTransmission.libelleStatut(dernier.statutDossier)) || 'Dossier créé';
+    el.innerHTML = '<span style="color:var(--success-600)">' + statut + '</span>'
+      + (dernier.transmisLe ? ' · depuis le ' + RFDossiers.fmtDate(dernier.transmisLe) : '');
+    if (elP) elP.textContent = (dernier.partenaire && dernier.partenaire.nom)
+      || (dernier.transmisLe ? 'Désignation en cours' : '—');
+  }
+
+  /* Retrait du consentement (RGPD art. 7-3) : la transmission est stoppée,
+     le compte et les données restent en place. */
+  const revokeBtn = document.getElementById('revoke-transmission');
+  if (revokeBtn) revokeBtn.addEventListener('click', () => {
+    let actifs = [];
+    try { actifs = (window.RFDossiers && RFDossiers.getActifs()) || []; } catch (e) {}
+    if (!actifs.length){ toast("Aucun dossier n'a été transmis."); return; }
+    if (!confirm("Retirer votre consentement à la transmission ?\n\n"
+      + "Votre accompagnateur cessera de traiter votre dossier. Vos données restent dans votre espace, "
+      + "et vous pourrez transmettre à nouveau plus tard.")) return;
+    try {
+      const all = RFDossiers.loadAll();
+      all.forEach(d => {
+        if (!d.transmisLe) return;
+        d.consentementTransmission = Object.assign({}, d.consentementTransmission, {
+          retireLe: new Date().toISOString(),
+        });
+        d.statutDossier = 'complet';
+      });
+      RFDossiers.saveAll(all);
+    } catch (e) { console.warn('Retrait de consentement :', e); }
+    toast('Consentement retiré. Votre accompagnateur en est informé.');
+    renderDossierStatus();
+  });
+
+  // Appel sécurisé : une erreur ici ne doit pas casser la page
+  try { renderDossierStatus(); } catch(e){ console.warn('renderDossierStatus :', e); }
+</script>
+<script>
+/* RénoFacile — bindings sidebar canonique (lit renofacile.profile écrit par le diagnostic) */
+(function(){
+  const KEY = 'renofacile.profile';
+  function readData(){
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}'); }
+    catch { return {}; }
+  }
+  function fmtEUR(n){
+    if (n == null || isNaN(n)) return '—';
+    return new Intl.NumberFormat('fr-FR').format(Math.round(n)) + ' €';
+  }
+  function refresh(){
+    const d = readData();
+    const aids = d.aids || {};
+    const trav = aids.travaux || {};
+
+    // Widget aides estimées (sidebar)
+    const valEl = document.getElementById('rf-aides-val');
+    const subEl = document.getElementById('rf-aides-sub');
+    const total = aids.totalAides || aids.total || null;
+    const projet = trav.totalTTC || aids.coutTotalTTC || null;
+    if (valEl){
+      if (total){
+        valEl.textContent = fmtEUR(total);
+        if (subEl) subEl.textContent = projet ? 'sur ' + fmtEUR(projet) + ' TTC' : 'Estimation indicative';
+      } else {
+        valEl.textContent = '—';
+        if (subEl) subEl.textContent = 'Diagnostic à compléter';
+      }
+    }
+
+    // Carte de résumé en haut de page (sum-h / sum-s)
+    const sumH = document.getElementById('sum-h');
+    const sumS = document.getElementById('sum-s');
+    if (sumH && sumS){
+      if (total){
+        sumH.textContent = 'Aides estimées : ' + fmtEUR(total);
+        sumS.textContent = projet
+          ? 'Sur un projet estimé de ' + fmtEUR(projet) + ' TTC. Modifiez vos infos ci-dessous pour recalculer.'
+          : 'Estimation indicative. Modifiez vos infos ci-dessous pour recalculer.';
+      } else {
+        sumH.textContent = 'Aides estimées : à calculer';
+        sumS.textContent = 'Lancez votre diagnostic pour estimer vos aides.';
+      }
+    }
+
+    // Profil utilisateur en bas
+    const nameEl = document.getElementById('rf-me-name');
+    const planEl = document.getElementById('rf-me-plan');
+    const avEl = document.getElementById('rf-me-av');
+    const fn = (d.firstname || '').trim();
+    const ln = (d.lastname || '').trim();
+    const fullName = (fn + ' ' + ln).trim();
+    /* Le badge porte le statut du dossier, jamais une formule commerciale. */
+    let planTxt = '';
+    try {
+      const actifs = (window.RFDossiers && RFDossiers.getActifs && RFDossiers.getActifs()) || [];
+      if (actifs.length){
+        const dernier = actifs[actifs.length - 1];
+        const statut = (window.RFTransmission && RFTransmission.libelleStatut(dernier.statutDossier)) || 'Dossier créé';
+        const nomPart = dernier.partenaire && dernier.partenaire.nom;
+        planTxt = nomPart ? statut + ' · ' + nomPart : statut;
+      } else {
+        planTxt = 'Diagnostic en cours';
+      }
+    } catch (e) { planTxt = ''; }
+    if (nameEl) nameEl.textContent = fullName || 'Mon compte';
+    if (planEl) planEl.textContent = planTxt || '—';
+    if (avEl){
+      if (fullName){
+        const initials = ((fn[0]||'') + (ln[0]||'')).toUpperCase() || 'RF';
+        avEl.textContent = initials;
+      } else {
+        avEl.textContent = 'RF';
+      }
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', refresh);
+  else refresh();
+  window.addEventListener('storage', refresh);
+  // Expose pour les autres scripts (save handlers du bloc édition)
+  window.RFRefreshWidgets = refresh;
+})();
+</script>
+<script src="_demo_mode.js"></script>
+<script src="_storage.js"></script>
+<script src="_dossiers.js"></script>
+<script src="_transmission.js"></script>
+<script>
+/* Aucun dossier fictif n'est injecté : ce que l'utilisateur voit vient
+   uniquement de ce qu'il a saisi. */
+</script>
+<script src="_auth_guard.js"></script>
+<script>
+/* RénoFacile — tableau des dossiers (un achat = un dossier, suivi 12 mois) */
+(function(){
+  var host = document.getElementById('dos-table-host');
+  if (!host || !window.RFDossiers) return;
+  var dossiers = RFDossiers.getAll().filter(function(d){ return d.status !== 'brouillon'; });
+  if (!dossiers.length){
+    host.innerHTML = '<p class="dos-empty">Aucun dossier ouvert pour le moment. ' +
+      '<a href="choix-parcours.html">Démarrer un dossier</a></p>';
+    return;
+  }
+  host.innerHTML = '<table class="dos-table"><thead><tr>' +
+      '<th>Type</th><th>Créé le</th><th>Statut</th><th>Accompagnateur</th><th>Aides estimées</th><th></th>' +
+    '</tr></thead><tbody>' +
+    dossiers.map(function(dos){
+      var meta = RFDossiers.meta(dos.type);
+      var statut = (window.RFTransmission && RFTransmission.libelleStatut(dos.statutDossier)) || 'Dossier créé';
+      var part = (dos.partenaire && dos.partenaire.nom) || (dos.transmisLe ? 'Désignation en cours' : '—');
+      return '<tr>' +
+        '<td style="color:' + meta.color + ';font-weight:600">' + meta.court + '</td>' +
+        '<td>' + RFDossiers.fmtDate(dos.createdAt) + '</td>' +
+        '<td><span class="dos-badge actif">' + statut + '</span></td>' +
+        '<td>' + part + '</td>' +
+        '<td class="num">' + Math.round(RFDossiers.totalAides(dos)).toLocaleString('fr-FR') + ' €</td>' +
+        '<td><a href="' + meta.detail + '?dossier=' + encodeURIComponent(dos.id) + '">Ouvrir</a></td>' +
+      '</tr>';
+    }).join('') +
+    '</tbody></table>';
+})();
+</script>
+<script src="_baremes_sources.js"></script>
+<script src="_compute_aids.js"></script>
+<script src="_alertes.js"></script>
+<script>
+/* RénoFacile — rend le widget profil de sidebar cliquable et ajoute Déconnexion */
+(function(){
+  function init(){
+    var me = document.querySelector('.sidebar .me, aside .me');
+    if (!me) return;
+    me.style.cursor = 'pointer';
+    me.style.position = 'relative';
+    var menu = document.createElement('div');
+    menu.style.cssText = 'display:none;position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid #E2E8F0;border-radius:8px;box-shadow:0 -4px 16px rgba(15,23,42,.08);padding:6px;z-index:50;font-size:13px';
+    menu.innerHTML =
+      '<a href="mon-profil.html" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:6px;color:#1E293B;text-decoration:none">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>' +
+        'Mon profil' +
+      '</a>' +
+      '<div style="height:1px;background:#E2E8F0;margin:4px 0"></div>' +
+      '<a href="#" id="rf-side-logout" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:6px;color:#DC2626;text-decoration:none">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>' +
+        'Se déconnecter' +
+      '</a>';
+    me.appendChild(menu);
+    me.addEventListener('click', function(e){
+      if (e.target.closest('a')) return;
+      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    });
+    document.addEventListener('click', function(e){
+      if (!e.target.closest('.me')) menu.style.display = 'none';
+    });
+    var logoutLink = document.getElementById('rf-side-logout');
+    if (logoutLink){
+      logoutLink.addEventListener('click', function(e){
+        e.preventDefault();
+        if (window.RFStore) RFStore.logout();
+        else {
+          ['renofacile.session','renofacile.profile'].forEach(function(k){ try{localStorage.removeItem(k);}catch{} });
+        }
+        window.location.href = 'login.html';
+      });
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+<script>
+/* ══ Profil polymorphique ═════════════════════════════════════════
+   La page a été écrite pour le tunnel énergétique, qui persiste
+   renofacile.profile. Un dossier MPA ou LHI ne vit que dans RFDossiers :
+   sans ce bloc, l'utilisateur voit les valeurs par défaut énergétiques.
+   Ce script tourne en dernier (après _dossiers.js et _compute_aids.js) et
+   n'intervient QUE lorsqu'un dossier non énergétique est ouvert. */
+(function(){
+  var eur = function(n){ return Math.round(Number(n) || 0).toLocaleString('fr-FR') + ' €'; };
+
+  function resolveActiveDossier(){
+    try {
+      if (!window.RFDossiers) return null;
+      var id = new URLSearchParams(location.search).get('dossier');
+      if (id){
+        var byId = RFDossiers.getById(id);
+        if (byId) return byId;
+      }
+      var actifs = (RFDossiers.getActifs && RFDossiers.getActifs()) || [];
+      if (!actifs.length) return null;
+      actifs.sort(function(a, b){ return new Date(b.transmisLe || 0) - new Date(a.transmisLe || 0); });
+      return actifs[0];
+    } catch (_) { return null; }
+  }
+
+  function resultatDe(dos){
+    if (!dos) return null;
+    var r = dos.result;
+    var peuple = r && (r.totalAides > 0 || (r.aide && (r.aide.total > 0 || r.aide.totalApresEcretement > 0)));
+    if (peuple) return r;
+    var C = window.RFCompute;
+    if (!C || !dos.profile) return r || null;
+    try {
+      if (dos.type === 'autonomie' && C.computeMprAdapt) return C.computeMprAdapt(dos.profile);
+      if (dos.type === 'indigne' && C.computeMprLogementDecent) return C.computeMprLogementDecent(dos.profile);
+    } catch (e) { console.warn('[mon-profil] recalcul :', e); }
+    return r || null;
+  }
+
+  function totalDe(dos, r){
+    r = r || resultatDe(dos);
+    if (!r) return 0;
+    if (r.totalAides > 0) return r.totalAides;
+    if (r.aids && r.aids.totalAides > 0) return r.aids.totalAides;
+    if (r.aide){
+      if (dos && dos.type === 'indigne'){
+        // Même définition que RFDossiers.totalAides : MPLD + cumulables, hors
+        // prêt éco-PTZ et hors services pris en charge par l'Anah.
+        var socle = r.aide.totalApresEcretement || r.aide.total || 0;
+        return socle + (r.aide.mprCumulable || 0) + (r.aide.local || 0);
+      }
+      return r.aide.totalApresEcretement || r.aide.total || 0;
+    }
+    return 0;
+  }
+  function coutDe(dos, r){
+    r = r || resultatDe(dos);
+    var t = (r && r.travaux) || {};
+    if (t.totalTTC) return t.totalTTC;
+    // Dossiers stockés avant l'ajout des alias : coutEstime et coutHT sont HT.
+    var ht = t.coutEstime || t.coutHT || 0;
+    return ht ? Math.round(ht * 1.055) : 0;
+  }
+
+  /* ── Bandeau sidebar : somme de TOUS les dossiers payés, tous types ── */
+  function majBandeau(){
+    var val = document.getElementById('rf-aides-val');
+    var sub = document.getElementById('rf-aides-sub');
+    if (!val || !window.RFDossiers) return;
+    var actifs = (RFDossiers.getActifs && RFDossiers.getActifs()) || [];
+    if (!actifs.length) return; // le binding historique (profil) garde la main
+    var aides = 0, cout = 0;
+    actifs.forEach(function(d){
+      var r = resultatDe(d);
+      aides += totalDe(d, r);
+      cout += coutDe(d, r);
+    });
+    if (aides <= 0) return;
+    val.textContent = eur(aides);
+    if (sub) sub.textContent = cout > 0 ? 'sur ' + eur(cout) + ' TTC' : 'Estimation indicative';
+  }
+
+  var dossier = resolveActiveDossier();
+
+  /* Dossier énergétique : le profil stocké dans le dossier a la même forme que
+     renofacile.profile, déjà lu par le pré-remplissage historique. On ne rejoue
+     donc les champs que lorsqu'un dossier précis est ciblé par l'URL — utile
+     quand l'utilisateur a plusieurs dossiers énergétiques et que le profil global
+     ne reflète que le dernier. */
+  function prefillEnergetique(dos){
+    var p = dos.profile || {};
+    var lg = p.logement || {};
+    var setVal = function(id, v){ var e = document.getElementById(id); if (e && v != null && v !== '') e.value = v; };
+    if (p.address) setVal('p-addr', p.address);
+    setVal('p-surf', lg.surface || '');
+    setVal('p-year', lg.year || lg.annee || '');
+    if (lg.type) document.querySelectorAll('[data-r="type"]').forEach(function(t){
+      t.classList.toggle('selected', t.dataset.v === lg.type);
+    });
+    if (lg.heat) document.querySelectorAll('[data-r="heat"]').forEach(function(t){
+      t.classList.toggle('selected', t.dataset.v === lg.heat);
+    });
+    var foy = p.foyer || {};
+    if (foy.rfr) setVal('p-rfr', Number(foy.rfr).toLocaleString('fr-FR') + ' €');
+    if (foy.parts){
+      var sel = document.getElementById('p-parts');
+      if (sel) sel.selectedIndex = Math.max(0, Math.min(5, Number(foy.parts) - 1));
+    }
+    if (foy.region){
+      var reg = document.getElementById('p-region');
+      if (reg) reg.value = foy.region;
+    }
+    if (Array.isArray(p.travaux)){
+      document.querySelectorAll('#works input').forEach(function(cb){
+        cb.checked = p.travaux.indexOf(cb.value) !== -1;
+      });
+    }
+    var r = dos.result || p.aids || null;
+    if (r && r.totalAides){
+      var sumH = document.getElementById('sum-h');
+      var sumS = document.getElementById('sum-s');
+      var cout = (r.travaux && r.travaux.totalTTC) || 0;
+      if (sumH) sumH.textContent = 'Aides estimées : ' + eur(r.totalAides);
+      if (sumS && cout) sumS.textContent = 'Sur un projet estimé de ' + eur(cout) + ' TTC';
+    }
+  }
+
+  /* Liste des travaux : une seule source, _travaux_catalog.js, pour que le
+     profil propose exactement ce que le tunnel permet de cocher. Sur un dossier
+     habitat dégradé le moteur ne raisonne pas en gestes : on garde un
+     récapitulatif en lecture seule plutôt que des cases sans effet. */
+  function renderTravaux(type, prof){
+    var works = document.getElementById('works');
+    if (!works) return;
+    var btn = works.parentElement && works.parentElement.querySelector('[data-save="travaux"]');
+
+    if (type === 'indigne'){
+      var etats = { tres_degrade: 'Très dégradé', moyennement_degrade: 'Moyennement dégradé',
+                    insalubre: 'Insalubre', arrete_police: 'Sous arrêté de police' };
+      var lignes = [
+        ['État du logement', etats[prof.etatLogement] || prof.etatLogement || '—'],
+        ['Coût des travaux estimé', prof.coutTravauxHT ? eur(prof.coutTravauxHT) + ' HT' : '—'],
+        ['DPE avant / après', [prof.dpeAvant, prof.dpeApres].filter(function(x){ return x && x !== 'unknown'; }).join(' → ') || '—'],
+      ];
+      works.style.display = 'block';
+      works.innerHTML = lignes.map(function(x){
+        return '<div style="display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--slate-600)">' +
+          '<span>' + x[0] + '</span><strong style="font:600 14px var(--font-mono);color:var(--slate-900)">' + x[1] + '</strong></div>';
+      }).join('') +
+      '<p style="margin:12px 0 0;font-size:13px;color:var(--slate-500);line-height:1.55">Le programme de travaux d\'un dossier habitat dégradé est arrêté avec l\'opérateur spécialisé, à partir de la grille d\'évaluation. Il n\'est pas modifiable ici.</p>';
+      if (btn) btn.hidden = true;
+      return;
+    }
+
+    var cat = window.RFTravauxCatalog;
+    if (!cat) return;
+    var choisis = prof.travaux || [];
+    works.style.display = 'block';
+    works.innerHTML = cat.bySection(type).map(function(grp){
+      return '<div style="font:600 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--slate-500);margin:14px 0 8px">' +
+          grp.section + '</div>' +
+        '<div class="works-grid" style="margin-bottom:0">' +
+          grp.items.map(function(t){
+            var on = choisis.indexOf(t.id) !== -1;
+            return '<label class="work-check"><input type="checkbox" value="' + t.id + '"' + (on ? ' checked' : '') + ' />' +
+              '<span>' + t.label +
+              (t.hint ? '<span style="display:block;font-size:12px;color:var(--slate-500)">' + t.hint + '</span>' : '') +
+              '</span></label>';
+          }).join('') +
+        '</div>';
+    }).join('');
+    if (btn) btn.hidden = false;
+  }
+
+  /* Enregistrement : écrire dans le dossier ouvert, pas seulement dans le profil
+     global, et recalculer son résultat avec le moteur du dispositif. Sans cela le
+     dashboard et « Mes aides », qui lisent dossier.result, divergent du profil. */
+  function attacherSauvegarde(){
+    if (!dossier || !window.RFDossiers) return;
+    var sumH = document.getElementById('sum-h');
+    var sumS = document.getElementById('sum-s');
+    document.querySelectorAll('[data-save]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var bloc = btn.dataset.save;
+        var all = RFDossiers.loadAll();
+        var ref = null;
+        for (var i = 0; i < all.length; i++) if (all[i].id === dossier.id) ref = all[i];
+        if (!ref) return;
+        var prof = ref.profile || (ref.profile = {});
+        var lgp = prof.logement || (prof.logement = {});
+        var isEnerg = ref.type === 'energetique';
+        var num = function(id){ return Number((document.getElementById(id) || {}).value) || 0; };
+
+        if (bloc === 'logement'){
+          var a = (document.getElementById('p-addr') || {}).value;
+          if (a){ lgp.adresse = a; if (isEnerg) prof.address = a; }
+          var s = num('p-surf');
+          if (s){ lgp.surface = s; if ('surface' in prof) prof.surface = s; }
+          var y = num('p-year');
+          if (y){
+            // Le profil énergétique nomme l'année « year », les profils Anah « annee ».
+            if (isEnerg) lgp.year = y; else lgp.annee = y;
+            if (ref.type === 'indigne') prof.ageLogementAnnees = new Date().getFullYear() - y;
+          }
+          var t = document.querySelector('[data-r="type"].selected');
+          if (t) lgp.type = t.dataset.v;
+          var ht = document.querySelector('[data-r="heat"].selected');
+          if (ht && isEnerg) lgp.heat = ht.dataset.v;
+        }
+        if (bloc === 'foyer'){
+          var rfr = Number(((document.getElementById('p-rfr') || {}).value || '').replace(/\D/g, '')) || 0;
+          var sel2 = document.getElementById('p-parts');
+          var reg2 = document.getElementById('p-region');
+          if (isEnerg){
+            var foy = prof.foyer || (prof.foyer = {});
+            if (rfr) foy.rfr = rfr;
+            if (sel2) foy.parts = sel2.selectedIndex + 1;
+            if (reg2) foy.region = reg2.value;
+          } else {
+            if (rfr) prof.rfr = rfr;
+            if (sel2) prof.foyer = sel2.selectedIndex + 1;
+            if (reg2) prof.region = reg2.value;
+          }
+        }
+        // L'habitat dégradé n'a pas de liste de gestes : rien à écrire.
+        if (bloc === 'travaux' && ref.type !== 'indigne'){
+          prof.travaux = Array.prototype.map.call(
+            document.querySelectorAll('#works input:checked'), function(c){ return c.value; });
+        }
+        RFDossiers.saveAll(all);
+
+        try {
+          var C = window.RFCompute, res = null;
+          if (ref.type === 'autonomie' && C && C.computeMprAdapt) res = C.computeMprAdapt(prof);
+          if (ref.type === 'indigne' && C && C.computeMprLogementDecent) res = C.computeMprLogementDecent(prof);
+          if (isEnerg && C && C.compute){
+            var lg2 = prof.logement || {}, fo2 = prof.foyer || {};
+            res = C.compute({
+              surface: Number(lg2.surface) || 0,
+              foyer:   Number(fo2.parts) || 1,
+              rfr:     Number(fo2.rfr) || 0,
+              region:  fo2.region || lg2.region || '',
+              heat:    lg2.heat || '',
+              dept:    lg2.dept || '',
+              selection: prof.travaux || [],
+            });
+            // Le profil énergétique porte aussi ses aides : on garde les deux alignés.
+            prof.aids = res;
+            RFDossiers.saveAll(all);
+          }
+          if (res) RFDossiers.updateResult(ref.id, res);
+          dossier = RFDossiers.getById(ref.id) || dossier;
+          var nt = totalDe(dossier), nc = coutDe(dossier);
+          if (sumH && nt > 0) sumH.textContent = 'Aides estimées : ' + eur(nt);
+          if (sumS && nc > 0) sumS.textContent = 'Sur un projet estimé de ' + eur(nc) + ' TTC';
+          majBandeau();
+        } catch (e) { console.warn('[mon-profil] recalcul après enregistrement :', e); }
+      });
+    });
+  }
+
+  /* Titre et fil d'Ariane : nommer le dispositif réellement ouvert. */
+  function adaptTitre(dos){
+    if (!dos) return;
+    var TITRES = {
+      energetique: { h1: 'Mon profil — Rénovation énergétique',  crumb: 'Compte · Mon profil · Rénovation énergétique' },
+      autonomie:   { h1: "Mon profil — MaPrimeAdapt'",           crumb: "Compte · Mon profil · MaPrimeAdapt'" },
+      indigne:     { h1: 'Mon profil — Ma Prime Logement Décent', crumb: 'Compte · Mon profil · Habitat dégradé' },
+    };
+    var cfg = TITRES[dos.type] || TITRES.energetique;
+    var h1 = document.querySelector('main h1.page-title');
+    if (h1) h1.textContent = cfg.h1;
+    var crumb = document.querySelector('main .breadcrumb');
+    if (crumb) crumb.textContent = cfg.crumb;
+  }
+
+  function run(){
+    majBandeau();
+    adaptTitre(dossier);
+    // La liste des travaux est la même que celle du tunnel dans tous les cas,
+    // dossier ciblé ou non.
+    var profGlobal = {};
+    try { profGlobal = JSON.parse(localStorage.getItem('renofacile.profile') || '{}'); } catch(e){}
+    renderTravaux((dossier && dossier.type) || 'energetique',
+                  (dossier && dossier.profile) || profGlobal);
+    if (!dossier) return;
+    if (dossier.type === 'energetique'){
+      var cible = null;
+      try { cible = new URLSearchParams(location.search).get('dossier'); } catch(e){}
+      if (cible) prefillEnergetique(dossier);
+      attacherSauvegarde();
+      return;
+    }
+
+    var p = dossier.profile || {};
+    var lg = p.logement || {};
+    var r = resultatDe(dossier);
+
+    // Sous-titre : nommer le dispositif réellement concerné
+    var lead = document.querySelector('main .lead');
+    if (lead){
+      lead.textContent = dossier.type === 'autonomie'
+        ? "Modifiez vos informations à tout moment. Toute modification déclenche un recalcul de votre aide MaPrimeAdapt'."
+        : 'Modifiez vos informations à tout moment. Toute modification déclenche un recalcul de vos aides Ma Prime Logement Décent.';
+    }
+
+    // ── Mon logement
+    var adr = [lg.adresse, [lg.codePostal, lg.ville].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+    var setVal = function(id, v){ var e = document.getElementById(id); if (e && v != null && v !== '') e.value = v; };
+    var setTxt = function(id, v){ var e = document.getElementById(id); if (e) e.textContent = v || '—'; };
+    if (adr) setVal('p-addr', adr);
+    setVal('p-surf', lg.surface || p.surface || '');
+    setVal('p-year', lg.annee || '');
+    var DEPTS = (window.RFCompute && window.RFCompute.DEPTS_GRAND_EST) || {};
+    setTxt('p-dept', lg.dept ? (DEPTS[lg.dept] ? lg.dept + ' — ' + DEPTS[lg.dept] : lg.dept) : null);
+    setTxt('p-epci', null);
+    if (lg.type){
+      var libType = /appart/i.test(lg.type) ? 'Appartement' : (/maison|pavillon/i.test(lg.type) ? 'Maison individuelle' : null);
+      if (libType) document.querySelectorAll('[data-r="type"]').forEach(function(t){
+        t.classList.toggle('selected', t.dataset.v === libType);
+      });
+    }
+    // DPE et énergie de chauffage : hors sujet pour un dossier autonomie.
+    var dpeRow = document.getElementById('p-dpe-row');
+    var heatRow = document.getElementById('p-heat-row');
+    if (dossier.type === 'autonomie'){
+      if (dpeRow) dpeRow.hidden = true;
+      if (heatRow) heatRow.hidden = true;
+    } else {
+      setTxt('p-dpe', lg.dpeAvant || p.dpeAvant || null);
+      if (heatRow) heatRow.hidden = true; // le moteur LHI ne se sert pas de l'énergie de chauffage
+    }
+
+    // ── Foyer fiscal
+    if (p.rfr) setVal('p-rfr', Number(p.rfr).toLocaleString('fr-FR') + ' €');
+    var parts = Number(p.foyer) || 0;
+    if (parts){
+      var sel = document.getElementById('p-parts');
+      if (sel) sel.selectedIndex = Math.max(0, Math.min(5, parts - 1));
+    }
+    if (p.region){
+      var reg = document.getElementById('p-region');
+      if (reg) reg.value = p.region;
+    }
+
+    // ── Travaux : la liste vient du catalogue partagé (mêmes codes que le moteur)
+    renderTravaux(dossier.type, p);
+
+    // ── Carte résumé
+    var total = totalDe(dossier, r), cout = coutDe(dossier, r);
+    var sumH = document.getElementById('sum-h');
+    var sumS = document.getElementById('sum-s');
+    if (sumH && total > 0) sumH.textContent = 'Aides estimées : ' + eur(total);
+    if (sumS) sumS.textContent = cout > 0
+      ? 'Sur un projet estimé de ' + eur(cout) + ' TTC'
+      : 'Cliquez sur un bloc ci-dessous pour modifier, puis Enregistrer.';
+
+    attacherSauvegarde();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,762 @@
+<!--
+  Écran : Dashboard utilisateur connecté
+  Décisions :
+  1. Sidebar persistante avec compteur "Total d'aides" en haut comme repère permanent — c'est la valeur centrale du produit.
+  2. Vue "Mon projet" sous forme de checklist verticale (style timeline) avec statut de chaque dossier,
+     plus une zone "Prochaines actions" priorisée — l'utilisateur sait toujours quoi faire ensuite.
+  3. Alertes réglementaires personnalisées en haut, jamais en pop-up agressive — on respecte le calme du produit.
+-->
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mon tableau de bord — RénoFacile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --teal-50:#F0FDFA;--teal-100:#CCFBF1;--teal-200:#99F6E4;--teal-400:#2DD4BF;
+    --teal-600:#0D9488;--teal-700:#0F766E;--teal-800:#115E59;--teal-900:#134E4A;
+    --amber-100:#FEF3C7;--amber-500:#F59E0B;--amber-600:#D97706;
+    --slate-50:#F8FAFC;--slate-100:#F1F5F9;--slate-200:#E2E8F0;--slate-300:#CBD5E1;
+    --slate-400:#94A3B8;--slate-500:#64748B;--slate-600:#475569;--slate-700:#334155;
+    --slate-800:#1E293B;--slate-900:#0F172A;
+    --success-50:#ECFDF5;--success-600:#059669;
+    --warning-50:#FFFBEB;--warning-600:#D97706;
+    --bg:#F8FAFC;--surface:#FFFFFF;--border:#E2E8F0;
+    --shadow-sm:0 1px 3px rgba(15,23,42,.06),0 1px 2px rgba(15,23,42,.04);
+    --font-sans:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --font-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+    --sidebar:280px;
+  }
+  *{box-sizing:border-box}
+  /* Le projet pilote la visibilité par l'attribut `hidden` : cette règle
+     l'emporte sur les classes qui déclarent leur propre `display`. */
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{font-family:var(--font-sans);color:var(--slate-800);background:var(--bg);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer}
+
+  .layout{display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:100vh}
+  @media (max-width:880px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+
+  .sidebar{background:#fff;border-right:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .brand{display:flex;align-items:center;gap:12px;padding:0 8px;flex-shrink:0}
+  .brand-mark{width:30px;height:30px;border-radius:8px;background:var(--teal-700);display:grid;place-items:center}
+  .brand-name{font-weight:700;font-size:17px;letter-spacing:-.01em}
+  .brand-name .accent{color:var(--teal-700)}
+
+  .total-widget{padding:18px;border-radius:14px;background:linear-gradient(135deg,var(--teal-700),var(--teal-900));color:#fff;position:relative;overflow:hidden;flex-shrink:0}
+  .total-widget::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 80% at 100% 0%,rgba(45,212,191,.18),transparent 60%)}
+  .total-widget .lbl{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;opacity:.75;position:relative}
+  .total-widget .val{font:700 28px var(--font-mono);letter-spacing:-.01em;margin-top:4px;position:relative}
+  .total-widget .sub{font-size:12.5px;opacity:.85;position:relative;margin-top:2px}
+  .total-widget .pgrs{height:4px;background:rgba(255,255,255,.18);border-radius:999px;margin-top:14px;position:relative;overflow:hidden}
+  .total-widget .pgrs i{display:block;height:100%;background:var(--teal-200);border-radius:999px;width:42%}
+  .total-widget .pg-l{display:flex;justify-content:space-between;font-size:11px;font-family:var(--font-mono);opacity:.75;margin-top:6px;position:relative}
+
+  .nav{display:flex;flex-direction:column;gap:2px}
+  .nav-section{padding:8px 12px 4px;font:600 11px var(--font-mono);color:var(--slate-400);letter-spacing:.06em;text-transform:uppercase}
+  .nav a{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;color:var(--slate-700);font-size:14px;font-weight:500}
+  .nav a:hover{background:var(--slate-100)}
+  .nav a.active{background:var(--teal-50);color:var(--teal-800)}
+  .nav a.active svg{color:var(--teal-700)}
+  .nav a svg{color:var(--slate-400);flex:0 0 auto}
+  .nav a .badge{margin-left:auto;background:var(--slate-100);color:var(--slate-600);font:500 11px var(--font-mono);padding:2px 7px;border-radius:999px}
+  .nav a.active .badge{background:#fff;color:var(--teal-700)}
+
+  .me{margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:10px;flex-shrink:0}
+  .me .av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--teal-100),var(--teal-400));display:grid;place-items:center;color:var(--teal-900);font:600 12px var(--font-sans)}
+  .me .nm{font-size:13.5px;font-weight:600;line-height:1.2}
+  .me .em{font-size:12px;color:var(--slate-500)}
+
+  main{padding:32px 40px 64px;max-width:1180px;width:100%}
+  @media (max-width:640px){main{padding:24px 20px 60px}}
+
+  .top-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px;gap:18px;flex-wrap:wrap}
+  h1.page-title{font-size:28px;font-weight:700;letter-spacing:-.02em;margin:0}
+  .breadcrumb{font:500 12px var(--font-mono);color:var(--slate-500);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+  .top-actions{display:flex;gap:8px}
+  .btn{display:inline-flex;align-items:center;gap:8px;font:500 14px var(--font-sans);line-height:1;padding:10px 14px;border-radius:8px;border:1px solid transparent;cursor:pointer}
+  .btn-primary{background:var(--teal-700);color:#fff}
+  .btn-primary:hover{background:var(--teal-800)}
+  .btn-secondary{background:#fff;color:var(--slate-800);border-color:var(--border)}
+  .btn-secondary:hover{border-color:var(--slate-400)}
+  .btn-ghost{background:transparent;color:var(--slate-700)}
+  .btn-ghost:hover{background:var(--slate-100)}
+
+  .alert{display:flex;gap:14px;padding:14px 18px;border-radius:12px;border:1px solid;margin-bottom:24px;align-items:flex-start}
+  .alert .ic{flex:0 0 auto;margin-top:2px}
+  .alert .body{flex:1}
+  .alert .h{font-weight:600;font-size:14px;margin-bottom:2px}
+  .alert .s{font-size:13.5px;opacity:.9}
+  .alert-info{background:#EFF6FF;border-color:#BFDBFE;color:#1E3A8A}
+  .alert .a{font-weight:600;color:inherit;text-decoration:underline;text-underline-offset:3px}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+  @media (max-width:880px){.kpis{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px}
+  .kpi .lbl{font:500 11px var(--font-mono);color:var(--slate-500);letter-spacing:.06em;text-transform:uppercase}
+  .kpi .val{font:700 24px var(--font-mono);letter-spacing:-.01em;color:var(--slate-900);margin-top:6px}
+  .kpi .delta{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;color:var(--success-600);margin-top:4px}
+  .kpi .delta.warn{color:var(--warning-600)}
+  .kpi .delta.muted{color:var(--slate-500)}
+
+  .columns{display:grid;grid-template-columns:1.5fr 1fr;gap:24px}
+  @media (max-width:980px){.columns{grid-template-columns:1fr}}
+
+  .panel{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .panel-head{padding:18px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+  .panel-head h2{margin:0;font-size:16px;font-weight:600}
+  .panel-head .meta{font-size:12.5px;color:var(--slate-500);font-family:var(--font-mono)}
+
+  .col-stages{display:flex;flex-direction:column}
+  .stage{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;gap:14px}
+  .stage:last-child{border-bottom:0}
+  .stage .timeline{display:flex;flex-direction:column;align-items:center;gap:4px;flex:0 0 auto;padding-top:2px}
+  .stage .dot{width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--slate-300)}
+  .stage .line{flex:1;width:2px;background:var(--slate-200);min-height:24px}
+  .stage:last-child .line{display:none}
+  .stage.done .dot{background:var(--success-600);border-color:var(--success-600);position:relative}
+  .stage.done .dot::after{content:"";position:absolute;left:3px;top:1px;width:6px;height:3px;border-left:1.6px solid #fff;border-bottom:1.6px solid #fff;transform:rotate(-45deg)}
+  .stage.active .dot{background:var(--teal-700);border-color:var(--teal-700);box-shadow:0 0 0 4px var(--teal-100)}
+  .stage.done .line,.stage.active .line{background:var(--teal-200)}
+  .stage .body{flex:1;display:flex;flex-direction:column;gap:8px}
+  .stage .row1{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+  .stage .nm{font-weight:600;font-size:15px}
+  .stage .pill{font:500 11px var(--font-mono);padding:3px 8px;border-radius:999px;letter-spacing:.04em;text-transform:uppercase}
+  .pill.todo{background:var(--slate-100);color:var(--slate-600)}
+  .pill.progress{background:var(--teal-50);color:var(--teal-800)}
+  .pill.done{background:var(--success-50);color:var(--success-600)}
+  .pill.review{background:var(--warning-50);color:var(--warning-600)}
+  .stage .desc{font-size:13.5px;color:var(--slate-600);margin:0}
+  .stage .sub-items{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+  .stage .sub-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--slate-50);border-radius:8px;font-size:13px}
+  .stage .sub-item .ic{width:16px;height:16px;border-radius:50%;background:var(--slate-200);display:grid;place-items:center;color:var(--slate-500);flex:0 0 auto;font:700 9px var(--font-mono)}
+  .stage .sub-item.done .ic{background:var(--success-50);color:var(--success-600)}
+  .stage .sub-item .amt{margin-left:auto;font:600 12.5px var(--font-mono);color:var(--slate-700)}
+  .stage .actions{display:flex;gap:8px;margin-top:4px}
+
+  .panel-pad{padding:18px 20px}
+  .actions-list{display:flex;flex-direction:column;gap:10px}
+  .action-item{display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--slate-50);border:1px solid var(--border);border-radius:10px}
+  .action-item .ic{width:32px;height:32px;border-radius:8px;background:#fff;color:var(--teal-700);display:grid;place-items:center;flex:0 0 auto;border:1px solid var(--border)}
+  .action-item.urgent .ic{color:var(--warning-600)}
+  .action-item .nm{font-weight:600;font-size:14px}
+  .action-item .due{font-size:12px;color:var(--slate-500);margin-top:2px}
+  .action-item .due.soon{color:var(--warning-600);font-weight:500}
+  .action-item .go{margin-left:auto;color:var(--slate-400);flex:0 0 auto;align-self:center}
+
+  .reg-list{display:flex;flex-direction:column;gap:10px}
+  .reg-item{display:flex;gap:12px;align-items:flex-start;padding:12px;border:1px solid var(--border);border-radius:10px}
+  .reg-item .ic{width:30px;height:30px;border-radius:8px;background:var(--teal-50);color:var(--teal-700);display:grid;place-items:center;flex:0 0 auto}
+  .reg-item .h{font-size:13.5px;font-weight:600}
+  .reg-item .s{font-size:12.5px;color:var(--slate-500)}
+  .reg-item time{font:500 11px var(--font-mono);color:var(--slate-400);text-transform:uppercase}
+
+  .arts-list{display:flex;flex-direction:column;gap:10px}
+  .art{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid var(--border);border-radius:10px}
+  .art .av{width:36px;height:36px;border-radius:50%;background:var(--slate-100);display:grid;place-items:center;color:var(--slate-600);font:600 12px var(--font-sans)}
+  .art .nm{font-weight:600;font-size:13.5px;line-height:1.2}
+  .art .sp{font-size:12px;color:var(--slate-500)}
+  .art .rt{margin-left:auto;display:flex;align-items:center;gap:4px;font:500 12px var(--font-mono);color:var(--slate-700)}
+  .art .rt svg{color:var(--amber-500)}
+  .w-check{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:14px;line-height:1.45;background:#fff;transition:border-color 120ms}
+  .w-check:hover{border-color:var(--slate-400)}
+  .w-check input{margin-top:2px;flex:0 0 auto;accent-color:var(--teal-700)}
+  .w-check span{flex:1}
+  .w-check input:checked ~ span{font-weight:600;color:var(--teal-800)}
+
+  /* Multi-dossiers */
+  .dossiers-section{margin-bottom:28px}
+  .dossiers-header{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+  .dossiers-header h2{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em;color:var(--slate-900)}
+  .dossiers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+  .dossier-card{display:flex;flex-direction:column;gap:12px;padding:20px;background:#fff;border:1px solid var(--border);border-left-width:4px;border-radius:12px;text-decoration:none;color:inherit;transition:transform .12s ease,box-shadow .15s ease}
+  .dossier-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,118,110,.08);text-decoration:none;color:inherit}
+  .dossier-type{font:600 12px var(--font-mono);letter-spacing:.06em;text-transform:uppercase}
+  .dossier-aides{font-size:15px;color:var(--slate-600)}
+  .dossier-aides strong{font:700 20px var(--font-mono);color:var(--slate-900);display:block;margin-top:2px}
+  .dossier-adresse{display:flex;gap:6px;align-items:flex-start;font-size:12px;color:var(--slate-500);line-height:1.4}
+  .dossier-adresse svg{flex:0 0 auto;margin-top:2px}
+  .dossier-suivi{font-size:12px;color:var(--slate-500)}
+  .dossier-badge{flex:0 0 auto;margin-left:auto;padding:3px 9px;border-radius:6px;background:var(--teal-50);color:var(--teal-800);font:700 10.5px var(--font-mono);letter-spacing:.06em;text-transform:uppercase}
+  .dossier-top{display:flex;align-items:center;gap:10px}
+  .dossier-bar{height:6px;border-radius:999px;background:var(--slate-100,#f1f5f9);overflow:hidden}
+  .dossier-bar span{display:block;height:100%;background:var(--teal-700);border-radius:999px}
+  .dossier-next{font-size:12.5px;color:var(--slate-600);line-height:1.45}
+  .dossier-next strong{color:var(--slate-800)}
+  .dossier-cta{margin-top:auto;font:600 13px var(--font-sans);color:var(--teal-700)}
+  .dossiers-empty{padding:30px;text-align:center;background:#fff;border:1px dashed var(--border);border-radius:12px;color:var(--slate-500);font-size:14px}
+  .dossiers-empty .btn{margin-top:14px}
+  .rf-unused-reset{margin-top:26px;padding-top:20px;border-top:1px dashed var(--border);display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+  .rf-unused-reset span{font-size:11.5px;color:var(--slate-500)}
+
+  /* ── Cockpit dashboard : hero + KPI, actions urgentes, cards enrichies ── */
+  .layout>main{min-width:0}
+  .rf-dash-hero{background:linear-gradient(135deg,#115E59,#0F3F3B);color:#fff;padding:30px;border-radius:16px;margin-bottom:32px}
+  .rf-dash-hero__welcome{margin-bottom:22px}
+  .rf-dash-hero__welcome h1{font-size:28px;font-weight:700;letter-spacing:-.02em;margin:0 0 6px;color:#fff}
+  .rf-dash-hero__welcome p{margin:0;font-size:14px;color:rgba(255,255,255,.85)}
+  .rf-dash-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  /* 4 ou 2 colonnes, jamais 3 : sinon le 4e KPI reste orphelin sur sa ligne. */
+  @media (max-width:1100px){.rf-dash-kpis{grid-template-columns:repeat(2,1fr)}}
+  .rf-kpi{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:16px;min-width:0}
+  .rf-kpi__value{font-size:clamp(19px,2.1vw,24px);font-weight:700;letter-spacing:-.02em;line-height:1.1;margin-bottom:6px;color:#fff;white-space:nowrap}
+  .rf-kpi__label{font-size:12px;line-height:1.4;color:rgba(255,255,255,.85)}
+  .rf-kpi__label small{display:block;font-size:11px;opacity:.8;margin-top:3px}
+  .rf-section-head{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+  .rf-section-head h2{font-size:18px;margin:0;font-weight:700;letter-spacing:-.01em}
+  .rf-section-head__count{font:500 13px var(--font-sans);color:var(--slate-500);padding:3px 10px;background:var(--slate-100);border-radius:12px}
+  .rf-dash-urgent{margin-bottom:32px}
+  .rf-urgent-list{display:flex;flex-direction:column;gap:10px}
+  .rf-urgent{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;background:#FFFBEB;border-left:4px solid #F59E0B;padding:14px 18px;border-radius:10px}
+  .rf-urgent__type{font:700 11px var(--font-mono);text-transform:uppercase;letter-spacing:.04em;padding:4px 8px;border-radius:6px;background:#CCFBF1;color:#115E59;white-space:nowrap}
+  .rf-urgent__type--autonomie{background:#DDD6FE;color:#5B21B6}
+  .rf-urgent__type--indigne{background:#FDE68A;color:#92400E}
+  .rf-urgent__title{font-weight:700;font-size:14.5px;color:#451A03;margin-bottom:3px}
+  .rf-urgent__meta{font-size:12.5px;color:#92400E}
+  .rf-urgent__cta{padding:9px 14px;background:#B45309;color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap}
+  .rf-urgent__cta:hover{background:#92400E;color:#fff;text-decoration:none}
+  .rf-section-head__cta{padding:9px 16px;background:var(--teal-700);color:#fff;border-radius:8px;font-size:13.5px;font-weight:600;text-decoration:none}
+  .rf-section-head__cta:hover{background:var(--teal-800);color:#fff;text-decoration:none}
+  .rf-dcard{display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);border-top:5px solid var(--teal-700);border-radius:14px;padding:22px;transition:box-shadow 200ms,transform 200ms;min-width:0}
+  .rf-dcard:hover{box-shadow:0 8px 24px rgba(15,23,42,.08);transform:translateY(-2px)}
+  .rf-dcard--autonomie{border-top-color:#7C3AED}
+  .rf-dcard--indigne{border-top-color:#D97706}
+  .rf-dcard__head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+  .rf-dcard__badge{font:700 11px var(--font-mono);text-transform:uppercase;letter-spacing:.05em;padding:5px 10px;border-radius:6px;background:#CCFBF1;color:#115E59}
+  .rf-dcard--autonomie .rf-dcard__badge{background:#DDD6FE;color:#5B21B6}
+  .rf-dcard--indigne .rf-dcard__badge{background:#FDE68A;color:#92400E}
+  .rf-dcard__status{font-size:12px;color:var(--slate-500);font-weight:500;white-space:nowrap}
+  .rf-dcard__adresse{display:flex;gap:6px;align-items:flex-start;font-size:14px;color:var(--slate-700);margin-bottom:16px}
+  .rf-dcard__adresse svg{flex:0 0 auto;margin-top:3px;color:var(--slate-400,#94A3B8)}
+  .rf-dcard__bar{height:8px;background:var(--slate-100);border-radius:4px;overflow:hidden;margin-bottom:6px}
+  .rf-dcard__bar span{display:block;height:100%;background:var(--teal-700);border-radius:4px;transition:width 400ms}
+  .rf-dcard--autonomie .rf-dcard__bar span{background:#7C3AED}
+  .rf-dcard--indigne .rf-dcard__bar span{background:#D97706}
+  .rf-dcard__bar-meta{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--slate-500);margin-bottom:16px}
+  .rf-dcard__next{background:#FFFBEB;border-left:3px solid #F59E0B;padding:12px 14px;border-radius:8px;margin-bottom:16px}
+  .rf-dcard__next-label{font:700 11px var(--font-mono);text-transform:uppercase;letter-spacing:.04em;color:#92400E;margin-bottom:4px}
+  .rf-dcard__next-title{font-size:14px;font-weight:600;color:#451A03;line-height:1.4}
+  .rf-dcard__stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+  .rf-dcard__stat{padding:10px 12px;background:var(--slate-50);border-radius:8px;min-width:0}
+  .rf-dcard__stat-label{font:500 11px var(--font-mono);text-transform:uppercase;letter-spacing:.04em;color:var(--slate-500);margin-bottom:4px}
+  .rf-dcard__stat-value{font-size:15px;font-weight:700;color:var(--slate-800)}
+  .rf-dcard__cta{display:block;margin-top:auto;padding:12px;text-align:center;background:var(--teal-700);color:#fff;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;transition:background 150ms}
+  .rf-dcard__cta:hover{background:var(--teal-800);color:#fff;text-decoration:none}
+  .rf-dcard--autonomie .rf-dcard__cta{background:#7C3AED}
+  .rf-dcard--autonomie .rf-dcard__cta:hover{background:#6D28D9}
+  .rf-dcard--indigne .rf-dcard__cta{background:#D97706}
+  .rf-dcard--indigne .rf-dcard__cta:hover{background:#B45309}
+  .rf-quick{margin-bottom:32px}
+  .rf-quick h2{font-size:17px;margin:0 0 14px;font-weight:700;letter-spacing:-.01em}
+  .rf-quick__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+  .rf-quick__item{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 16px;background:#fff;border:1px solid var(--border);border-radius:12px;color:var(--slate-700);text-decoration:none;transition:all 200ms;text-align:center}
+  .rf-quick__item:hover{border-color:var(--teal-200,#99F6E4);background:var(--teal-50,#F0FDFA);color:var(--teal-800);text-decoration:none;transform:translateY(-2px)}
+  .rf-quick__item svg{color:var(--teal-700)}
+  .rf-quick__label{font-size:13px;font-weight:600}
+  @media (max-width:720px){
+    .rf-dash-hero{padding:22px 20px}
+    .rf-dash-kpis{grid-template-columns:repeat(2,1fr)}
+    .dossiers-grid{grid-template-columns:1fr}
+    .rf-quick__grid{grid-template-columns:repeat(2,1fr)}
+  }
+
+/* ══════════════════════════════════════════════════════════════════
+   Repli mobile — DÉLIBÉRÉMENT EN FIN DE FEUILLE.
+   La media query qui replie la barre latérale était déclarée AVANT la
+   règle de base `.sidebar{display:flex}` : à spécificité égale c'est la
+   dernière déclarée qui gagne, la barre restait affichée et poussait la
+   page à 654 px de large. Ne pas remonter ce bloc.
+   `:not(.open)` est indispensable, sinon le tiroir mobile ne s'ouvre
+   plus. `minmax(0,1fr)` remplace `1fr`, qui ne descend jamais sous la
+   largeur minimale de son contenu — un seul tableau large suffisait à
+   élargir toute la page.
+   ══════════════════════════════════════════════════════════════════ */
+@media (max-width:880px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .sidebar:not(.open){display:none}
+  .layout > main,.layout > .main{min-width:0;max-width:100%;overflow-x:hidden}
+  .layout table{display:block;overflow-x:auto;max-width:100%}
+}
+/* Respect de « réduire les animations » — neuf animations déclarées, dont un
+   badge en pulsation infinie que rien n'arrêtait. */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+/* Focus visible — les règles `outline:none` + halo `teal-100` donnaient
+   1,13:1 pour un seuil de 3:1. Contour rétabli, halo conservé. */
+:where(input,select,textarea,button,a,[tabindex]):focus-visible{
+  outline:2px solid var(--teal-700)!important;outline-offset:2px!important;
+}
+.suggest > *:focus-visible,.suggest .item:focus-visible,.suggest li:focus-visible{
+  outline:2px solid var(--teal-700)!important;outline-offset:-2px!important;
+}
+</style>
+  <script src="_partner_config.js"></script>
+  <script src="_analytics.js" defer></script>
+<link rel="stylesheet" href="_mobile_nav.css">
+<script src="_mobile_nav.js" defer></script>
+<script src="_user.js"></script>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg></span>
+      <span class="brand-name">Réno<span style="color:var(--teal-700)">Facile</span></span>
+    </a>
+
+    <div class="total-widget" id="rf-aides-widget">
+      <div class="lbl">Aides estimées</div>
+      <div class="val" id="rf-aides-val">—</div>
+      <div class="sub" id="rf-aides-sub">Diagnostic à compléter</div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section" >Mon parcours</div>
+      <a href="dashboard.html" class="active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg> Mon projet</a>
+      <a href="mes-aides.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg> Mes aides</a>
+      <a href="mes-documents.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg> Mes documents</a>
+      <div class="nav-section" style="margin-top:8px">Outils</div>
+      <a href="annuaire-artisans.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg> Annuaire artisans</a>
+      <a href="glossaire-aides.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg> Comprendre les aides</a>
+      <div class="nav-section" style="margin-top:8px">Compte</div>
+      <a href="mon-profil.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg> Mon profil</a>
+      <a href="page-info.html?p=contact"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg> Paramètres</a>
+
+      <div class="exit" style="margin-top:6px;padding-top:14px;border-top:1px solid var(--border)">
+        <a href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg> Retour à l'accueil du site</a>
+      </div>
+    </nav>
+
+    <div class="me">
+      <div class="av" id="rf-me-av">RF</div>
+      <div>
+        <div class="nm" id="rf-me-name">Mon compte</div>
+        <div class="em" id="rf-me-plan">—</div>
+      </div>
+    </div>
+  </aside>
+
+  <main data-screen-label="Dashboard">
+    <!-- Cockpit : état global de tous les dossiers, d'un coup d'œil. -->
+    <section class="rf-dash-hero">
+      <div class="rf-dash-hero__welcome">
+        <h1 id="rf-dash-greeting">Bonjour</h1>
+        <p id="dash-subline">Voici où en sont vos projets de rénovation.</p>
+      </div>
+      <div class="rf-dash-kpis">
+        <div class="rf-kpi"><div class="rf-kpi__value" id="rf-dash-total-aides">—</div><div class="rf-kpi__label">Aides à récupérer<small id="rf-dash-total-count">—</small></div></div>
+        <div class="rf-kpi"><div class="rf-kpi__value" id="rf-dash-avg-progress">—</div><div class="rf-kpi__label">Avancement moyen<small id="rf-dash-avg-detail">—</small></div></div>
+        <div class="rf-kpi"><div class="rf-kpi__value" id="rf-dash-next-deadline">—</div><div class="rf-kpi__label">Prochaine échéance<small id="rf-dash-next-action">—</small></div></div>
+        <div class="rf-kpi"><div class="rf-kpi__value" id="rf-dash-docs-count">—</div><div class="rf-kpi__label">Documents<small>à fournir</small></div></div>
+      </div>
+    </section>
+
+    <section class="rf-dash-urgent" id="rf-dash-urgent" hidden>
+      <div class="rf-section-head">
+        <h2>À faire cette semaine</h2>
+        <span class="rf-section-head__count" id="rf-urgent-count">—</span>
+      </div>
+      <div class="rf-urgent-list" id="rf-urgent-list"></div>
+    </section>
+
+    <section class="dossiers-section">
+      <div class="rf-section-head">
+        <h2>Mes dossiers</h2>
+        <a href="choix-parcours.html" class="rf-section-head__cta">+ Nouveau dossier</a>
+      </div>
+      <div id="dossiers-liste" class="dossiers-grid"></div>
+      <div id="dossiers-empty" class="dossiers-empty" hidden>
+        Vous n'avez encore aucun dossier actif.
+        <div><a href="choix-parcours.html" class="btn btn-primary">Estimer mes aides →</a></div>
+      </div>
+    </section>
+
+    <section class="rf-quick">
+      <h2>Actions rapides</h2>
+      <div class="rf-quick__grid">
+      <a href="choix-parcours.html" class="rf-quick__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span class="rf-quick__label">Nouveau dossier</span></a>
+      <a href="glossaire-aides.html" class="rf-quick__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg><span class="rf-quick__label">Comprendre les aides</span></a>
+      <a href="annuaire-artisans.html" class="rf-quick__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m15 12-8.5 8.5a2.12 2.12 0 0 1-3-3L12 9"/><path d="M17.64 15 22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86L16.01 4.6a5.56 5.56 0 0 0-3.94-1.64H9l.92.82A6.18 6.18 0 0 1 12 8.4v1.56l2 2h2.47l1.26 1.21Z"/></svg><span class="rf-quick__label">Trouver un artisan</span></a>
+      <a href="page-info.html?p=guide-mpr" class="rf-quick__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg><span class="rf-quick__label">Comprendre la démarche</span></a>
+      <a href="mailto:hello@renofacile.fr" class="rf-quick__item"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="rf-quick__label">Contacter le support</span></a>
+      </div>
+    </section>
+
+    <div id="mao-partenaire-slot"></div>
+    <script>if(window.RFPartner)window.RFPartner.mount();</script>
+
+  </main>
+</div>
+
+<script>
+  /* Synchronisation depuis l'onboarding (localStorage) */
+  (function(){
+    function syncProfile(){
+    try {
+      const raw = localStorage.getItem('renofacile.profile');
+      if (!raw) return;
+      const p = JSON.parse(raw);
+      const fmt = n => Math.round(n).toLocaleString('fr-FR') + ' €';
+
+      // Nom, avatar et salutation : écrits par le bloc « rf-me-* » et « rf-dash-greeting »
+      // plus bas. Les anciennes cibles dash-fullname / dash-av / dash-greeting
+      // n'existent plus dans le balisage.
+    } catch(e) { console.warn('Sync profil :', e); }
+    }
+    syncProfile();
+    window.addEventListener('storage', e => { if (e.key === 'renofacile.profile') syncProfile(); });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) syncProfile(); });
+  })();
+
+  /* Les montants du tableau de bord sont portés par les cartes de dossier,
+     rendues plus bas. L'ancien bloc « KPI » écrivait dans des éléments absents
+     du balisage (kpi-obtenues, kpi-rac…) et inventait un DPE projeté : retiré. */
+
+</script>
+
+<script>
+/* RénoFacile — bindings sidebar canonique (lit renofacile.profile écrit par le diagnostic) */
+(function(){
+  const KEY = 'renofacile.profile';
+  function readData(){
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}'); }
+    catch { return {}; }
+  }
+  function fmtEUR(n){
+    if (n == null || isNaN(n)) return '—';
+    return new Intl.NumberFormat('fr-FR').format(Math.round(n)) + ' €';
+  }
+  function refresh(){
+    const d = readData();
+    const aids = d.aids || {};
+    const trav = aids.travaux || {};
+
+    // Widget aides estimées
+    const valEl = document.getElementById('rf-aides-val');
+    const subEl = document.getElementById('rf-aides-sub');
+    let total = aids.totalAides || aids.total || null;
+    let projet = trav.totalTTC || aids.coutTotalTTC || null;
+    // Un utilisateur MPA ou LHI n'a pas de renofacile.profile.aids : le montant
+    // vient alors des dossiers transmis, tous types confondus.
+    if (!total && window.RFDossiers && typeof RFDossiers.getActifs === 'function'){
+      try {
+        let sommeAides = 0, sommeTTC = 0;
+        RFDossiers.getActifs().forEach(function(dos){
+          sommeAides += Number(RFDossiers.totalAides(dos)) || 0;
+          const t = (dos.result && dos.result.travaux) || {};
+          // Dossiers stockés avant l'ajout des alias : coutEstime et coutHT sont
+          // des montants HT, à convertir avant d'être présentés comme TTC.
+          const coutHTStocke = t.coutEstime || t.coutHT || 0;
+          const cout = t.totalTTC || (coutHTStocke ? Math.round(coutHTStocke * 1.055) : 0);
+          sommeTTC += Number(cout) || 0;
+        });
+        if (sommeAides > 0){ total = sommeAides; projet = sommeTTC || projet; }
+      } catch(e){ console.warn('Widget aides multi-dossiers :', e); }
+    }
+    if (valEl){
+      if (total){
+        valEl.textContent = fmtEUR(total);
+        if (subEl) subEl.textContent = projet ? 'sur ' + fmtEUR(projet) + ' TTC' : 'Estimation indicative';
+      } else {
+        valEl.textContent = '—';
+        if (subEl) subEl.textContent = 'Diagnostic à compléter';
+      }
+    }
+
+    // Profil utilisateur en bas
+    const nameEl = document.getElementById('rf-me-name');
+    const planEl = document.getElementById('rf-me-plan');
+    const avEl = document.getElementById('rf-me-av');
+    const fn = (d.firstname || '').trim();
+    const ln = (d.lastname || '').trim();
+    const fullName = (fn + ' ' + ln).trim();
+    /* Le badge porte le statut du dossier, jamais une formule commerciale. */
+    let planTxt = '';
+    try {
+      const actifs = (window.RFDossiers && RFDossiers.getActifs && RFDossiers.getActifs()) || [];
+      if (actifs.length){
+        const dernier = actifs[actifs.length - 1];
+        const statut = (window.RFTransmission && RFTransmission.libelleStatut(dernier.statutDossier)) || 'Dossier créé';
+        const nomPart = dernier.partenaire && dernier.partenaire.nom;
+        planTxt = nomPart ? statut + ' · ' + nomPart : statut;
+      } else {
+        planTxt = 'Diagnostic en cours';
+      }
+    } catch (e) { planTxt = ''; }
+    if (nameEl) nameEl.textContent = fullName || 'Mon compte';
+    if (planEl) planEl.textContent = planTxt || '—';
+    if (avEl){
+      if (fullName){
+        const initials = ((fn[0]||'') + (ln[0]||'')).toUpperCase() || 'RF';
+        avEl.textContent = initials;
+      } else {
+        avEl.textContent = 'RF';
+      }
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', refresh);
+  else refresh();
+  window.addEventListener('storage', refresh);
+})();
+</script>
+
+<script>
+/* RénoFacile — rehydratation profil depuis la base clients.
+   Si l'utilisateur est connecté en tant que client mais que `renofacile.profile`
+   est vide ou ne contient plus les aides, on reconstitue le profil à partir
+   de l'entrée correspondante dans `renofacile.clients`. Sécurité contre les
+   écrasements accidentels du diagnostic en local. S'exécute AVANT le bind()
+   défensif principal. */
+(function(){
+  function rehydrate(){
+    try {
+      const session = JSON.parse(localStorage.getItem('renofacile.session') || 'null');
+      if (!session || session.role !== 'client') return;
+      const profile = JSON.parse(localStorage.getItem('renofacile.profile') || '{}');
+      const hasAids = !!(profile.aids && profile.aids.totalAides > 0);
+      if (hasAids) return;
+      const clients = JSON.parse(localStorage.getItem('renofacile.clients') || '[]');
+      const me = clients.find(c => c.email && session.email && c.email.toLowerCase() === session.email.toLowerCase());
+      if (!me || !me.aids || !(me.aids.totalAides > 0)) return;
+      const merged = {
+        ...profile,
+        firstname: profile.firstname || me.firstname,
+        lastname:  profile.lastname  || me.lastname,
+        email:     profile.email     || me.email,
+        tier:      profile.tier      || me.tier,
+        address:   profile.address   || me.address,
+        logement:  profile.logement  || me.logement,
+        situation: profile.situation || me.situation,
+        foyer:     profile.foyer     || me.foyer,
+        aids:      me.aids,
+          diagnostiqueLe: profile.diagnostiqueLe || me.diagnostiqueLe,
+      };
+      localStorage.setItem('renofacile.profile', JSON.stringify(merged));
+    } catch(e){ console.warn('Rehydrate profile :', e); }
+  }
+  rehydrate();
+})();
+</script>
+<script>
+/* RénoFacile — binding défensif des 4 KPI cards du haut de dashboard.
+   Tourne après le bind() natif et garantit que les KPIs reflètent
+   les données réelles du diagnostic (ou laissent l'état vide). */
+(function(){
+  const KEY = 'renofacile.profile';
+  function readData(){
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}'); }
+    catch { return {}; }
+  }
+  function fmtEUR(n){
+    if (n == null || isNaN(n)) return '—';
+    return new Intl.NumberFormat('fr-FR').format(Math.round(n)) + ' €';
+  }
+  function setText(id, v){ const el = document.getElementById(id); if (el) el.textContent = v; }
+
+})();
+</script>
+<script src="_demo_mode.js"></script>
+<script src="_storage.js"></script>
+<script src="_dossiers.js"></script>
+<script src="_transmission.js"></script>
+<script>
+/* Aucun dossier fictif n'est injecté : ce que l'utilisateur voit vient
+   uniquement de ce qu'il a saisi. */
+</script>
+<script src="_auth_guard.js"></script>
+<script>
+/* RénoFacile — liste des dossiers actifs (multi-dossiers) */
+(function(){
+  // Retour de transmission : le brouillon déposé pendant le tunnel est consigné.
+  var dossierCible = null;
+  try {
+    var qp = new URLSearchParams(location.search);
+    if (window.RFDossiers && qp.get('transmis') === '1'){
+      RFDossiers.settleDossierEnAttente({ consentement: true });
+    }
+    dossierCible = qp.get('dossier');
+  } catch(e){}
+
+  /* Confirmation d'arrivée après création d'un dossier. */
+  function showToast(msg){
+    var t = document.createElement('div');
+    t.setAttribute('role', 'status');
+    t.style.cssText = 'position:fixed;top:24px;right:24px;z-index:2147483000;max-width:340px;padding:14px 18px;'
+      + 'background:var(--teal-800);color:#fff;border-radius:10px;box-shadow:0 12px 30px rgba(15,23,42,.22);'
+      + 'font:600 13.5px var(--font-sans);line-height:1.45;opacity:0;transform:translateY(-6px);'
+      + 'transition:opacity .25s ease,transform .25s ease';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    requestAnimationFrame(function(){ t.style.opacity = '1'; t.style.transform = 'translateY(0)'; });
+    setTimeout(function(){ t.style.opacity = '0'; t.style.transform = 'translateY(-6px)'; }, 4200);
+    setTimeout(function(){ t.remove(); }, 4700);
+  }
+  var host  = document.getElementById('dossiers-liste');
+  var empty = document.getElementById('dossiers-empty');
+  if (!host || !window.RFDossiers) return;
+  var dossiers = RFDossiers.getActifs();
+  if (!dossiers.length){
+    host.hidden = true;
+    if (empty) empty.hidden = false;
+    return;
+  }
+  if (empty) empty.hidden = true;
+  var TYPE_SHORT = { energetique: 'Énergétique', autonomie: 'MPA', indigne: 'LHI' };
+  var escHtml = function(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); };
+  host.innerHTML = dossiers.map(function(dos){
+    var m = RFDossiers.meta(dos.type);
+    var total = (window.rfTotalDossier && window.rfTotalDossier(dos)) || RFDossiers.totalAides(dos) || 0;
+    var tl = RFDossiers.getTimeline(dos);
+    var idx = RFDossiers.getCurrentStepIndex ? RFDossiers.getCurrentStepIndex(dos) : 0;
+    var step = tl[idx];
+    var pct = Math.round((idx / tl.length) * 100);
+    var docs = (RFDossiers.getDocumentsAttendus(dos) || []).length;
+    var adr = (dos.profile && dos.profile.logement && dos.profile.logement.adresse) || '';
+    var adrCourte = adr.length > 60 ? adr.slice(0, 57) + '…' : adr;
+    return '<article class="rf-dcard rf-dcard--' + dos.type + '" data-dossier-id="' + escHtml(dos.id) + '">' +
+      '<div class="rf-dcard__head">' +
+        '<span class="rf-dcard__badge">' + (TYPE_SHORT[dos.type] || m.court) + '</span>' +
+        '<span class="rf-dcard__status">' + (window.RFTransmission ? RFTransmission.libelleStatut(dos.statutDossier) : 'Dossier créé') + ' · ' + pct + ' %</span>' +
+      '</div>' +
+      (adrCourte ? '<div class="rf-dcard__adresse"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>' + escHtml(adrCourte) + '</span></div>' : '') +
+      '<div class="rf-dcard__bar"><span style="width:' + pct + '%"></span></div>' +
+      '<div class="rf-dcard__bar-meta"><span>' + idx + ' / ' + tl.length + ' étapes</span><span>' + ((dos.partenaire && dos.partenaire.nom) ? escHtml(dos.partenaire.nom) : 'Créé le ' + RFDossiers.fmtDate(dos.transmisLe)) + '</span></div>' +
+      (step && idx < tl.length - 1 ? '<div class="rf-dcard__next">' +
+        '<div class="rf-dcard__next-label">Prochaine action' + (step.delai ? ' · sous ' + escHtml(step.delai) : '') + '</div>' +
+        '<div class="rf-dcard__next-title">' + escHtml(step.libelle) + '</div>' +
+      '</div>' : '') +
+      '<div class="rf-dcard__stats">' +
+        '<div class="rf-dcard__stat"><div class="rf-dcard__stat-label">Aides estimées</div><div class="rf-dcard__stat-value">' + Math.round(total).toLocaleString('fr-FR') + ' €</div></div>' +
+        '<div class="rf-dcard__stat"><div class="rf-dcard__stat-label">Documents à fournir</div><div class="rf-dcard__stat-value">' + docs + '</div></div>' +
+      '</div>' +
+      '<a class="rf-dcard__cta" href="' + m.detail + '?dossier=' + encodeURIComponent(dos.id) + '">Ouvrir mon dossier →</a>' +
+    '</article>';
+  }).join('');
+
+  // Met en avant le dossier tout juste créé
+  if (dossierCible){
+    var card = host.querySelector('[data-dossier-id="' + dossierCible + '"]');
+    if (card){
+      card.style.boxShadow = '0 0 0 2px var(--teal-700)';
+      showToast('Votre dossier a été créé. Vous le retrouvez ci-dessous, suivi pendant 12 mois.');
+    }
+  }
+})();
+</script>
+<script>
+/* RénoFacile — rend le widget profil de sidebar cliquable et ajoute Déconnexion */
+(function(){
+  function init(){
+    var me = document.querySelector('.sidebar .me, aside .me');
+    if (!me) return;
+    me.style.cursor = 'pointer';
+    me.style.position = 'relative';
+    var menu = document.createElement('div');
+    menu.style.cssText = 'display:none;position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid #E2E8F0;border-radius:8px;box-shadow:0 -4px 16px rgba(15,23,42,.08);padding:6px;z-index:50;font-size:13px';
+    menu.innerHTML =
+      '<a href="mon-profil.html" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:6px;color:#1E293B;text-decoration:none">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>' +
+        'Mon profil' +
+      '</a>' +
+      '<div style="height:1px;background:#E2E8F0;margin:4px 0"></div>' +
+      '<a href="#" id="rf-side-logout" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:6px;color:#DC2626;text-decoration:none">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>' +
+        'Se déconnecter' +
+      '</a>';
+    me.appendChild(menu);
+    me.addEventListener('click', function(e){
+      if (e.target.closest('a')) return;
+      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    });
+    document.addEventListener('click', function(e){
+      if (!e.target.closest('.me')) menu.style.display = 'none';
+    });
+    var logoutLink = document.getElementById('rf-side-logout');
+    if (logoutLink){
+      logoutLink.addEventListener('click', function(e){
+        e.preventDefault();
+        if (window.RFStore) RFStore.logout();
+        else {
+          ['renofacile.session','renofacile.profile'].forEach(function(k){ try{localStorage.removeItem(k);}catch{} });
+        }
+        window.location.href = 'login.html';
+      });
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+<script>
+/* Cockpit dashboard — KPI globaux et actions urgentes consolidées sur tous les dossiers. */
+(function initDashboardCockpit(){
+  'use strict';
+  if (!window.RFDossiers) return;
+  var esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); };
+  var setTxt = function(id, v){ var el = document.getElementById(id); if (el) el.textContent = v; };
+  var eur = function(n){ return Math.round(Number(n) || 0).toLocaleString('fr-FR') + ' €'; };
+  var jours = function(delai){ var mm = /(\d+)/.exec(delai || ''); return mm ? parseInt(mm[1], 10) : null; };
+
+  var greetEl = document.getElementById('rf-dash-greeting');
+  if (greetEl && window.RFUser) greetEl.textContent = RFUser.getGreeting();
+
+  var actifs = (RFDossiers.getActifs && RFDossiers.getActifs()) || [];
+  var totalAides = 0, sommePct = 0, etapesFaites = 0, docs = 0, urgent = [];
+
+  actifs.forEach(function(dos){
+    totalAides += (window.rfTotalDossier && window.rfTotalDossier(dos)) || RFDossiers.totalAides(dos) || 0;
+    var tl = RFDossiers.getTimeline(dos);
+    var idx = RFDossiers.getCurrentStepIndex(dos);
+    sommePct += Math.round((idx / tl.length) * 100);
+    etapesFaites += idx;
+    docs += (RFDossiers.getDocumentsAttendus(dos) || []).length;
+    var step = tl[idx];
+    if (step && step.delai) urgent.push({ dos: dos, step: step, j: jours(step.delai) });
+  });
+
+  setTxt('rf-dash-total-aides', actifs.length ? eur(totalAides) : '—');
+  setTxt('rf-dash-total-count', actifs.length + (actifs.length > 1 ? ' dossiers actifs' : ' dossier actif'));
+  setTxt('rf-dash-avg-progress', actifs.length ? Math.round(sommePct / actifs.length) + ' %' : '—');
+  setTxt('rf-dash-avg-detail', etapesFaites + (etapesFaites > 1 ? ' étapes complétées' : ' étape complétée'));
+  setTxt('rf-dash-docs-count', docs || '—');
+
+  urgent.sort(function(a, b){ return (a.j == null ? 999 : a.j) - (b.j == null ? 999 : b.j); });
+  if (urgent.length){
+    setTxt('rf-dash-next-deadline', urgent[0].j != null ? urgent[0].j + ' j' : '—');
+    setTxt('rf-dash-next-action', urgent[0].step.court || urgent[0].step.libelle);
+  } else {
+    setTxt('rf-dash-next-deadline', '—');
+    setTxt('rf-dash-next-action', actifs.length ? 'Aucune échéance' : 'Aucun dossier');
+  }
+
+  var section = document.getElementById('rf-dash-urgent');
+  var list = document.getElementById('rf-urgent-list');
+  if (section && list && urgent.length){
+    section.hidden = false;
+    setTxt('rf-urgent-count', urgent.length + (urgent.length > 1 ? ' actions' : ' action'));
+    var SHORT = { energetique: 'Énergétique', autonomie: 'MPA', indigne: 'LHI' };
+    list.innerHTML = urgent.map(function(u){
+      var adr = (u.dos.profile && u.dos.profile.logement && u.dos.profile.logement.adresse) || '';
+      var href = u.step.href || ('mes-aides.html?dossier=' + encodeURIComponent(u.dos.id));
+      var ext = /^https?:/.test(href) ? ' target="_blank" rel="noopener"' : '';
+      return '<div class="rf-urgent">' +
+        '<span class="rf-urgent__type rf-urgent__type--' + u.dos.type + '">' + (SHORT[u.dos.type] || u.dos.type) + '</span>' +
+        '<div><div class="rf-urgent__title">' + esc(u.step.libelle) + '</div>' +
+        '<div class="rf-urgent__meta">Sous ' + esc(u.step.delai) + (adr ? ' · ' + esc(adr) : '') + '</div></div>' +
+        '<a class="rf-urgent__cta" href="' + esc(href) + '"' + ext + '>' + esc(u.step.cta || 'Voir le dossier') + ' →</a>' +
+      '</div>';
+    }).join('');
+  }
+})();
+</script>
+</body>
+</html>

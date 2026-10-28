@@ -1,0 +1,2521 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mes aides — RénoFacile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="_pdf_docs.js" defer></script>
+<style>
+  :root{
+    --teal-50:#F0FDFA;--teal-100:#CCFBF1;--teal-200:#99F6E4;--teal-400:#2DD4BF;
+    --teal-600:#0D9488;--teal-700:#0F766E;--teal-800:#115E59;--teal-900:#134E4A;
+    --amber-100:#FEF3C7;--amber-500:#F59E0B;--amber-600:#D97706;
+    --slate-50:#F8FAFC;--slate-100:#F1F5F9;--slate-200:#E2E8F0;--slate-300:#CBD5E1;
+    --slate-400:#94A3B8;--slate-500:#64748B;--slate-600:#475569;--slate-700:#334155;
+    --slate-800:#1E293B;--slate-900:#0F172A;
+    --success-50:#ECFDF5;--success-600:#059669;
+    --warning-50:#FFFBEB;--warning-600:#D97706;
+    --danger-50:#FEF2F2;--danger-600:#DC2626;
+    --bg:#F8FAFC;--surface:#FFFFFF;--border:#E2E8F0;
+    --shadow-sm:0 1px 3px rgba(15,23,42,.06),0 1px 2px rgba(15,23,42,.04);
+    --font-sans:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --font-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+    --sidebar:280px;
+  }
+  *{box-sizing:border-box}
+  /* Le projet pilote la visibilité par l'attribut `hidden` : cette règle
+     l'emporte sur les classes qui déclarent leur propre `display`. */
+  [hidden]{display:none!important}
+  html,body{margin:0;padding:0}
+  body{font-family:var(--font-sans);color:var(--slate-800);background:var(--bg);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer}
+
+  .layout{display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:100vh}
+  /* Sans min-width:0, la colonne 1fr adopte la largeur min-content de son contenu
+     et le stepper du copilote élargit la page au lieu de scroller. */
+  .layout>main{min-width:0}
+  @media (max-width:880px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+
+  .sidebar{background:#fff;border-right:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh;overflow-y:auto}
+  .brand{display:flex;align-items:center;gap:12px;padding:0 8px;flex-shrink:0}
+  .brand-mark{width:30px;height:30px;border-radius:8px;background:var(--teal-700);display:grid;place-items:center}
+  .brand-name{font-weight:700;font-size:17px;letter-spacing:-.01em}
+
+  .total-widget{padding:18px;border-radius:14px;background:linear-gradient(135deg,var(--teal-700),var(--teal-900));color:#fff;position:relative;overflow:hidden;flex-shrink:0}
+  .total-widget::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 80% at 100% 0%,rgba(45,212,191,.18),transparent 60%)}
+  .total-widget .lbl{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;opacity:.75;position:relative}
+  .total-widget .val{font:700 28px var(--font-mono);letter-spacing:-.01em;margin-top:4px;position:relative}
+  .total-widget .sub{font-size:12.5px;opacity:.85;position:relative;margin-top:2px}
+
+  .nav{display:flex;flex-direction:column;gap:2px}
+  .nav-section{padding:8px 12px 4px;font:600 11px var(--font-mono);color:var(--slate-400);letter-spacing:.06em;text-transform:uppercase}
+  .nav a{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;color:var(--slate-700);font-size:14px;font-weight:500}
+  .nav a:hover{background:var(--slate-100)}
+  .nav a.active{background:var(--teal-50);color:var(--teal-800)}
+  .nav a.active svg{color:var(--teal-700)}
+  .nav a svg{color:var(--slate-400);flex:0 0 auto}
+  .nav a .badge{margin-left:auto;background:var(--slate-100);color:var(--slate-600);font:500 11px var(--font-mono);padding:2px 7px;border-radius:999px}
+  .nav a.active .badge{background:#fff;color:var(--teal-700)}
+
+  .me{margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:10px}
+  .me .av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--teal-100),var(--teal-400));display:grid;place-items:center;color:var(--teal-900);font:600 12px var(--font-sans)}
+  .me .nm{font-size:13.5px;font-weight:600;line-height:1.2}
+  .me .em{font-size:12px;color:var(--slate-500)}
+
+  main{padding:32px 40px 64px;max-width:1180px;width:100%}
+  @media (max-width:640px){main{padding:24px 20px 60px}}
+
+  .top-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px;gap:18px;flex-wrap:wrap}
+  h1.page-title{font-size:28px;font-weight:700;letter-spacing:-.02em;margin:0}
+  .breadcrumb{font:500 12px var(--font-mono);color:var(--slate-500);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+  .btn{display:inline-flex;align-items:center;gap:8px;font:500 14px var(--font-sans);line-height:1;padding:10px 14px;border-radius:8px;border:1px solid transparent;cursor:pointer;text-decoration:none}
+  .btn-primary{background:var(--teal-700);color:#fff}
+  .btn-primary:hover{background:var(--teal-800)}
+  .btn-secondary{background:#fff;color:var(--slate-800);border-color:var(--border)}
+  .btn-secondary:hover{border-color:var(--slate-400)}
+  .btn-ghost{background:transparent;color:var(--slate-700)}
+  .btn-ghost:hover{background:var(--slate-100)}
+
+  /* Summary stack */
+  .stack{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:28px;display:grid;grid-template-columns:1.4fr 1fr;gap:32px}
+  @media (max-width:880px){.stack{grid-template-columns:1fr}}
+  .stack-left h2{margin:0 0 4px;font-size:14px;font-weight:600;color:var(--slate-600);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.06em}
+  .stack-total{font:700 44px var(--font-mono);letter-spacing:-.02em;color:var(--slate-900);margin:6px 0 0}
+  .stack-cap{font-size:13.5px;color:var(--slate-500);margin-top:6px}
+  .bar{height:14px;border-radius:8px;display:flex;overflow:hidden;background:var(--slate-100);margin-top:18px}
+  .bar i{display:block;height:100%}
+  .bar i.b1{background:var(--teal-700)}
+  .bar i.b2{background:var(--teal-400)}
+  .bar i.b3{background:var(--amber-500)}
+  .bar i.b4{background:var(--slate-300)}
+  .legend{display:flex;flex-direction:column;gap:10px}
+  .legend--hors{margin-top:14px;padding-top:12px;border-top:1px dashed var(--border)}
+  .legend--hors .hors-title{font:600 11px var(--font-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--slate-500);margin-bottom:8px}
+  .legend--hors .nm{color:var(--slate-600)}
+  .legend--hors .hors-note{display:block;font-size:11.5px;color:var(--slate-500);margin-top:1px}
+  .legend--hors .v{color:var(--slate-600)}
+  .legend .row{display:flex;align-items:center;gap:10px;font-size:13.5px}
+  .legend .sw{width:10px;height:10px;border-radius:3px;flex:0 0 auto}
+  .legend .nm{flex:1}
+  .legend .v{font:600 13px var(--font-mono);color:var(--slate-700)}
+
+  /* Filter */
+  .filters{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;background:var(--slate-100);padding:5px;border-radius:10px;width:fit-content;max-width:100%;overflow-x:auto}
+  .filters button{padding:7px 14px;border-radius:7px;border:0;background:transparent;font:500 13px var(--font-sans);color:var(--slate-600);white-space:nowrap}
+  .filters button.on{background:#fff;color:var(--teal-700);box-shadow:var(--shadow-sm);font-weight:600}
+
+  /* Aid card */
+  .aids{display:flex;flex-direction:column;gap:14px}
+  .aid{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .aid-head{padding:18px 22px;display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}
+  .aid-h-l{display:flex;gap:14px;align-items:flex-start}
+  .aid-logo{width:44px;height:44px;border-radius:10px;background:var(--teal-50);color:var(--teal-700);display:grid;place-items:center;flex:0 0 auto;font:700 14px var(--font-mono)}
+  .aid-logo.cee{background:var(--amber-100);color:var(--amber-600)}
+  .aid-logo.local{background:#EFF6FF;color:#1E3A8A}
+  .aid-logo.eptz{background:#F3E8FF;color:#7E22CE}
+  .aid-name{font-weight:700;font-size:16px;letter-spacing:-.005em}
+  .aid-org{font-size:13px;color:var(--slate-500);margin-top:2px}
+  .aid-amount{text-align:right}
+  .aid-amount .v{font:700 22px var(--font-mono);letter-spacing:-.01em;color:var(--slate-900)}
+  .aid-amount .s{font-size:12px;color:var(--slate-500);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.04em}
+
+  .aid-body{padding:0 22px 18px;display:grid;grid-template-columns:1fr auto;gap:18px;align-items:end}
+  @media (max-width:720px){.aid-head,.aid-body{grid-template-columns:1fr}.aid-amount{text-align:left}}
+
+  .aid-progress{flex:1}
+  .steps{display:flex;align-items:center;gap:0;margin-top:6px}
+  .steps .step{flex:1;display:flex;align-items:center;gap:8px}
+  .steps .step:last-child{flex:0 0 auto}
+  .steps .dot{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--slate-300);flex:0 0 auto;position:relative}
+  .steps .ln{flex:1;height:2px;background:var(--slate-200)}
+  .steps .step.done .dot{background:var(--success-600);border-color:var(--success-600)}
+  .steps .step.done .dot::after{content:"";position:absolute;left:3px;top:2px;width:7px;height:3.5px;border-left:1.6px solid #fff;border-bottom:1.6px solid #fff;transform:rotate(-45deg)}
+  .steps .step.active .dot{background:var(--teal-700);border-color:var(--teal-700);box-shadow:0 0 0 4px var(--teal-100)}
+  .steps .step.done .ln,.steps .step.active .ln{background:var(--teal-200,#99F6E4)}
+  .step-labels{display:flex;justify-content:space-between;font:500 11px var(--font-mono);color:var(--slate-500);margin-top:8px;text-transform:uppercase;letter-spacing:.04em}
+  .step-labels span.cur{color:var(--teal-700);font-weight:600}
+
+  .aid-meta{display:flex;gap:14px;font-size:12.5px;color:var(--slate-500);margin-top:10px;flex-wrap:wrap}
+  .aid-meta b{font-weight:600;color:var(--slate-700)}
+  .aid-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+  .pill{font:500 11px var(--font-mono);padding:3px 9px;border-radius:999px;letter-spacing:.04em;text-transform:uppercase;display:inline-block}
+  .pill.eligible{background:var(--teal-50);color:var(--teal-800)}
+  .pill.depose{background:#EFF6FF;color:#1E3A8A}
+  .pill.review{background:var(--warning-50);color:var(--warning-600)}
+  .pill.granted{background:var(--success-50);color:var(--success-600)}
+  .pill.refused{background:var(--danger-50);color:var(--danger-600)}
+  .pill.attente{background:var(--slate-100);color:var(--slate-600)}
+
+  .aid-foot{padding:14px 22px;background:var(--slate-50);border-top:1px solid var(--border);font-size:13px;color:var(--slate-600);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+  .aid-foot .last{font-family:var(--font-mono);font-size:12px;color:var(--slate-500)}
+
+  .empty{padding:32px;text-align:center;color:var(--slate-500);background:#fff;border:1px dashed var(--border);border-radius:14px}
+
+  .info-callout{display:flex;gap:14px;padding:16px 18px;border-radius:12px;background:var(--teal-50);border:1px solid var(--teal-100);color:var(--teal-800);margin-bottom:24px}
+  .info-callout svg{flex:0 0 auto;color:var(--teal-700);margin-top:2px}
+  .info-callout .h{font-weight:600;margin-bottom:2px}
+  .info-callout .s{font-size:13.5px}
+  /* Synthèse multi-dossiers */
+  .dos-section{margin-bottom:28px}
+  .dos-section>h2{margin:0 0 14px;font-size:20px;font-weight:700;letter-spacing:-.01em;color:var(--slate-900)}
+  .dos-block{background:#fff;border:1px solid var(--border);border-left:4px solid var(--slate-300);border-radius:12px;padding:18px 20px;margin-bottom:14px}
+  .dos-block h3{margin:0 0 4px;font:600 12px var(--font-mono);letter-spacing:.06em;text-transform:uppercase}
+  .dos-block .dos-adresse{font-size:13px;color:var(--slate-600);margin:2px 0 6px}
+  .dos-block .dos-meta{font-size:12px;color:var(--slate-500);margin-bottom:12px}
+  .dos-lines{display:flex;flex-direction:column;gap:8px}
+  .dos-line{display:flex;justify-content:space-between;gap:14px;font-size:14px;color:var(--slate-600);padding-bottom:8px;border-bottom:1px solid var(--slate-100,#f1f5f9)}
+  .dos-line:last-child{border-bottom:0;padding-bottom:0}
+  .dos-line strong{font:600 15px var(--font-mono);color:var(--slate-900);white-space:nowrap}
+  .dos-line.tot strong{color:var(--teal-700);font-size:17px}
+  /* Alertes réglementaires et services pris en charge (vue dossier) */
+  .lhi-alert{display:flex;gap:10px;align-items:flex-start;background:#FEF3C7;border:1px solid #FCD34D;border-radius:10px;padding:12px 14px;margin-bottom:10px;font-size:13px;color:#78350F;line-height:1.55}
+  .lhi-alert svg{flex:0 0 auto;margin-top:2px}
+  #lhi-detail .aid-body,#mpa-detail .aid-body{display:block}
+  .aid-service .aid-head{padding:16px 20px}
+  .aid-service .aid-body{padding:0 20px 16px;font-size:13.5px;color:var(--slate-600);line-height:1.55}
+  .aid-free{padding:3px 10px;border-radius:999px;font:600 11px var(--font-mono);text-transform:uppercase;letter-spacing:.04em;background:var(--success-50);color:var(--success-600)}
+  .dos-section-label{font:600 11px var(--font-mono);color:var(--teal-700);letter-spacing:.06em;text-transform:uppercase;margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--slate-100,#f1f5f9)}
+  .dos-lines > .dos-section-label:first-child{border-top:0;padding-top:0;margin-top:0}
+  .dos-section-label--small{color:var(--slate-500);font-weight:500}
+  .dos-note{color:var(--slate-400);font-size:12.5px;font-weight:400}
+  .dos-line--service em,.dos-line--pret em{color:var(--slate-500);font-style:normal;font-weight:500;font-size:12.5px;white-space:nowrap}
+  .dos-tag-gratuit{color:var(--teal-700);font-style:normal;font-weight:500;font-size:12.5px;white-space:nowrap}
+  .dos-relance{color:var(--teal-700);font-weight:600;text-decoration:none;padding:4px 10px;border:1px solid var(--teal-100);border-radius:6px;font-size:12.5px;white-space:nowrap}
+  .dos-relance:hover{background:var(--teal-50);text-decoration:none}
+  .dos-open{display:inline-block;margin-top:12px;font:600 13px var(--font-sans);color:var(--teal-700)}
+</style>
+  <script src="_baremes_sources.js"></script>
+<script src="_compute_aids.js"></script>
+<script src="_alertes.js"></script>
+  <script src="_partner_config.js"></script>
+  <script src="_analytics.js" defer></script>
+<link rel="stylesheet" href="_mobile_nav.css">
+<script src="_mobile_nav.js" defer></script>
+<script src="_user.js"></script>
+<script src="_mar.js"></script>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg></span>
+      <span class="brand-name">Réno<span style="color:var(--teal-700)">Facile</span></span>
+    </a>
+
+    <div class="total-widget" id="rf-aides-widget">
+      <div class="lbl">Aides estimées</div>
+      <div class="val" id="rf-aides-val">—</div>
+      <div class="sub" id="rf-aides-sub">Diagnostic à compléter</div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section" >Mon parcours</div>
+      <a href="dashboard.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg> Mon projet</a>
+      <a href="mes-aides.html" class="active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg> Mes aides</a>
+      <a href="mes-documents.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg> Mes documents</a>
+      <div class="nav-section" style="margin-top:8px">Outils</div>
+      <a href="annuaire-artisans.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg> Annuaire artisans</a>
+      <a href="glossaire-aides.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg> Comprendre les aides</a>
+      <div class="nav-section" style="margin-top:8px">Compte</div>
+      <a href="mon-profil.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg> Mon profil</a>
+      <a href="page-info.html?p=contact"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg> Paramètres</a>
+
+      <div class="exit" style="margin-top:6px;padding-top:14px;border-top:1px solid var(--border)">
+        <a href="index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg> Retour à l'accueil du site</a>
+      </div>
+    </nav>
+
+    <div class="me">
+      <div class="av" id="rf-me-av">RF</div>
+      <div>
+        <div class="nm" id="rf-me-name">Mon compte</div>
+        <div class="em" id="rf-me-plan">—</div>
+      </div>
+    </div>
+  </aside>
+
+  <main data-screen-label="Mes aides">
+    <div class="top-row">
+      <div>
+        <div class="breadcrumb">Mon parcours · Mes aides</div>
+        <h1 class="page-title">Mes aides</h1>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <a href="page-info.html?p=guide-mpr" class="btn btn-secondary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg>
+          Comprendre les aides
+        </a>
+        <a href="choix-parcours.html" class="btn btn-primary" id="cta-diag">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          Estimer mes aides
+        </a>
+      </div>
+    </div>
+
+    <!-- MaPrimeAdapt' \u2014 volet perte d'autonomie -->
+<style>
+  /* ── Copilote de parcours (mode « dossier ouvert ») ─────────────────
+     Priorité stricte à l'action en cours : hero + stepper, card action,
+     checklist, puis le détail des aides plus bas dans la page. */
+  .rf-admin{display:none;margin-bottom:40px}
+  .rf-admin.is-on{display:block}
+  .rf-admin,.rf-hero,.rf-action,.rf-action__body{min-width:0}
+  .rf-hero{background:linear-gradient(135deg,#115E59,#0F3F3B);color:#fff;padding:30px 30px 0;border-radius:16px;margin-bottom:28px}
+  .rf-hero__top{display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;padding-bottom:22px}
+  .rf-hero h2{font-size:27px;font-weight:700;letter-spacing:-.02em;margin:0 0 8px;color:#fff;line-height:1.15}
+  .rf-hero__meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px;margin:0;color:rgba(255,255,255,.85)}
+  .rf-hero__badge{background:rgba(255,255,255,.15);padding:5px 12px;border-radius:20px;font-weight:600;font-size:13px}
+  .rf-hero__stats{display:flex;gap:32px}
+  .rf-hero__stat{display:flex;flex-direction:column;align-items:flex-end}
+  .rf-hero__stat-value{font-size:26px;font-weight:700;letter-spacing:-.02em;color:#fff}
+  .rf-hero__stat-label{font:500 11px var(--font-mono);opacity:.75;text-transform:uppercase;letter-spacing:.06em;margin-top:5px}
+  .rf-stepper{display:flex;gap:0;padding:18px 0 22px;border-top:1px solid rgba(255,255,255,.15);overflow-x:auto;scrollbar-width:none}
+  .rf-stepper::-webkit-scrollbar{display:none}
+  .rf-step{flex:1;min-width:88px;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;padding:0 4px}
+  .rf-step__badge{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.15);color:rgba(255,255,255,.75);font-weight:700;font-size:13.5px;position:relative;z-index:2;transition:all 200ms}
+  .rf-step--done .rf-step__badge{background:#10B981;color:#fff}
+  .rf-step--current .rf-step__badge{background:#fff;color:#0F3F3B;animation:rfPulse 2s infinite}
+  @keyframes rfPulse{0%,100%{box-shadow:0 0 0 4px rgba(255,255,255,.25)}50%{box-shadow:0 0 0 8px rgba(255,255,255,.35)}}
+  .rf-step__label{font-size:11px;text-align:center;line-height:1.25;opacity:.8}
+  .rf-step--current .rf-step__label{opacity:1;font-weight:700}
+  .rf-step::after{content:"";position:absolute;top:16px;left:50%;width:100%;height:2px;background:rgba(255,255,255,.15);z-index:1}
+  .rf-step:last-child::after{display:none}
+  .rf-step--done::after{background:#10B981}
+
+  .rf-action{display:grid;grid-template-columns:140px 1fr;gap:30px;background:linear-gradient(135deg,#F0FDFA,#CCFBF1);border:3px solid #0D9488;border-radius:16px;padding:30px;margin-bottom:36px;box-shadow:0 8px 24px rgba(13,148,136,.15);position:relative;overflow:hidden}
+  .rf-action__num-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.7);border-radius:12px;padding:22px;position:relative;z-index:1}
+  .rf-action__num{font-size:70px;font-weight:800;line-height:1;letter-spacing:-.04em;color:#115E59}
+  .rf-action__num-label{font:700 10.5px var(--font-mono);text-transform:uppercase;letter-spacing:.1em;margin-top:8px;text-align:center;color:#134E4A}
+  .rf-action__body{position:relative;z-index:1;min-width:0}
+  .rf-action__meta{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;margin-bottom:12px;color:#115E59}
+  .rf-action__meta b{font-weight:700}
+  .rf-action h3{font-size:26px;line-height:1.25;margin:0 0 12px;letter-spacing:-.02em;color:#134E4A}
+  .rf-action__desc{font-size:15px;line-height:1.55;margin:0 0 20px;color:#115E59;text-wrap:pretty}
+  .rf-action__tips{background:rgba(255,255,255,.65);border-left:3px solid #0D9488;border-radius:8px;padding:14px 18px;margin-bottom:20px}
+  .rf-action__tips-title{font:700 13px var(--font-sans);margin-bottom:6px;color:#134E4A}
+  .rf-action__tips ul{margin:0;padding-left:20px;font-size:13.5px;line-height:1.7;color:#115E59}
+  .rf-action__ctas{display:flex;gap:12px;flex-wrap:wrap}
+  .rf-action__cta{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;background:#0F766E;color:#fff;border:0;border-radius:10px;font:700 15px var(--font-sans);text-decoration:none;cursor:pointer;transition:all 180ms;box-shadow:0 4px 12px rgba(15,118,110,.3)}
+  .rf-action__cta:hover{background:#115E59;color:#fff;text-decoration:none;transform:translateY(-2px);box-shadow:0 6px 16px rgba(15,118,110,.4)}
+  .rf-action__cta--ghost{background:#fff;color:#115E59;border:2px solid rgba(13,148,136,.35);box-shadow:none;font-weight:600;font-size:14px;padding:14px 20px}
+  .rf-action__cta--ghost:hover{background:#F0FDFA;color:#134E4A;transform:none;box-shadow:none}
+
+  .rf-admin-block{margin-bottom:32px}
+  .rf-admin-block__head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:14px}
+  .rf-admin-block__head h3{font-size:18px;margin:0}
+  .rf-admin-block__count{font-size:13px;color:var(--slate-500);font-weight:500}
+  .rf-admin-link{color:var(--teal-700);font-size:13.5px;font-weight:600;text-decoration:none}
+  .rf-check{background:#fff;border:1px solid var(--slate-100);border-radius:12px;overflow:hidden}
+  .rf-check__item{display:grid;grid-template-columns:24px 1fr auto;gap:14px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--slate-50,#F8FAFC)}
+  .rf-check__item:last-child{border-bottom:0}
+  .rf-check__item--done{background:#F0FDF4}
+  .rf-check__item--current{background:#F0FDFA;border-left:4px solid #0D9488;padding-left:14px}
+  .rf-check__box{width:22px;height:22px;border-radius:6px;border:2px solid var(--slate-300);background:#fff;display:grid;place-items:center;font-size:12px;font-weight:700}
+  .rf-check__item--done .rf-check__box{background:#16A34A;border-color:#16A34A;color:#fff}
+  .rf-check__item--current .rf-check__box{border-color:#0D9488;color:#0D9488}
+  .rf-check__label{font-size:14.5px;color:var(--slate-800);font-weight:500}
+  .rf-check__item--done .rf-check__label{color:var(--slate-500)}
+  .rf-check__item--current .rf-check__label{font-weight:700;color:#115E59}
+  .rf-check__item--pending .rf-check__label{color:var(--slate-500)}
+  .rf-check__badge{font:600 11px var(--font-mono);padding:4px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.04em;background:var(--slate-100);color:var(--slate-500);white-space:nowrap}
+  .rf-check__item--done .rf-check__badge{background:#DCFCE7;color:#166534}
+  .rf-check__item--current .rf-check__badge{background:#CCFBF1;color:#115E59}
+  .rf-admin-docs{display:flex;flex-direction:column;gap:8px}
+  .rf-admin-doc{display:grid;grid-template-columns:auto 1fr auto;gap:14px;padding:12px 16px;background:#fff;border:1px solid var(--slate-100);border-radius:10px;align-items:center}
+  .rf-admin-doc__ico{width:34px;height:34px;border-radius:8px;background:var(--slate-50);color:var(--slate-500);display:grid;place-items:center;font:600 10px var(--font-mono)}
+  .rf-admin-doc__name{font-weight:600;color:var(--slate-800);font-size:14px}
+  .rf-admin-doc__for{font-size:12.5px;color:var(--slate-500);margin-top:2px}
+  .rf-admin-doc__cta{padding:7px 14px;background:var(--teal-50,#F0FDFA);color:var(--teal-700);border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap}
+  .rf-admin-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .rf-admin-summary__item{background:#fff;border:1px solid var(--slate-100);border-radius:10px;padding:14px 16px}
+  .rf-admin-summary__label{font:500 11.5px var(--font-mono);color:var(--slate-500);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+  .rf-admin-summary__value{font-size:18px;font-weight:700;color:var(--slate-900);letter-spacing:-.01em}
+  .rf-admin-summary__value.sm{font-size:14.5px;font-weight:600;line-height:1.35}
+
+  /* Chromatique par type — MPA violet */
+  .rf-admin-type-autonomie .rf-hero{background:linear-gradient(135deg,#5B21B6,#3B1580)}
+  .rf-admin-type-autonomie .rf-step--current .rf-step__badge{color:#3B1580}
+  .rf-admin-type-autonomie .rf-action{background:linear-gradient(135deg,#F5F3FF,#DDD6FE);border-color:#8B5CF6;box-shadow:0 8px 24px rgba(139,92,246,.15)}
+  .rf-admin-type-autonomie .rf-action__num,.rf-admin-type-autonomie .rf-action__meta,.rf-admin-type-autonomie .rf-action__desc,.rf-admin-type-autonomie .rf-action__tips ul{color:#5B21B6}
+  .rf-admin-type-autonomie .rf-action h3,.rf-admin-type-autonomie .rf-action__num-label,.rf-admin-type-autonomie .rf-action__tips-title{color:#2E1065}
+  .rf-admin-type-autonomie .rf-action__tips{border-left-color:#7C3AED}
+  .rf-admin-type-autonomie .rf-action__cta{background:#6D28D9;box-shadow:0 4px 12px rgba(109,40,217,.3)}
+  .rf-admin-type-autonomie .rf-action__cta:hover{background:#5B21B6;box-shadow:0 6px 16px rgba(109,40,217,.4)}
+  .rf-admin-type-autonomie .rf-action__cta--ghost{background:#fff;color:#5B21B6;border-color:rgba(124,58,237,.35);box-shadow:none}
+  .rf-admin-type-autonomie .rf-check__item--current{background:#F5F3FF;border-left-color:#7C3AED}
+  .rf-admin-type-autonomie .rf-check__item--current .rf-check__box{border-color:#7C3AED;color:#7C3AED}
+  .rf-admin-type-autonomie .rf-check__item--current .rf-check__label{color:#5B21B6}
+  .rf-admin-type-autonomie .rf-check__item--current .rf-check__badge{background:#EDE9FE;color:#5B21B6}
+  .rf-admin-type-autonomie .rf-admin-link,.rf-admin-type-autonomie .rf-admin-doc__cta{color:#5B21B6}
+  .rf-admin-type-autonomie .rf-admin-doc__cta{background:#F5F3FF}
+
+  /* Chromatique par type — LHI ambre */
+  .rf-admin-type-indigne .rf-hero{background:linear-gradient(135deg,#92400E,#5C2708)}
+  .rf-admin-type-indigne .rf-step--current .rf-step__badge{color:#5C2708}
+  .rf-admin-type-indigne .rf-action{background:linear-gradient(135deg,#FFFBEB,#FDE68A);border-color:#F59E0B;box-shadow:0 8px 24px rgba(245,158,11,.15)}
+  .rf-admin-type-indigne .rf-action__num,.rf-admin-type-indigne .rf-action__meta,.rf-admin-type-indigne .rf-action__desc,.rf-admin-type-indigne .rf-action__tips ul{color:#92400E}
+  .rf-admin-type-indigne .rf-action h3,.rf-admin-type-indigne .rf-action__num-label,.rf-admin-type-indigne .rf-action__tips-title{color:#451A03}
+  .rf-admin-type-indigne .rf-action__tips{border-left-color:#D97706}
+  .rf-admin-type-indigne .rf-action__cta{background:#B45309;box-shadow:0 4px 12px rgba(180,83,9,.3)}
+  .rf-admin-type-indigne .rf-action__cta:hover{background:#92400E;box-shadow:0 6px 16px rgba(180,83,9,.4)}
+  .rf-admin-type-indigne .rf-action__cta--ghost{background:#fff;color:#92400E;border-color:rgba(217,119,6,.35);box-shadow:none}
+  .rf-admin-type-indigne .rf-check__item--current{background:#FFFBEB;border-left-color:#D97706}
+  .rf-admin-type-indigne .rf-check__item--current .rf-check__box{border-color:#D97706;color:#D97706}
+  .rf-admin-type-indigne .rf-check__item--current .rf-check__label{color:#92400E}
+  .rf-admin-type-indigne .rf-check__item--current .rf-check__badge{background:#FEF3C7;color:#92400E}
+  .rf-admin-type-indigne .rf-admin-link,.rf-admin-type-indigne .rf-admin-doc__cta{color:#92400E}
+  .rf-admin-type-indigne .rf-admin-doc__cta{background:#FFFBEB}
+
+  @media (max-width:880px){
+    .rf-hero{padding:22px 20px 0}
+    .rf-hero__top{grid-template-columns:1fr;gap:18px;align-items:start}
+    .rf-hero__stats{gap:28px}
+    .rf-hero__stat{align-items:flex-start}
+    .rf-admin-summary{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (max-width:720px){
+    .rf-action{grid-template-columns:1fr;gap:16px;padding:20px}
+    .rf-action__num-wrap{flex-direction:row;gap:16px;padding:14px 18px;justify-content:flex-start}
+    .rf-action__num{font-size:46px}
+    .rf-action__num-label{margin-top:0;text-align:left}
+    .rf-action h3{font-size:22px}
+    .rf-action__ctas{flex-direction:column}
+    .rf-action__ctas .rf-action__cta{width:100%;justify-content:center}
+  }
+
+/* ══════════════════════════════════════════════════════════════════
+   Repli mobile — DÉLIBÉRÉMENT EN FIN DE FEUILLE.
+   La media query qui replie la barre latérale était déclarée AVANT la
+   règle de base `.sidebar{display:flex}` : à spécificité égale c'est la
+   dernière déclarée qui gagne, la barre restait affichée et poussait la
+   page à 654 px de large. Ne pas remonter ce bloc.
+   `:not(.open)` est indispensable, sinon le tiroir mobile ne s'ouvre
+   plus. `minmax(0,1fr)` remplace `1fr`, qui ne descend jamais sous la
+   largeur minimale de son contenu — un seul tableau large suffisait à
+   élargir toute la page.
+   ══════════════════════════════════════════════════════════════════ */
+@media (max-width:880px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .sidebar:not(.open){display:none}
+  .layout > main,.layout > .main{min-width:0;max-width:100%;overflow-x:hidden}
+  .layout table{display:block;overflow-x:auto;max-width:100%}
+}
+/* Respect de « réduire les animations » — neuf animations déclarées, dont un
+   badge en pulsation infinie que rien n'arrêtait. */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+/* Focus visible — les règles `outline:none` + halo `teal-100` donnaient
+   1,13:1 pour un seuil de 3:1. Contour rétabli, halo conservé. */
+:where(input,select,textarea,button,a,[tabindex]):focus-visible{
+  outline:2px solid var(--teal-700)!important;outline-offset:2px!important;
+}
+.suggest > *:focus-visible,.suggest .item:focus-visible,.suggest li:focus-visible{
+  outline:2px solid var(--teal-700)!important;outline-offset:-2px!important;
+}
+
+/* Lien vers le glossaire — les tunnels masquent la navigation publique */
+.rf-glossaire-lien{max-width:720px;margin:28px auto 36px;padding:0 20px;text-align:center;font-size:14px}
+.rf-glossaire-lien a{color:var(--teal-700);font-weight:600}
+abbr[title]{text-decoration:underline dotted;text-underline-offset:3px;cursor:help}
+</style>
+
+    <!-- Copilote de parcours : visible uniquement quand un dossier est ouvert. -->
+    <section class="rf-admin" id="rf-admin" aria-label="Suivi de mon dossier">
+      <section class="rf-hero">
+        <div class="rf-hero__top">
+          <div>
+            <h2 id="rf-admin-greeting">Bonjour</h2>
+            <p class="rf-hero__meta">
+              <span class="rf-hero__badge" id="rf-hero-type">—</span>
+              <span id="rf-hero-adresse"></span>
+            </p>
+          </div>
+          <div class="rf-hero__stats">
+            <div class="rf-hero__stat"><span class="rf-hero__stat-value" id="rf-hero-aides">—</span><span class="rf-hero__stat-label">Aides à récupérer</span></div>
+            <div class="rf-hero__stat"><span class="rf-hero__stat-value" id="rf-hero-step">—</span><span class="rf-hero__stat-label">Étapes complétées</span></div>
+          </div>
+        </div>
+        <nav class="rf-stepper" id="rf-stepper" aria-label="Progression du dossier"></nav>
+      </section>
+
+      <section class="rf-action" id="rf-next-action">
+        <div class="rf-action__num-wrap">
+          <div class="rf-action__num" id="rf-next-num">—</div>
+          <div class="rf-action__num-label">Étape en cours</div>
+        </div>
+        <div class="rf-action__body">
+          <div class="rf-action__meta">
+            <span id="rf-next-delai-wrap" hidden>À faire sous <b id="rf-next-delai">—</b></span>
+            <span id="rf-next-duree-wrap" hidden>Temps estimé <b id="rf-next-duree">—</b></span>
+          </div>
+          <h3 id="rf-next-title">—</h3>
+          <p class="rf-action__desc" id="rf-next-desc"></p>
+          <div class="rf-action__tips" id="rf-next-tips" hidden>
+            <div class="rf-action__tips-title">Ce qu'il faut préparer</div>
+            <ul id="rf-next-tips-list"></ul>
+          </div>
+          <div class="rf-action__ctas">
+            <a class="rf-action__cta" id="rf-next-cta" href="#" hidden>—</a>
+            <button type="button" class="rf-action__cta rf-action__cta--ghost" id="rf-mark-done">✓ J'ai fait cette étape</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="rf-admin-block">
+        <div class="rf-admin-block__head">
+          <h3>Toutes les étapes de votre parcours</h3>
+          <span class="rf-admin-block__count"><span id="rf-check-done">0</span> sur <span id="rf-check-total">0</span> complétées</span>
+        </div>
+        <div class="rf-check" id="rf-checklist"></div>
+      </div>
+
+      <div class="rf-admin-block">
+        <div class="rf-admin-block__head">
+          <h3>Documents à préparer pour cette étape</h3>
+          <a href="mes-documents.html" class="rf-admin-link">Voir tous mes documents →</a>
+        </div>
+        <div class="rf-admin-docs" id="rf-admin-doc-list"></div>
+      </div>
+
+      <div class="rf-admin-block">
+        <div class="rf-admin-block__head"><h3>Votre dossier en un coup d'œil</h3></div>
+        <div class="rf-admin-summary">
+          <div class="rf-admin-summary__item"><div class="rf-admin-summary__label">Adresse</div><div class="rf-admin-summary__value sm" id="rf-summary-adresse">—</div></div>
+          <div class="rf-admin-summary__item"><div class="rf-admin-summary__label">Aides totales estimées</div><div class="rf-admin-summary__value" id="rf-summary-aides">—</div></div>
+          <div class="rf-admin-summary__item"><div class="rf-admin-summary__label">Reste à votre charge</div><div class="rf-admin-summary__value" id="rf-summary-reste">—</div></div>
+          <div class="rf-admin-summary__item"><div class="rf-admin-summary__label">Accompagnateur</div><div class="rf-admin-summary__value sm" id="rf-summary-partenaire">—</div></div>
+        </div>
+        <div id="rf-mar-line-anchor"></div>
+      </div>
+    </section>
+
+    <section class="dos-section" id="dos-section" hidden>
+      <h2>Vos dossiers en cours</h2>
+      <div id="dos-liste"></div>
+    </section>
+
+    <!-- Aperçu des formulaires officiels : l'utilisateur doit voir
+         tout de suite ce qu'il reste à déposer, sans passer par « Mes documents ». -->
+    <section id="dossiers-a-deposer" class="dos-section" hidden>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+        <h2 style="margin:0">Mes dossiers officiels à déposer</h2>
+        <a href="mes-documents.html" style="font-size:13px;font-weight:600;color:var(--teal-700)">Voir tous mes documents →</a>
+      </div>
+      <div id="dossiers-a-deposer-list" style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:6px 20px"></div>
+    </section>
+
+    <div class="aid" id="aid-block-mpa" style="margin-bottom:24px" hidden>
+      <div class="aid-head">
+        <div class="aid-h-l">
+          <div class="aid-logo" style="background:#EFF6FF;color:#1E3A8A">MPA</div>
+          <div>
+            <div class="aid-name">MaPrimeAdapt' — adaptation à la perte d'autonomie</div>
+            <div class="aid-org">Anah · jusqu'à 70 % des travaux, plafond 22 000 € HT</div>
+          </div>
+        </div>
+        <div class="aid-amount"><div class="s">à estimer</div></div>
+      </div>
+      <div class="aid-body" style="grid-template-columns:1fr">
+        <ul style="margin:0;padding-left:20px;color:var(--slate-600);font-size:13.5px;line-height:1.7">
+          <li>70 ans et plus (sans autre condition), 60-69 ans avec GIR, ou handicap ≥ 50 % / bénéficiaire PCH</li>
+          <li>Revenus modestes ou très modestes uniquement</li>
+          <li>Douche de plain-pied, monte-escalier, accessibilité, aménagements adaptés</li>
+          <li>Cumulable avec MaPrimeRénov' — les plafonds sont dissociés</li>
+          <li>Accompagnement AMO obligatoire, financé par un forfait Anah de <span data-bareme="amo_mpa">350 à 800&nbsp;€</span></li>
+        </ul>
+      </div>
+      <div class="aid-foot">
+        <span>Le crédit d'impôt autonomie a été supprimé au 1<sup>er</sup> janvier 2026.</span>
+        <a href="parcours-autonomie.html" class="btn btn-secondary">Estimer mon aide MaPrimeAdapt' →</a>
+      </div>
+    </div>
+
+    <!-- Ma Prime Logement D\u00e9cent + LHI \u2014 habitat d\u00e9grad\u00e9 -->
+    <div class="aid" id="aid-block-lhi" style="margin-bottom:24px" hidden>
+      <div class="aid-head">
+        <div class="aid-h-l">
+          <div class="aid-logo" style="background:var(--amber-100);color:var(--amber-600)">LHI</div>
+          <div>
+            <div class="aid-name">Ma Prime Logement Décent — habitat dégradé</div>
+            <div class="aid-org">Anah · jusqu'à 80 % des travaux, plafond 70 000 € HT</div>
+          </div>
+        </div>
+        <div class="aid-amount"><div class="s">à estimer</div></div>
+      </div>
+      <div class="aid-body" style="grid-template-columns:1fr">
+        <ul style="margin:0;padding-left:20px;color:var(--slate-600);font-size:13.5px;line-height:1.7">
+          <li>Propriétaires occupants aux revenus modestes ou très modestes : <b>Ma Prime Logement Décent</b>, 60 à 80 % des travaux</li>
+          <li>Propriétaires bailleurs : 25 à 35 % des travaux avec une convention Loc'Avantages de 6 ans</li>
+          <li>Copropriétés sous arrêté de police : <b>50 %</b> des travaux, sans plafond</li>
+          <li>Cumulable avec MaPrimeRénov' pour la partie énergétique</li>
+          <li>Audit énergétique et accompagnement par un opérateur spécialisé obligatoires (financés par l'Anah)</li>
+        </ul>
+      </div>
+      <div class="aid-foot">
+        <span>Logement construit depuis plus de 15 ans.</span>
+        <a href="parcours-indigne.html" class="btn btn-secondary">Estimer mes aides LHI →</a>
+      </div>
+    </div>
+
+    <!-- ═══ Vue dossier « adaptation à l'autonomie » : aides et prestations ═══ -->
+    <div id="mpa-detail" hidden>
+      <div style="background:linear-gradient(135deg,#7C3AED,#5B21B6);color:#fff;border-radius:14px;padding:16px 20px;margin:0 0 20px;display:flex;gap:14px;align-items:flex-start">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;margin-top:2px"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div>
+          <div style="font-weight:600;margin-bottom:4px">Focus Grand Est · MaPrimeAdapt'</div>
+          <div style="font-size:13.5px;line-height:1.5;opacity:.9">En complément de MaPrimeAdapt', votre <b>Conseil départemental</b> et la <b>Métropole du Grand Nancy</b> financent des travaux d'adaptation du logement pour les personnes âgées et les personnes en situation de handicap. Votre opérateur AMO habilité par l'Anah les mobilise pour vous au moment du montage du dossier.</div>
+        </div>
+      </div>
+
+      <div class="aids">
+      <article class="aid" data-aid="mpa-travaux">
+        <div class="aid-head">
+          <div class="aid-h-l">
+            <div class="aid-logo" style="background:#EDE9FE;color:#7C3AED">MPA</div>
+            <div>
+              <div class="aid-name">MaPrimeAdapt' travaux</div>
+              <div class="aid-org">Anah — Agence nationale de l'habitat</div>
+              <div style="margin-top:8px"><span class="pill" style="background:var(--success-50);color:var(--success-600);padding:3px 10px;border-radius:999px;font:600 11px var(--font-mono);text-transform:uppercase;letter-spacing:.04em">Éligible — déposé par votre AMO</span></div>
+            </div>
+          </div>
+          <div class="aid-amount">
+            <div class="v" id="mpa-travaux-amount">— €</div>
+            <div class="s">Montant estimé</div>
+          </div>
+        </div>
+        <div class="aid-body" style="padding:0 22px 18px">
+          <p style="color:var(--slate-600);font-size:13.5px;margin:0 0 14px;line-height:1.55">Aide de l'Anah pour adapter le logement au grand âge (70 ans et plus, ou 60 à 69 ans avec évaluation GIR) et au handicap. Taux de 70 % pour les ménages très modestes, 50 % pour les modestes, sur un plafond de 22 000 € HT de travaux.</p>
+          <div class="lhi-alert"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg><div><b>À savoir avant de déposer</b> — Le dépôt s'effectue sur <code>monprojet.anah.gouv.fr</code>. Un opérateur AMO habilité par l'Anah pilote le dossier de A à Z : c'est obligatoire. L'Anah verse un forfait de <span data-bareme="amo_mpa">350 à 800&nbsp;€</span> selon le niveau de prestation. Si l'opérateur facture au-delà, la différence reste à votre charge — le montant vous est indiqué par écrit avant tout engagement.</div></div>
+          <div class="aid-actions" style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="btn btn-primary" data-depot="mpa" data-aid-name="MaPrimeAdapt&#39; travaux" data-aid-amount="0">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16v-4a2 2 0 0 0-2-2h-7l-3-3H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h7"/><path d="m16 19 2 2 4-4"/></svg>
+              Confier le dépôt à RénoFacile
+            </button>
+            <a href="https://monprojet.anah.gouv.fr" target="_blank" rel="noopener" class="btn btn-secondary" style="font-size:12.5px">ou faire moi-même sur le portail Anah ↗</a>
+          </div>
+        </div>
+      </article>
+      <article class="aid" data-aid="apa" hidden>
+        <div class="aid-head">
+          <div class="aid-h-l">
+            <div class="aid-logo" style="background:#DBEAFE;color:#1E40AF">APA</div>
+            <div>
+              <div class="aid-name">APA — Allocation Personnalisée d'Autonomie</div>
+              <div class="aid-org">Conseil départemental</div>
+              <div style="margin-top:8px"><span class="pill" style="background:var(--slate-100);color:var(--slate-600);padding:3px 10px;border-radius:999px;font:600 11px var(--font-mono);text-transform:uppercase;letter-spacing:.04em">À demander si GIR 1 à 4</span></div>
+            </div>
+          </div>
+          <div class="aid-amount">
+            <div class="v">selon le GIR</div>
+            <div class="s">Évaluation départementale</div>
+          </div>
+        </div>
+        <div class="aid-body" style="padding:0 22px 18px">
+          <p style="color:var(--slate-600);font-size:13.5px;margin:0 0 14px;line-height:1.55">Prestation destinée aux personnes de 60 ans et plus en perte d'autonomie. Elle peut financer une partie des aménagements du logement, et aussi des heures d'aide à domicile. Le montant dépend du degré d'autonomie (GIR) évalué par une équipe médico-sociale.</p>
+          <div class="lhi-alert"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg><div><b>À savoir</b> — Demande à déposer auprès de votre Conseil départemental. L'APA et la PCH ne se cumulent pas : il faut choisir celle qui couvre le mieux votre situation.</div></div>
+
+        </div>
+      </article>
+      <article class="aid" data-aid="pch" hidden>
+        <div class="aid-head">
+          <div class="aid-h-l">
+            <div class="aid-logo" style="background:#FEE2E2;color:#B91C1C">PCH</div>
+            <div>
+              <div class="aid-name">PCH — aménagement du logement</div>
+              <div class="aid-org">MDPH — Maison départementale des personnes handicapées</div>
+              <div style="margin-top:8px"><span class="pill" style="background:var(--slate-100);color:var(--slate-600);padding:3px 10px;border-radius:999px;font:600 11px var(--font-mono);text-transform:uppercase;letter-spacing:.04em">À demander si taux d'incapacité ≥ 50 %</span></div>
+            </div>
+          </div>
+          <div class="aid-amount">
+            <div class="v">jusqu'à 10 000 €</div>
+            <div class="s">sur 10 ans</div>
+          </div>
+        </div>
+        <div class="aid-body" style="padding:0 22px 18px">
+          <p style="color:var(--slate-600);font-size:13.5px;margin:0 0 14px;line-height:1.55">Volet « aménagement du logement » de la Prestation de Compensation du Handicap. Elle complète MaPrimeAdapt' et se demande à la MDPH, qui évalue les besoins avec une équipe pluridisciplinaire.</p>
+          <div class="lhi-alert"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg><div><b>À savoir</b> — La PCH et l'APA ne se cumulent pas. Votre opérateur AMO vous aide à déterminer laquelle mobiliser.</div></div>
+
+        </div>
+      </article>
+      <article class="aid aid-service" data-aid="amo-mpa">
+        <div class="aid-head">
+          <div class="aid-h-l">
+            <div class="aid-logo" style="background:var(--slate-100);color:var(--slate-700)">🤝</div>
+            <div>
+              <div class="aid-name">Accompagnement AMO — opérateur habilité Anah</div>
+              <div class="aid-org">Obligatoire · forfait Anah de <span data-bareme="amo_mpa">350 à 800&nbsp;€</span></div>
+            </div>
+          </div>
+          <div class="aid-amount"><span class="aid-free">Gratuit pour vous</span></div>
+        </div>
+        <div class="aid-body">L'opérateur visite le logement, établit le diagnostic autonomie, préconise les travaux finançables, monte le dossier Anah et le suit jusqu'au versement. L'Anah verse un forfait de <span data-bareme="amo_mpa">350 à 800&nbsp;€</span> selon le niveau de prestation. Si l'opérateur facture au-delà, la différence reste à votre charge — le montant vous est indiqué par écrit avant tout engagement.</div>
+      </article>
+      </div>
+
+      <section style="margin-top:24px">
+        <h3 style="font-size:16px;font-weight:700;letter-spacing:-.01em;margin:0 0 12px">Alertes réglementaires · MaPrimeAdapt'</h3>
+        <div class="lhi-alert"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg><div><b>Crédit d'impôt autonomie supprimé</b> — Depuis le 1<sup>er</sup> janvier 2026, le crédit d'impôt pour l'adaptation du logement n'existe plus : MaPrimeAdapt' le remplace.</div></div>
+        <div class="lhi-alert"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg><div><b>Accompagnement AMO obligatoire</b> — L'opérateur habilité par l'Anah pilote le dossier. L'Anah verse un forfait de <span data-bareme="amo_mpa">350 à 800&nbsp;€</span> selon le niveau de prestation. Si l'opérateur facture au-delà, la différence reste à votre charge — le montant vous est indiqué par écrit avant tout engagement.</div></div>
+        <div class="lhi-alert info"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg><div><b>Cumul avec MaPrimeRénov'</b> — Les plafonds sont dissociés : le volet énergétique (isolation, chauffage) peut être financé en parallèle, via un dossier distinct.</div></div>
+      </section>
+    </div>
+
+    <!-- ═══ Vue dossier « habitat dégradé » : empilement réel des aides ═══ -->
+    <div id="lhi-detail" hidden>
+      <div style="background:linear-gradient(135deg,var(--teal-700),var(--teal-900));color:#fff;border-radius:14px;padding:16px 20px;margin:0 0 20px;display:flex;gap:14px;align-items:flex-start">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;margin-top:2px"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div>
+          <div style="font-weight:600;margin-bottom:4px">Focus Grand Est · habitat dégradé</div>
+          <div style="font-size:13.5px;line-height:1.5;opacity:.9">Vos aides intègrent les dispositifs régionaux propres à l'habitat dégradé : <b>Habiter Mieux Grand Est</b>, aides EPCI (Métropole du Grand Nancy, communautés de communes) et le programme <b>Lutte contre l'Habitat Indigne</b> co-piloté par l'Anah et la Région.</div>
+        </div>
+      </div>
+
+      <div class="aids">
+      <article class="aid" data-aid="mpld">
+        <div class="aid-head">
+          <div class="aid-h-l">
+            <div class="aid-logo" style="background:var(--amber-100);color:var(--amber-600)">LHI</div>
+            <div>
+              <div class="aid-name">Ma Prime Logement Décent</div>
+              <div class="aid-org">Anah — Agence nationale de l'habitat</div>
+              <div style="margin-top:8px"><span class="pill" style="background:var(--success-50);color:var(--success-600);padding:3px 10px;border-radius:999px;font:600 11px var(--font-mono);text-transform:uppercase;letter-spacing:.04em">Éligible — à déposer</span></div>
+            </div>
+          </div>
+          <div class="aid-amount">
+            <div class="v" id="lhi-mpld-amount">— €</div>
+            <div class="s">Montant estimé</div>
+          </div>
+        </div>
+        <div class="aid-body" style="padding:0 22px 18px">
+          <p style="color:var(--slate-600);font-size:13.5px;margin:0 0 14px;line-height:1.55">Aide de l'Anah pour la remise en état d'un logement dégradé ou insalubre. Selon votre statut — propriétaire occupant modeste ou très modeste, bailleur avec convention Loc'Avantages, copropriété sous arrêté — le taux va de 25 % à 80 % des travaux, plafond 70 000 € HT.</p>
+          <div class="lhi-alert"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg><div><b>À savoir avant de déposer</b> — Le dépôt s'effectue sur <code>monprojet.anah.gouv.fr</code>. Un opérateur spécialisé habilité par l'Anah (AMO obligatoire) pilote votre dossier de A à Z. Audit énergétique préalable requis.</div></div>
+          <div class="aid-actions" style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="btn btn-primary" data-depot="mpld" data-aid-name="Ma Prime Logement Décent" data-aid-amount="0">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16v-4a2 2 0 0 0-2-2h-7l-3-3H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h7"/><path d="m16 19 2 2 4-4"/></svg>
+              Confier le dépôt à RénoFacile
+            </button>
+            <a href="https://monprojet.anah.gouv.fr" target="_blank" rel="noopener" class="btn btn-secondary" style="font-size:12.5px">ou faire moi-même sur le portail Anah ↗</a>
+          </div>
+        </div>
+      </article>
+      <article class="aid" data-aid="mpr-cumulable">
+        <div class="aid-head">
+          <div class="aid-h-l">
+            <div class="aid-logo" style="background:var(--teal-50);color:var(--teal-700)">MPR</div>
+            <div>
+              <div class="aid-name">MaPrimeRénov' — partie énergétique</div>
+              <div class="aid-org">Anah · cumulable avec Ma Prime Logement Décent, plafonds dissociés</div>
+              <div style="margin-top:8px"><span class="pill" style="background:var(--warning-50);color:var(--warning-600);padding:3px 10px;border-radius:999px;font:600 11px var(--font-mono);text-transform:uppercase;letter-spacing:.04em">Éligible si audit — à déposer</span></div>
+            </div>
+          </div>
+          <div class="aid-amount">
+            <div class="v" id="lhi-mpr-amount">— €</div>
+            <div class="s">Montant estimé</div>
+          </div>
+        </div>
+        <div class="aid-body" style="padding:0 22px 18px">
+          <p style="color:var(--slate-600);font-size:13.5px;margin:0 0 14px;line-height:1.55">Ma Prime Logement Décent se cumule avec MaPrimeRénov' pour la partie énergétique des travaux (isolation, chauffage décarboné, ventilation). Les plafonds sont dissociés : l'un ne consomme pas l'autre.</p>
+          <div class="lhi-alert"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg><div><b>À savoir</b> — Audit énergétique préalable obligatoire, déjà inclus dans votre parcours LHI et remboursé par l'Anah. Le compte MaPrimeRénov' se crée via FranceConnect+.</div></div>
+          <div class="aid-actions" style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="btn btn-primary" data-depot="mpr" data-aid-name="MaPrimeRénov&#39; — partie énergétique" data-aid-amount="0">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16v-4a2 2 0 0 0-2-2h-7l-3-3H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h7"/><path d="m16 19 2 2 4-4"/></svg>
+              Confier le dépôt à RénoFacile
+            </button>
+            <a href="https://maprimerenov.gouv.fr" target="_blank" rel="noopener" class="btn btn-secondary" style="font-size:12.5px">ou faire moi-même sur le portail MaPrimeRénov' ↗</a>
+          </div>
+        </div>
+      </article>
+      <article class="aid" data-aid="eco-ptz">
+        <div class="aid-head">
+          <div class="aid-h-l">
+            <div class="aid-logo" style="background:#F3E8FF;color:#7E22CE">PTZ</div>
+            <div>
+              <div class="aid-name">Éco-prêt à taux zéro</div>
+              <div class="aid-org">Service-public.fr · prêt à 0 %</div>
+              <div style="margin-top:8px"><span class="pill" style="background:var(--slate-100);color:var(--slate-600);padding:3px 10px;border-radius:999px;font:600 11px var(--font-mono);text-transform:uppercase;letter-spacing:.04em">Mobilisable — à voir avec votre banque</span></div>
+            </div>
+          </div>
+          <div class="aid-amount">
+            <div class="v" id="lhi-ptz-amount">jusqu'à 50 000 €</div>
+            <div class="s">Prêt 0 % · 20 ans</div>
+          </div>
+        </div>
+        <div class="aid-body" style="padding:0 22px 18px">
+          <p style="color:var(--slate-600);font-size:13.5px;margin:0 0 14px;line-height:1.55">Prêt bancaire à taux zéro pour couvrir votre reste à charge après les aides de l'Anah et MaPrimeRénov'. Remboursable sur 20 ans, sans condition de ressources. Ce n'est pas une subvention : il n'entre pas dans le total des aides.</p>
+          <div class="lhi-alert"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg><div><b>À savoir</b> — À souscrire auprès d'une banque ayant signé la convention avec l'État. Le devis des travaux est joint à la demande.</div></div>
+          <div class="aid-actions" style="display:flex;gap:8px;flex-wrap:wrap">
+            <a href="https://www.service-public.fr/particuliers/vosdroits/F19905" target="_blank" rel="noopener" class="btn btn-secondary" style="font-size:12.5px">En savoir plus sur service-public.fr ↗</a>
+          </div>
+        </div>
+      </article>
+      <article class="aid" data-aid="regional-lhi">
+        <div class="aid-head">
+          <div class="aid-h-l">
+            <div class="aid-logo" style="background:#F0FDFA;color:#0F766E">RGE</div>
+            <div>
+              <div class="aid-name">Aides régionales Grand Est · habitat dégradé</div>
+              <div class="aid-org">Région Grand Est · Métropole du Grand Nancy · EPCI</div>
+              <div style="margin-top:8px"><span class="pill" style="background:var(--slate-100);color:var(--slate-600);padding:3px 10px;border-radius:999px;font:600 11px var(--font-mono);text-transform:uppercase;letter-spacing:.04em">À vérifier localement</span></div>
+            </div>
+          </div>
+          <div class="aid-amount">
+            <div class="v" id="lhi-regional-amount">— €</div>
+            <div class="s">Montant estimé</div>
+          </div>
+        </div>
+        <div class="aid-body" style="padding:0 22px 18px">
+          <p style="color:var(--slate-600);font-size:13.5px;margin:0 0 14px;line-height:1.55">Dispositifs régionaux et intercommunaux propres au traitement de l'habitat dégradé : <b>Habiter Mieux Grand Est</b>, primes du Plan Climat de la Métropole du Grand Nancy, aides EPCI ciblées LHI. Ces dispositifs évoluent chaque année.</p>
+          <div class="lhi-alert"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg><div><b>À savoir</b> — Ces aides sont le plus souvent mobilisées pour vous par votre opérateur AMO spécialisé, au moment du montage du dossier.</div></div>
+
+        </div>
+      </article>
+      <article class="aid aid-service" data-aid="audit">
+        <div class="aid-head">
+          <div class="aid-h-l">
+            <div class="aid-logo" style="background:var(--slate-100);color:var(--slate-700)">🔍</div>
+            <div>
+              <div class="aid-name">Audit énergétique — remboursé par l'Anah</div>
+              <div class="aid-org">Obligatoire pour un dossier habitat dégradé</div>
+            </div>
+          </div>
+          <div class="aid-amount"><span class="aid-free">Gratuit pour vous</span></div>
+        </div>
+        <div class="aid-body">Financé en partie par l'Anah dans le parcours habitat dégradé ; un éventuel solde vous est indiqué par écrit avant tout engagement. Réalisé par un auditeur qualifié.</div>
+      </article>
+      <article class="aid aid-service" data-aid="amo">
+        <div class="aid-head">
+          <div class="aid-h-l">
+            <div class="aid-logo" style="background:var(--slate-100);color:var(--slate-700)">🤝</div>
+            <div>
+              <div class="aid-name">Accompagnement AMO — opérateur spécialisé</div>
+              <div class="aid-org">Obligatoire · financé en partie par l'Anah</div>
+            </div>
+          </div>
+          <div class="aid-amount"><span class="aid-free">Gratuit pour vous</span></div>
+        </div>
+        <div class="aid-body">Un opérateur habilité par l'Anah pilote votre dossier de A à Z : diagnostic, grille d'évaluation, montage administratif, coordination des travaux, contrôle après travaux. Il est financé en partie par l'Anah ; le montant de sa prestation, et un éventuel solde à votre charge, vous sont indiqués par écrit avant tout engagement.</div>
+      </article>
+      </div>
+
+      <section style="margin-top:24px">
+        <h3 style="font-size:16px;font-weight:700;letter-spacing:-.01em;margin:0 0 12px">Alertes réglementaires · habitat dégradé</h3>
+        <div class="lhi-alert"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg><div><b>Audit énergétique obligatoire</b> — Aucun dossier LHI ne peut être déposé sans audit préalable réalisé par un auditeur qualifié. Le coût est intégralement remboursé par l'Anah.</div></div>
+        <div class="lhi-alert"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg><div><b>Accompagnement AMO obligatoire</b> — L'opérateur spécialisé habilité par l'Anah est indispensable : il établit la grille d'évaluation qui conditionne votre taux d'aide. Financé en partie par l'Anah ; un éventuel solde vous est indiqué par écrit.</div></div>
+        <div class="lhi-alert" data-variant="occupant" hidden><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg><div><b>Résidence principale pendant 3 ans</b> — Vous vous engagez à occuper le logement à titre de résidence principale pendant 3 ans après réception des travaux.</div></div>
+        <div class="lhi-alert" data-variant="bailleur" hidden><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg><div><b>Convention Loc'Avantages obligatoire</b> — Convention avec l'Anah de 6 ans minimum, loyers plafonnés selon la catégorie (Loc1 / Loc2 / Loc3), et classe énergétique de sortie <b>D minimum</b>.</div></div>
+        <div class="lhi-alert" data-variant="copro" hidden><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg><div><b>Arrêté de police administratif requis</b> — Le dossier LHI copropriété n'est éligible qu'avec un arrêté d'insalubrité ou de péril en cours. Le vote des travaux en assemblée générale est requis.</div></div>
+      </section>
+    </div>
+
+    <!-- État vide : aucun diagnostic réalisé -->
+    <div id="empty-aids" hidden>
+      <div style="background:linear-gradient(135deg,#F0FDFA 0%,#fff 100%);border:1px solid var(--teal-100);border-radius:16px;padding:36px;margin-bottom:24px;display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center">
+        <div style="width:56px;height:56px;border-radius:14px;background:#fff;border:1px solid var(--teal-100);color:var(--teal-700);display:grid;place-items:center;flex:0 0 auto">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M8 15h3"/></svg>
+        </div>
+        <div>
+          <div style="font:600 11px var(--font-mono);color:var(--teal-700);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">Aucun diagnostic réalisé</div>
+          <h2 style="margin:0 0 6px;font-size:20px;font-weight:700;letter-spacing:-.01em;color:var(--slate-900)">Estimez les aides auxquelles vous avez droit.</h2>
+          <p style="margin:0;color:var(--slate-700);max-width:62ch;font-size:14.5px;line-height:1.55">Le diagnostic croise vos données avec les barèmes officiels <b>Anah</b>, <b>ADEME</b>, <b>ATEE</b> et les aides locales pour vous indiquer précisément ce que vous pouvez toucher. Estimation indicative — validation par <b>France Rénov' (0 808 800 700)</b>.</p>
+        </div>
+        <a class="btn btn-primary btn-lg" href="choix-parcours.html" style="white-space:nowrap;padding:14px 22px">Estimer mes aides</a>
+      </div>
+
+      <!-- Aperçu pédagogique des 4 dispositifs (sans montants) -->
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px">
+        <div class="aid" data-aid-mini="energetique" data-aid-key="mpr" style="cursor:default">
+          <div class="aid-head" style="grid-template-columns:auto 1fr;gap:14px">
+            <div class="aid-h-l">
+              <div class="aid-logo">MPR</div>
+              <div>
+                <div class="aid-name">MaPrimeRénov'</div>
+                <div class="aid-org">Anah · prime forfaitaire selon revenus &amp; travaux</div>
+                <div style="margin-top:8px"><span class="pill attente">À évaluer</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="aid" data-aid-mini="energetique" data-aid-key="cee" style="cursor:default">
+          <div class="aid-head" style="grid-template-columns:auto 1fr;gap:14px">
+            <div class="aid-h-l">
+              <div class="aid-logo cee">CEE</div>
+              <div>
+                <div class="aid-name">Prime énergie (CEE)</div>
+                <div class="aid-org">ATEE · financée par les obligés énergéticiens</div>
+                <div style="margin-top:8px"><span class="pill attente">À évaluer</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="aid" data-aid-mini="energetique" data-aid-key="regional" style="cursor:default">
+          <div class="aid-head" style="grid-template-columns:auto 1fr;gap:14px">
+            <div class="aid-h-l">
+              <div class="aid-logo local">RG</div>
+              <div>
+                <div class="aid-name">Aide régionale / locale</div>
+                <div class="aid-org">Conseil régional · métropole · intercommunalité</div>
+                <div style="margin-top:8px"><span class="pill attente">À évaluer</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="aid" data-aid-mini="energetique" data-aid-key="eco-ptz" style="cursor:default">
+          <div class="aid-head" style="grid-template-columns:auto 1fr;gap:14px">
+            <div class="aid-h-l">
+              <div class="aid-logo eptz">PTZ</div>
+              <div>
+                <div class="aid-name">Éco-prêt à taux zéro</div>
+                <div class="aid-org">Service Public · prêt 0 %, 7 000 à 30 000 € (ponctuel) — 50 000 € (rénovation globale)</div>
+                <div style="margin-top:8px"><span class="pill attente">À évaluer</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-callout">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h0"/></svg>
+        <div>
+          <div class="h">Le diagnostic est <b>100 % gratuit</b>, sans création de compte.</div>
+          <div class="s">Vos données restent privées. Aucune transmission à l'Anah ou à un artisan sans votre action explicite.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- État rempli (caché par défaut, affiché si un diagnostic a été réalisé) -->
+    <div id="full-aids" data-aid-block="energetique">
+
+    <div id="grand-est-banner" style="display:none;background:linear-gradient(135deg,#0F766E 0%,#115E59 100%);color:#fff;padding:16px 20px;border-radius:12px;margin-bottom:20px;gap:14px;align-items:center">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+      <div>
+        <div style="font-weight:600;font-size:15px">Focus Grand Est · V1 optimisée pour votre région</div>
+        <div style="font-size:13px;opacity:.9;margin-top:2px">Vos aides intègrent les dispositifs régionaux <strong>Climaxion</strong>, <strong>Plan Climat Métropole Grand Nancy</strong>, <strong>CEE bonifiés</strong>, et les aides intercommunales spécifiques.</div>
+      </div>
+    </div>
+
+    <div id="ampleur-badge" style="display:none;background:#EDE9FE;border:1px solid #C4B5FD;color:#5B21B6;padding:12px 16px;border-radius:10px;margin-bottom:20px;font-size:14px">
+      <b>Rénovation d'ampleur détectée</b> — votre bouquet de travaux ouvre droit à MaPrimeRénov' avec plafond majoré (jusqu'à 40 000 €) et forfait MAR. Un accompagnateur agréé est obligatoire (annuaire France Rénov').
+    </div>
+
+    <!-- Stack visuel : empilement des aides -->
+    <div class="stack">
+      <div class="stack-left">
+        <div id="rf-alertes"></div>
+        <h2>Total des aides — empilement</h2>
+        <div class="stack-total" id="stk-total">—</div>
+        <div class="stack-cap" id="stk-cap">—</div>
+
+        <div class="bar" role="img" id="stk-bar" aria-label="Répartition des aides par dispositif">
+          <i class="b1" style="width:40%"></i>
+          <i class="b2" style="width:20%"></i>
+          <i class="b3" style="width:10%"></i>
+          <i class="b4" style="width:30%"></i>
+        </div>
+      </div>
+      <div>
+        <div class="legend" id="stk-legend">
+          <div class="row"><span class="sw" style="background:var(--teal-700)"></span><span class="nm">MaPrimeRénov'</span><span class="v" data-leg="mpr">—</span></div>
+          <div class="row"><span class="sw" style="background:var(--teal-400)"></span><span class="nm">CEE — Prime énergie</span><span class="v" data-leg="cee">—</span></div>
+          <div class="row"><span class="sw" style="background:var(--amber-500)"></span><span class="nm">Aide locale</span><span class="v" data-leg="local">—</span></div>
+          <div class="row"><span class="sw" style="background:#8B5CF6"></span><span class="nm">Aides régionales et métropolitaines</span><span class="v" data-leg="grandEst">—</span></div>
+          <div class="row" id="stk-copro-row" style="display:none"><span class="sw" style="background:var(--slate-500)"></span><span class="nm">MaPrimeRénov' Copropriété — votre quote-part</span><span class="v" data-leg="copro">—</span></div>
+        </div>
+        <!-- Hors total : ni l'une ni l'autre n'est une aide versée. -->
+        <div class="legend legend--hors" id="stk-hors">
+          <div class="hors-title">Hors total des aides</div>
+          <div class="row"><span class="nm">Économie de TVA 5,5&nbsp;%<span class="hors-note">moindre dépense, pas une aide</span></span><span class="v" data-leg="tva">—</span></div>
+          <div class="row" id="stk-accomp-row"><span class="nm">Accompagnement pris en charge<span class="hors-note">hors coût des travaux</span></span><span class="v" data-leg="accompagnement">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-callout" id="diag-recap">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg>
+      <div>
+        <div class="h" id="diag-recap-h">Logement diagnostiqué — récapitulatif</div>
+        <div class="s" id="diag-recap-s">Maison individuelle · 110 m² · construction 1972 · Lyon · DPE actuel E · projet : isolation combles + isolation murs + PAC air/eau.</div>
+      </div>
+    </div>
+
+    <div class="filters" role="tablist">
+      <button class="on" data-f="all">Toutes <span id="cnt-all">(0)</span></button>
+      <button data-f="eligible">À déposer <span id="cnt-eli">(0)</span></button>
+      <button data-f="progress" hidden>En cours</button>
+      <button data-f="granted" hidden>Accordées</button>
+    </div>
+
+    <!-- Bandeau "estimation indicative" — important juridiquement -->
+    <div role="note" style="background:#FFFBEB;border:1px solid #FCD34D;border-radius:10px;padding:12px 16px;margin:14px 0 18px;font-size:13.5px;color:#92400E;display:flex;gap:12px;align-items:flex-start">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex:0 0 auto;margin-top:2px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h0"/></svg>
+      <div>
+        <b>Estimation indicative</b> · Barèmes 2026 (MaPrimeRénov' arrêté Anah, CEE Coup de pouce, éco-PTZ fiche service-public F19905). Les montants définitifs sont fixés par les organismes officiels (Anah, obligés CEE, banque) après dépôt de votre dossier complet. Ces estimations peuvent évoluer en cas de modification réglementaire.
+      </div>
+    </div>
+
+    <!-- Aides régionales et locales Grand Est (V1) -->
+    <div id="grand-est-aides" style="display:none;margin:0 0 20px">
+      <h3 style="font-size:18px;font-weight:600;margin:0 0 12px">Aides régionales et locales Grand Est</h3>
+      <div id="grand-est-list" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+
+    <div class="aids" id="aids">
+      <!-- Cartes générées dynamiquement à partir de profile.aids -->
+      <div id="aids-dynamic"></div>
+      <div id="aids-empty" hidden style="padding:40px;text-align:center;color:var(--slate-500);background:#fff;border:1px solid var(--border);border-radius:14px">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" style="margin-bottom:12px;color:var(--slate-300)"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>
+        <div style="font-size:14.5px;color:var(--slate-700);font-weight:500;margin-bottom:4px">Aucune aide encore éligible</div>
+        <div style="font-size:13px">Lancez votre diagnostic pour découvrir les aides cumulables.</div>
+        <a href="choix-parcours.html" class="btn btn-primary" style="margin-top:14px;text-decoration:none;display:inline-flex">Estimer mes aides →</a>
+      </div>
+    </div>
+    </div>
+
+    <div id="mao-partenaire-slot"></div>
+    <script>if(window.RFPartner)window.RFPartner.mount();</script>
+    </main>
+<p class="rf-glossaire-lien"><a href="glossaire-aides.html#vocabulaire" target="_blank" rel="noopener">Un mot vous échappe&nbsp;? Le vocabulaire des aides, expliqué</a></p>
+</div>
+
+<script>
+  /* Affiche l'état rempli uniquement si un diagnostic a été réalisé.
+     Si aucun diagnostic : on masque #full-aids et on affiche #empty-aids
+     pour éviter d'exposer les valeurs hardcodées de la maquette. */
+  (function(){
+    try {
+      const p = JSON.parse(localStorage.getItem('renofacile.profile') || '{}');
+      const hasDiag = !!(p && p.aids && (p.aids.totalAides > 0));
+      const empty = document.getElementById('empty-aids');
+      const full  = document.getElementById('full-aids');
+      if (!hasDiag){
+        if (empty) empty.hidden = false;
+        if (full)  full.hidden  = true;
+        return;
+      }
+      if (empty) empty.hidden = true;
+      if (full)  full.hidden  = false;
+      const cta = document.getElementById('cta-diag');
+      if (cta) cta.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 6 9 18l-5-5"/></svg> Refaire un diagnostic';
+    } catch(e){ console.warn('mes-aides toggle :', e); }
+  })();document.querySelectorAll('.filters button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.filters button').forEach(x => x.classList.remove('on'));
+      b.classList.add('on');
+      const f = b.dataset.f;
+      document.querySelectorAll('.aid[data-status]').forEach(a => {
+        a.style.display = (f === 'all' || a.dataset.status === f) ? '' : 'none';
+      });
+    });
+  });
+</script>
+
+<script>
+/* RénoFacile — bindings sidebar canonique (lit renofacile.profile écrit par le diagnostic) */
+(function(){
+  const KEY = 'renofacile.profile';
+  function readData(){
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}'); }
+    catch { return {}; }
+  }
+  function fmtEUR(n){
+    if (n == null || isNaN(n)) return '—';
+    return new Intl.NumberFormat('fr-FR').format(Math.round(n)) + ' €';
+  }
+  function refresh(){
+    const d = readData();
+    const aids = (window.rfAidsCourantes && window.rfAidsCourantes()) || d.aids || {};
+    const trav = aids.travaux || {};
+
+    // Widget aides estimées
+    const valEl = document.getElementById('rf-aides-val');
+    const subEl = document.getElementById('rf-aides-sub');
+    let total = aids.totalAides || aids.total || null;
+    let projet = trav.totalTTC || aids.coutTotalTTC || null;
+    // Le profil peut être vide alors qu'un dossier transmis existe : on retombe sur
+    // le résultat résolu du dernier dossier actif plutôt que d'afficher « — ».
+    if (!total && window.RFDossiers && window.rfResolveDossierResult){
+      try {
+        const actifs = RFDossiers.getActifs();
+        const last = actifs.length ? actifs[actifs.length - 1] : null;
+        const rr = last ? window.rfResolveDossierResult(last) : null;
+        if (rr){
+          total = (window.rfTotalDossier ? window.rfTotalDossier(last, rr) : 0)
+            || rr.totalAides || (rr.aide && (rr.aide.totalApresEcretement || rr.aide.total)) || null;
+          var tt = rr.travaux || {};
+          var htStocke = tt.coutEstime || tt.coutHT || 0;
+          projet = tt.totalTTC || (htStocke ? Math.round(htStocke * 1.055) : projet);
+        }
+      } catch (e) { console.warn('[mes-aides] widget sidebar :', e); }
+    }
+    if (valEl){
+      if (total){
+        valEl.textContent = fmtEUR(total);
+        if (subEl) subEl.textContent = projet ? 'sur ' + fmtEUR(projet) + ' TTC' : 'Estimation indicative';
+      } else {
+        valEl.textContent = '—';
+        if (subEl) subEl.textContent = 'Diagnostic à compléter';
+      }
+    }
+
+    // Profil utilisateur en bas
+    const nameEl = document.getElementById('rf-me-name');
+    const planEl = document.getElementById('rf-me-plan');
+    const avEl = document.getElementById('rf-me-av');
+    const fn = (d.firstname || '').trim();
+    const ln = (d.lastname || '').trim();
+    const fullName = (fn + ' ' + ln).trim();
+    /* Le badge porte le statut du dossier, jamais une formule commerciale. */
+    let planTxt = '';
+    try {
+      const actifs = (window.RFDossiers && RFDossiers.getActifs && RFDossiers.getActifs()) || [];
+      if (actifs.length){
+        const dernier = actifs[actifs.length - 1];
+        const statut = (window.RFTransmission && RFTransmission.libelleStatut(dernier.statutDossier)) || 'Dossier créé';
+        const nomPart = dernier.partenaire && dernier.partenaire.nom;
+        planTxt = nomPart ? statut + ' · ' + nomPart : statut;
+      } else {
+        planTxt = 'Diagnostic en cours';
+      }
+    } catch (e) { planTxt = ''; }
+    if (nameEl) nameEl.textContent = fullName || 'Mon compte';
+    if (planEl) planEl.textContent = planTxt || '—';
+    if (avEl){
+      if (fullName){
+        const initials = ((fn[0]||'') + (ln[0]||'')).toUpperCase() || 'RF';
+        avEl.textContent = initials;
+      } else {
+        avEl.textContent = 'RF';
+      }
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', refresh);
+  else refresh();
+  window.addEventListener('storage', refresh);
+})();
+</script>
+
+<script>
+/* RénoFacile — binding défensif du widget central de mes-aides
+   (stk-total, stk-cap, stk-bar, stk-legend, diag-recap-s).
+   S'exécute après le bind() natif et corrige les valeurs hardcodées
+   (Sophie Marin) avec les vraies données du diagnostic utilisateur. */
+(function(){
+  const KEY = 'renofacile.profile';
+  function readData(){
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}'); }
+    catch { return {}; }
+  }
+  function fmtEUR(n){
+    if (n == null || isNaN(n)) return '—';
+    return new Intl.NumberFormat('fr-FR').format(Math.round(n)) + ' €';
+  }
+  function setText(id, v){ const el = document.getElementById(id); if (el) el.textContent = v; }
+
+  function refresh(){
+    try {
+      const d = readData();
+      const aids = (window.rfAidsCourantes && window.rfAidsCourantes()) || d.aids || {};
+      const aides = aids.aides || {};
+      const trav = aids.travaux || {};
+      const total = aids.totalAides || aids.total || 0;
+      const projet = trav.totalTTC || aids.coutTotalTTC || 0;
+      /* Mises en garde du moteur (gestes hors parcours, audit manquant, fourchette
+         CEE, copropriété estimée…) et version des barèmes. Rendues AVANT le test
+         du total : un total nul a justement besoin de son explication. */
+      if (window.RFAlertes){
+        try {
+          RFAlertes.rendre(aids, 'rf-alertes');
+          let pied = document.getElementById('rf-referentiel');
+          if (!pied){
+            pied = document.createElement('div');
+            pied.id = 'rf-referentiel';
+            const hote = document.getElementById('stk-hors') || document.getElementById('stk-legend');
+            if (hote && hote.parentNode) hote.parentNode.appendChild(pied);
+          }
+          RFAlertes.rendreReferentiel(aids, pied);
+        } catch (e) { console.warn('Alertes :', e); }
+      }
+      const aDesAlertes = !!(aids.alertes && aids.alertes.gestesHorsParcoursGeste && aids.alertes.gestesHorsParcoursGeste.length);
+      if (total <= 0 && !aDesAlertes) return; // pas de données, on laisse « — »
+
+      // Grand chiffre central
+      setText('stk-total', fmtEUR(total));
+
+      // Caption "soit X % de couverture"
+      const stkCap = document.getElementById('stk-cap');      if (stkCap){
+        const pct = projet > 0 ? Math.round(100 * total / projet) : 0;
+        // L'éco-PTZ est un PRÊT : il n'entre jamais dans le total des aides.
+        stkCap.innerHTML = projet > 0
+          ? `soit <b>${pct} % de couverture</b> de votre projet de ${fmtEUR(projet)} TTC. Cumul MaPrimeRénov' + CEE + aides locales et régionales.`
+          : "Cumul MaPrimeRénov' + CEE + aides locales et régionales.";
+      }
+
+      // Décomposition par dispositif
+      const mpr   = (aides.mpr   && aides.mpr.total)   || 0;
+      const cee   = (aides.cee   && aides.cee.total)   || 0;
+      const local = (aides.local && aides.local.total) || 0;
+      const tva   = (aides.tva   && aides.tva.total)   || 0;
+      /* `geTotal` et non `ge` : la variable `ge` est déjà déclarée plus bas
+         dans cette même fonction pour le bloc Grand Est. */
+      const geTotal = (aides.grandEst && aides.grandEst.total) || 0;
+      const accomp  = (aids.accompagnement && aids.accompagnement.priseEnCharge) || 0;
+      const upd = (key, val) => {
+        const el = document.querySelector(`[data-leg="${key}"]`);
+        if (el) el.textContent = fmtEUR(val);
+      };
+      upd('mpr', mpr);
+      /* CEE : une fourchette, jamais un montant — il dépend de l'organisme. */
+      (function(){
+        const c = aides.cee || {};
+        const el = document.querySelector('[data-leg="cee"]');
+        if (el && c.unique === false && c.max > c.min) el.textContent = fmtEUR(c.min) + ' à ' + fmtEUR(c.max);
+        else upd('cee', cee);
+      })();
+      upd('local', local);
+      upd('grandEst', geTotal);
+      /* Quote-part copropriété : dans le total, donc dans la légende quand elle existe. */
+      const coproQP = Number(aids.coproQuotePart) || 0;
+      upd('copro', coproQP);
+      const coproRow = document.getElementById('stk-copro-row');
+      if (coproRow) coproRow.style.display = coproQP > 0 ? '' : 'none';
+      upd('tva', tva);
+      upd('accompagnement', accomp);
+      // La ligne accompagnement n'a de sens qu'en rénovation d'ampleur.
+      const accompRow = document.getElementById('stk-accomp-row');
+      if (accompRow) accompRow.style.display = accomp > 0 ? '' : 'none';
+
+      // Badge "Rénovation d'ampleur détectée"
+      if (aides.mpr && aides.mpr.isRenovAmpleur){
+        const badge = document.getElementById('ampleur-badge');
+        if (badge) badge.style.display = 'block';
+      }
+
+      // Focus Grand Est + aides régionales cumulatives
+      const ge = aides.grandEst;
+      if (ge && ge.isGrandEst){
+        const banner = document.getElementById('grand-est-banner');
+        if (banner) banner.style.display = 'flex';
+      }
+      const geSection = document.getElementById('grand-est-aides');
+      const geList    = document.getElementById('grand-est-list');
+      if (geSection && geList && ge && Array.isArray(ge.detail) && ge.detail.length > 0){
+        geSection.style.display = 'block';
+        geList.innerHTML = ge.detail.map(a => `
+          <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 20px;display:flex;justify-content:space-between;align-items:flex-start;gap:14px">
+            <div style="flex:1">
+              <div style="font-weight:600;font-size:14.5px;color:var(--slate-900)">${a.nom}</div>
+              <div style="font-size:12.5px;color:var(--slate-500);margin-top:4px">${a.note}</div>
+            </div>
+            <div style="font:700 20px var(--font-mono);color:var(--teal-700);white-space:nowrap">${Math.round(a.montant).toLocaleString('fr-FR')} €</div>
+          </div>`).join('');
+      }
+
+      /* Barre de répartition : sur les aides RÉELLEMENT VERSÉES, économie de
+         TVA exclue — elle ne finance rien, elle réduit la facture. Les quatre
+         segments recomposent donc `totalAides`. */
+      const sumAids = mpr + cee + local + geTotal + (Number(aids.coproQuotePart) || 0);
+      if (sumAids > 0){
+        const pct = (n) => Math.round(100 * n / sumAids);
+        const bars = document.querySelectorAll('#stk-bar > i');
+        if (bars[0]) bars[0].style.width = pct(mpr) + '%';
+        if (bars[1]) bars[1].style.width = pct(cee) + '%';
+        if (bars[2]) bars[2].style.width = pct(local) + '%';
+        if (bars[3]) bars[3].style.width = pct(geTotal) + '%';
+        const barEl = document.getElementById('stk-bar');
+        if (barEl) barEl.setAttribute('aria-label',
+          "Répartition des aides : MaPrimeRénov' " + fmtEUR(mpr)
+          + ', CEE ' + fmtEUR(cee) + ', aide locale ' + fmtEUR(local)
+          + ', aides régionales et métropolitaines ' + fmtEUR(geTotal)
+          + ', soit ' + fmtEUR(sumAids) + ' au total.');
+      }
+
+      // Récapitulatif logement
+      const recap = document.getElementById('diag-recap-s');
+      if (recap){
+        const log = d.logement || {};
+        const ville = (d.address || '').split(',').pop().trim().replace(/^\d{5}\s*/, '') || null;
+        const dpe = log.dpe || (d.foyer && d.foyer.dpe) || null;
+        const works = [];
+        if (trav.combles > 0) works.push('isolation combles');
+        if (trav.ite > 0)     works.push('isolation murs');
+        if (trav.pac > 0)     works.push('PAC air/eau');
+        const parts = [
+          log.type,
+          log.surface ? log.surface + ' m²' : null,
+          log.year ? 'construction ' + log.year : null,
+          ville,
+          dpe ? 'DPE actuel ' + dpe : null,
+          works.length ? 'projet : ' + works.join(' + ') : null,
+        ].filter(Boolean);
+        if (parts.length) recap.textContent = parts.join(' · ') + '.';
+      }
+    } catch(e) { console.warn('Refresh mes-aides :', e); }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', refresh);
+  else refresh();
+  window.addEventListener('storage', refresh);
+})();
+</script>
+<script src="_demo_mode.js"></script>
+<script src="_storage.js"></script>
+<script src="_dossiers.js"></script>
+<script src="_transmission.js"></script>
+<script>
+/* Résultats enregistrés avant la mise à jour des barèmes : un dossier calculé
+   sur l'ancien référentiel afficherait un CEE unique et un total périmé. On
+   recalcule UNE fois, au chargement, AVANT tout affichage, et on réenregistre
+   le résultat dans le profil et dans le dossier — pour que le bandeau, la
+   vignette et l'empilement lisent tous le même totalAides. */
+(function(){
+  var C = window.RFCompute;
+  if (!C || !C.REFERENTIEL || typeof C.recomputeFromProfile !== 'function') return;
+  var version = C.REFERENTIEL.version, moteur = C.REFERENTIEL.moteur;
+  /* Périmé : autre référentiel, OU calculé par une version antérieure du moteur. */
+  var perime = function(r){
+    return !!r && (!r.referentiel || r.referentiel.version !== version || r.referentiel.moteur !== moteur);
+  };
+  try {
+    var p = JSON.parse(localStorage.getItem('renofacile.profile') || '{}');
+    var aPerime = perime(p.aids);
+    var dossiers = (window.RFDossiers && RFDossiers.getAll) ? RFDossiers.getAll() : [];
+    // Le résultat d'un dossier peut vivre dans d.result OU dans sa copie d.profile.aids.
+    var energetiquesPerimes = dossiers.filter(function(d){
+      return d.type === 'energetique' && (perime(d.result) || perime(d.profile && d.profile.aids));
+    });
+    if (!aPerime && !energetiquesPerimes.length) return;
+    var ok = function(r){ return r && r.eligible !== false && r.totalAides >= 0; };
+    if (aPerime){
+      var fraisProfil = C.recomputeFromProfile();
+      if (ok(fraisProfil)){ p.aids = fraisProfil; localStorage.setItem('renofacile.profile', JSON.stringify(p)); }
+    }
+    /* Chaque dossier est recalculé sur SON profil, jamais sur le profil courant :
+       deux dossiers distincts gardent deux montants distincts. */
+    if (energetiquesPerimes.length){
+      var all = RFDossiers.loadAll();
+      energetiquesPerimes.forEach(function(d){
+        var frais = d.profile ? C.recomputeFromProfile(d.profile) : null;
+        if (!ok(frais)) return;
+        all.forEach(function(x){
+          if (x.id !== d.id) return;
+          x.result = frais;
+          if (x.profile) x.profile.aids = frais;
+        });
+      });
+      RFDossiers.saveAll(all);
+    }
+  } catch (e) { console.warn('[mes-aides] recalcul du référentiel impossible :', e); }
+})();
+(function(){
+  /* Source UNIQUE des montants de la page : le résultat du dossier affiché,
+     à défaut celui du profil. Bandeau, vignette et empilement la lisent tous. */
+  window.rfAidsCourantes = function(){
+    try {
+      var dos = (RFDossiers.resolveFromUrl && RFDossiers.resolveFromUrl()) || null;
+      if (dos && dos.result && dos.result.totalAides >= 0) return dos.result;
+    } catch (_) {}
+    try { return JSON.parse(localStorage.getItem('renofacile.profile') || '{}').aids || {}; }
+    catch (_) { return {}; }
+  };
+})();
+</script>
+<script src="_auth_guard.js"></script>
+<script>
+/* RénoFacile — synthèse des aides, un bloc par dossier actif.
+   Les cartes documentaires ci-dessous restent affichées : elles décrivent les
+   dispositifs, indépendamment des dossiers ouverts. */
+(function(){
+  // Aucun dossier fictif : la page ne montre que ce que l'utilisateur a saisi.
+  var sec  = document.getElementById('dos-section');
+  var host = document.getElementById('dos-liste');
+  if (!sec || !host || !window.RFDossiers) return;
+  var dossiers = RFDossiers.getActifs();
+  if (!dossiers.length) return;
+
+  var fmt = function(n){ return Math.round(Number(n) || 0).toLocaleString('fr-FR') + ' €'; };
+  function line(k, v, cls){
+    return '<div class="dos-line' + (cls ? ' ' + cls : '') + '"><span>' + k + '</span><strong>' + fmt(v) + '</strong></div>';
+  }
+
+  /* Un dossier transmis peut avoir été stocké sans son résultat (result: null).
+     Plutôt que d'afficher un tiret, on recalcule à la volée depuis le profil
+     enregistré — c'est le même moteur, les mêmes entrées, donc le même montant. */
+  function resolveDossierResult(dos){
+    if (!dos) return null;
+    var r = dos.result;
+    var peuple = r && (r.totalAides > 0 ||
+      (r.aide && (r.aide.total > 0 || r.aide.totalApresEcretement > 0)));
+    if (peuple) return r;
+    var C = window.RFCompute;
+    var p = dos.profile;
+    if (!C || !p) return null;
+    try {
+      // Les tunnels MPA et LHI stockent en profil la charge utile du moteur :
+      // elle est directement rejouable.
+      if (dos.type === 'autonomie' && C.computeMprAdapt) return C.computeMprAdapt(p);
+      if (dos.type === 'indigne'   && C.computeMprLogementDecent) return C.computeMprLogementDecent(p);
+      if (dos.type === 'energetique'){
+        // Le tunnel énergétique stocke un profil riche, pas la charge utile :
+        // les aides déjà calculées font foi, sinon on rejoue le moteur.
+        if (p.aids && p.aids.totalAides > 0) return p.aids;
+        var log = p.logement || {}, foy = p.foyer || {};
+        if (C.compute && (p.travaux || []).length){
+          return C.compute({
+            surface: Number(log.surface) || 0,
+            foyer:   Number(foy.parts) || Number(foy.personnes) || 1,
+            rfr:     Number(foy.rfr) || 0,
+            region:  foy.region || log.region || '',
+            heat:    log.chauffage || log.heat || '',
+            dept:    log.dept || '',
+            selection: p.travaux || [],
+          });
+        }
+      }
+      if (p.aids && p.aids.totalAides > 0) return p.aids;
+    } catch (e) {
+      console.warn('[mes-aides] recalcul impossible pour ' + dos.id + ' :', e);
+    }
+    return null;
+  }
+  window.rfResolveDossierResult = resolveDossierResult;
+  // Total unique pour la page entière : card dossier, widget sidebar et vue par
+  // type doivent afficher le même chiffre.
+  window.rfTotalDossier = function(dos, r){ return totalResolu(dos, r || resolveDossierResult(dos)); };
+
+  /* RFDossiers.totalAides() lit dos.result : inutilisable sur un dossier stocké
+     sans résultat. On prend le total du résultat résolu, sinon la somme des
+     postes réellement affichés — jamais 0 € au-dessus de lignes non nulles. */
+  function totalResolu(dos, r){
+    if (!r) return 0;
+    // LHI et MPA : les services pris en charge par l'Anah, les prêts et les
+    // prestations à demander ailleurs ne sont pas des subventions versées.
+    if (dos && dos.type === 'indigne') return lhiBreakdown(dos, r).totalDirectes;
+    if (dos && dos.type === 'autonomie') return mpaBreakdown(dos, r).totalDirectes;
+    if (r.totalAides > 0) return r.totalAides;
+    if (r.aide){
+      if (r.aide.totalApresEcretement > 0) return r.aide.totalApresEcretement;
+      if (r.aide.total > 0) return r.aide.total;
+    }
+    var A = r.aides || {}, s = 0;
+    ['mpr','cee','tva','local','grandEst'].forEach(function(k){
+      if (A[k] && A[k].total) s += A[k].total;
+    });
+    return s;
+  }
+
+  function relancerHref(type){
+    if (type === 'autonomie') return 'parcours-autonomie.html?fresh=1';
+    if (type === 'indigne')   return 'parcours-indigne.html?fresh=1';
+    return 'onboarding-diagnostic.html?fresh=1';
+  }
+
+  // Traçabilité : savoir en console quels dossiers ont été stockés incomplets.
+  dossiers.forEach(function(dos){
+    if (dos.result) return;
+    if (dos.profile) console.info('[mes-aides] Dossier ' + dos.id + ' sans result — recalcul à la volée depuis le profil');
+    else console.warn('[mes-aides] Dossier ' + dos.id + ' sans result ni profil — CTA de reprise proposé');
+  });
+
+  /* Un dossier LHI mélange trois natures très différentes. Les confondre gonfle
+     faussement le total : seules les subventions versées sont additionnées.
+       · aides directes   → versées au bénéficiaire, sommées
+       · services Anah    → financés par un forfait, jamais versés au ménage
+       · prêt éco-PTZ     → remboursable, hors total */
+  var LHI_AUDIT_EUR = 800, LHI_AMO_EUR = 1200;
+  function lhiBreakdown(dos, resolved){
+    var r = resolved || dos.result || {};
+    var aide = r.aide || {};
+    var directes = [
+      { label: 'Ma Prime Logement Décent (ANAH)',    montant: aide.totalApresEcretement || aide.total || aide.base || 0 },
+      { label: "MaPrimeRénov' (partie énergétique)", montant: aide.mprCumulable || 0, note: 'si audit fait' },
+      { label: 'Aides régionales Grand Est',         montant: aide.local || 0, note: 'à vérifier localement' },
+    ];
+    return {
+      directes: directes,
+      totalDirectes: directes.reduce(function(s, l){ return s + (l.montant || 0); }, 0),
+      services: [
+        { label: 'Audit énergétique remboursé',             montant: LHI_AUDIT_EUR },
+        { label: 'Accompagnement AMO opérateur spécialisé', montant: LHI_AMO_EUR },
+      ],
+      prets: [
+        { label: 'Éco-PTZ mobilisable', montant: aide.ecoPtz || 50000, note: 'prêt à 0 %, 20 ans' },
+      ],
+    };
+  }
+
+  /* MaPrimeAdapt' mêle une subvention travaux, un accompagnement pris en charge
+     par l'Anah, et des prestations à demander ailleurs (APA au Département, PCH à
+     la MDPH). Les trois natures ne se somment pas : seules les subventions
+     versées entrent dans le total. */
+  var MPA_AMO_EUR = 1200;
+  function mpaBreakdown(dos, resolved){
+    var r = resolved || dos.result || {};
+    var aide = r.aide || {};
+    var prof = dos.profile || {};
+    var age = Number(prof.age) || 0;
+    var handicap = prof.handicap === 'oui_50plus' || prof.handicap === 'oui_pch';
+    var directes = [
+      { label: "MaPrimeAdapt' travaux", montant: aide.travaux || aide.total || 0 },
+      { label: 'Aides locales Grand Est', montant: aide.local || 0, note: 'à vérifier localement' },
+    ];
+    var mobilisables = [];
+    if (age >= 60){
+      mobilisables.push({ label: "APA — Allocation Personnalisée d'Autonomie",
+        note: 'à demander au Conseil départemental si GIR 1 à 4' });
+    }
+    if (handicap){
+      mobilisables.push({ label: 'PCH — aménagement du logement',
+        note: 'à demander à la MDPH' });
+    }
+    return {
+      directes: directes,
+      totalDirectes: directes.reduce(function(s, l){ return s + (l.montant || 0); }, 0),
+      services: [{ label: 'Accompagnement AMO habilité Anah', montant: aide.amo || MPA_AMO_EUR }],
+      mobilisables: mobilisables,
+    };
+  }
+
+  function renderMpaCardBody(dos, resolved){
+    var bd = mpaBreakdown(dos, resolved);
+    var note = function(l){ return l.note ? ' <span class="dos-note">(' + l.note + ')</span>' : ''; };
+    var h = '<div class="dos-section-label">Aides financières directes</div>';
+    bd.directes.forEach(function(l){
+      h += '<div class="dos-line"><span>' + l.label + note(l) + '</span><strong>' +
+        (l.montant > 0 ? fmt(l.montant) : '— €') + '</strong></div>';
+    });
+    h += line('Total des aides directes', bd.totalDirectes, 'tot');
+    h += '<div class="dos-section-label dos-section-label--small">Service financé par un forfait Anah — un solde est possible</div>';
+    bd.services.forEach(function(l){
+      h += '<div class="dos-line dos-line--service"><span>' + l.label +
+        '</span><em class="dos-tag-gratuit">gratuit — ' + fmt(l.montant) + '</em></div>';
+    });
+    if (bd.mobilisables.length){
+      h += '<div class="dos-section-label dos-section-label--small">Aides complémentaires mobilisables</div>';
+      bd.mobilisables.forEach(function(l){
+        h += '<div class="dos-line dos-line--pret"><span>' + l.label + note(l) +
+          '</span><em>selon votre dossier</em></div>';
+      });
+    }
+    return h;
+  }
+
+  function renderLhiCardBody(dos, resolved){
+    var bd = lhiBreakdown(dos, resolved);
+    var note = function(l){ return l.note ? ' <span class="dos-note">(' + l.note + ')</span>' : ''; };
+    var h = '<div class="dos-section-label">Aides financières directes</div>';
+    bd.directes.forEach(function(l){
+      h += '<div class="dos-line"><span>' + l.label + note(l) + '</span><strong>' +
+        (l.montant > 0 ? fmt(l.montant) : '— €') + '</strong></div>';
+    });
+    h += line('Total des aides directes', bd.totalDirectes, 'tot');
+    h += '<div class="dos-section-label dos-section-label--small">Services financés par un forfait Anah — un solde est possible</div>';
+    bd.services.forEach(function(l){
+      h += '<div class="dos-line dos-line--service"><span>' + l.label +
+        '</span><em class="dos-tag-gratuit">gratuit — ' + fmt(l.montant) + '</em></div>';
+    });
+    h += '<div class="dos-section-label dos-section-label--small">Prêt mobilisable</div>';
+    bd.prets.forEach(function(l){
+      h += '<div class="dos-line dos-line--pret"><span>' + l.label + note(l) +
+        '</span><em>jusqu\'à ' + fmt(l.montant) + '</em></div>';
+    });
+    return h;
+  }
+
+  /* Chaque moteur range ses montants différemment : un rendu par type. */
+  function lignes(dos){
+    var r = resolveDossierResult(dos);
+    if (!r) return '<div class="dos-line"><span>Estimation à recalculer</span>' +
+      '<a class="dos-relance" href="' + relancerHref(dos.type) + '">Reprendre →</a></div>';
+    if (dos.type === 'autonomie') return renderMpaCardBody(dos, r);
+    if (dos.type === 'indigne') return renderLhiCardBody(dos, r);
+    if (r.aides){
+      var h = '';
+      if (r.aides.mpr && r.aides.mpr.total)   h += line("MaPrimeRénov'", r.aides.mpr.total);
+      if (r.aides.cee && r.aides.cee.total)   h += line('CEE', r.aides.cee.total);
+      if (r.aides.tva && r.aides.tva.total)   h += line('Économie TVA', r.aides.tva.total);
+      if (r.aides.local && r.aides.local.total) h += line('Aide locale', r.aides.local.total);
+      if (r.aides.grandEst && r.aides.grandEst.total) h += line('Aides Grand Est', r.aides.grandEst.total);
+      return h + line('Total des aides', totalResolu(dos, r), 'tot');
+    }
+    return line('Total des aides', totalResolu(dos, r), 'tot');
+  }
+
+  sec.hidden = false;
+  host.innerHTML = dossiers.map(function(dos){
+    var meta = RFDossiers.meta(dos.type);
+    var adr = (dos.profile && dos.profile.logement && dos.profile.logement.adresse) || '';
+    return '<div class="dos-block" style="border-left-color:' + meta.color + '">' +
+        '<h3 style="color:' + meta.color + '">' + meta.titre + '</h3>' +
+        (adr ? '<div class="dos-adresse">' + adr.replace(/[&<>"]/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }) + '</div>' : '') +
+        '<div class="dos-meta">Créé le ' + RFDossiers.fmtDate(dos.transmisLe) +
+          ((dos.partenaire && dos.partenaire.nom) ? ' · ' + dos.partenaire.nom : '') + '</div>' +
+        '<div class="dos-lines">' + lignes(dos) + '</div>' +
+        '<a class="dos-open" href="' + meta.detail + '?dossier=' + encodeURIComponent(dos.id) + '">Ouvrir ce dossier →</a>' +
+      '</div>';
+  }).join('');
+})();
+</script>
+<script>
+/* RénoFacile — rend le widget profil de sidebar cliquable et ajoute Déconnexion */
+(function(){
+  function init(){
+    var me = document.querySelector('.sidebar .me, aside .me');
+    if (!me) return;
+    me.style.cursor = 'pointer';
+    me.style.position = 'relative';
+    var menu = document.createElement('div');
+    menu.style.cssText = 'display:none;position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid #E2E8F0;border-radius:8px;box-shadow:0 -4px 16px rgba(15,23,42,.08);padding:6px;z-index:50;font-size:13px';
+    menu.innerHTML =
+      '<a href="mon-profil.html" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:6px;color:#1E293B;text-decoration:none">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>' +
+        'Mon profil' +
+      '</a>' +
+      '<div style="height:1px;background:#E2E8F0;margin:4px 0"></div>' +
+      '<a href="#" id="rf-side-logout" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:6px;color:#DC2626;text-decoration:none">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>' +
+        'Se déconnecter' +
+      '</a>';
+    me.appendChild(menu);
+    me.addEventListener('click', function(e){
+      if (e.target.closest('a')) return;
+      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    });
+    document.addEventListener('click', function(e){
+      if (!e.target.closest('.me')) menu.style.display = 'none';
+    });
+    var logoutLink = document.getElementById('rf-side-logout');
+    if (logoutLink){
+      logoutLink.addEventListener('click', function(e){
+        e.preventDefault();
+        if (window.RFStore) RFStore.logout();
+        else {
+          ['renofacile.session','renofacile.profile'].forEach(function(k){ try{localStorage.removeItem(k);}catch{} });
+        }
+        window.location.href = 'login.html';
+      });
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   Mes aides — génération dynamique des cartes depuis profile.aids
+   - 1 carte par aide réellement éligible (montant > 0)
+   - Statut par défaut "Éligible — à déposer" (pas "déposé" mensonger)
+   - Boutons branchés sur les portails officiels
+   - Liste des pièces requises affichée à la demande
+   ═══════════════════════════════════════════════════════════════════ */
+(function(){
+  const KEY = 'renofacile.profile';
+  function getProfile(){
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}'); }
+    catch { return {}; }
+  }
+  function fmtEUR(n){
+    if (n == null || isNaN(n) || n <= 0) return null;
+    return new Intl.NumberFormat('fr-FR').format(Math.round(n)) + ' €';
+  }
+  function escHtml(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  // ─── Modèles d'aides : ce qui ne change pas selon l'utilisateur ─────
+  const AIDS = [
+    {
+      key: 'mpr',
+      logo: 'MPR',
+      logoClass: '',
+      name: "MaPrimeRénov'",
+      org: "ANAH — Agence nationale de l'habitat",
+      portalUrl: 'https://www.maprimerenov.gouv.fr/',
+      portalLabel: 'Ouvrir mon compte ANAH',
+      desc: 'Aide de l\'ANAH. En 2026, l\'<b>isolation des murs</b> et les <b>chaudières biomasse</b> ne sont plus finançables par geste — elles restent éligibles en rénovation d\'ampleur ou via CEE Coup de pouce. Les ménages aux ressources supérieures ne sont plus éligibles au parcours par geste.',
+      pieces: ['Avis d\'imposition N-2', 'Devis d\'un artisan RGE', 'Photo avant travaux', 'Justificatif d\'identité'],
+    },
+    {
+      key: 'cee',
+      logo: 'CEE',
+      logoClass: 'cee',
+      name: 'Prime CEE — Certificats d\'économies d\'énergie',
+      org: 'Obligé énergie (TotalEnergies, EDF, Engie…)',
+      portalUrl: 'https://www.ecologie.gouv.fr/coup-pouce-economies-denergie',
+      portalLabel: 'Choisir mon obligé énergie',
+      desc: 'Prime financée par les fournisseurs d\'énergie. À demander AVANT signature du devis. Cumulable avec MaPrimeRénov\'.',
+      pieces: ['Devis signé', 'Facture des travaux', 'Attestation sur l\'honneur'],
+    },
+    {
+      key: 'local',
+      logo: 'Loc',
+      logoClass: 'local',
+      name: 'Aide locale',
+      org: 'Variable selon votre région et commune',
+      portalUrl: 'https://france-renov.gouv.fr/aides',
+      portalLabel: 'Trouver mon aide locale',
+      desc: 'Subvention complémentaire de votre région, département ou intercommunalité. Souvent oubliée.',
+      pieces: ['Justificatif de domicile', 'Devis ou facture', 'Formulaire de demande spécifique à votre collectivité'],
+    },
+    {
+      key: 'tva',
+      logo: 'TVA',
+      logoClass: '',
+      name: 'TVA réduite à 5,5 %',
+      org: 'Appliquée directement par l\'artisan',
+      portalUrl: 'https://www.service-public.fr/particuliers/vosdroits/F31506',
+      portalLabel: 'Conditions du taux réduit',
+      desc: 'Économie automatique sur la facture (au lieu de 10 %, taux normal des travaux de rénovation). L\'artisan applique le taux réduit directement, à condition que son devis soit conforme.',
+      pieces: ['Devis mentionnant le taux 5,5 %', 'Attestation TVA simplifiée'],
+    },
+    {
+      key: 'eptz',
+      logo: 'PTZ',
+      logoClass: 'eptz',
+      name: 'Éco-prêt à taux zéro',
+      org: 'Banque agréée par l\'État',
+      portalUrl: 'https://www.service-public.fr/particuliers/vosdroits/F19905',
+      portalLabel: 'Liste des banques agréées',
+      desc: 'Prêt à 0 % d\'intérêts pour financer votre reste à charge. Plafond 7 000 à 30 000 € en rénovation ponctuelle selon le nombre de gestes, sur 15 ans max. Jusqu\'à 50 000 € sur 20 ans en rénovation globale (audit énergétique + saut de 2 classes DPE).',
+      pieces: ['Devis des travaux', 'Avis d\'imposition', 'Justificatif d\'identité', 'Formulaire emprunteur'],
+    },
+  ];
+
+  // ─── Affichage ──────────────────────────────────────────────────────
+  function render(){
+    const p = getProfile();
+    const courant = (window.rfAidsCourantes && window.rfAidsCourantes()) || p.aids || {};
+    const aids = courant.aides || {};
+    const container = document.getElementById('aids-dynamic');
+    const emptyEl = document.getElementById('aids-empty');
+    if (!container) return;
+
+    // Construit la liste des aides EFFECTIVES (montant > 0)
+    const items = [];
+    AIDS.forEach(model => {
+      let montant = null;
+      if (model.key === 'mpr')   montant = aids.mpr && aids.mpr.total;
+      else if (model.key === 'cee')   montant = aids.cee && aids.cee.total;
+      else if (model.key === 'local') montant = aids.local && aids.local.total;
+      else if (model.key === 'tva')   montant = aids.tva && aids.tva.total;
+      else if (model.key === 'eptz')  {
+        // Éco-PTZ : finance le RESTE À CHARGE (TTC - aides directes), pas le coût total.
+        // Plafonds officiels rénovation ponctuelle (service-public.fr F19905) :
+        //   - 7 000 € : 1 action parois vitrées (menuiseries) SEULE
+        //   - 15 000 € : 1 action autre nature
+        //   - 25 000 € : lot de 2 travaux
+        //   - 30 000 € : lot de 3 travaux ou plus
+        // Le plafond 50 000 € est réservé à la rénovation globale (audit énergétique
+        // démontrant un gain ≥ 2 classes DPE), non auto-détectable ici — mentionné dans le PDF.
+        const trav = (p.aids && p.aids.travaux) || {};
+        const totalTTC = trav.totalTTC || 0;
+        const totalAides = (p.aids && p.aids.totalAides) || 0;
+        const rac = Math.max(0, totalTTC - totalAides);
+        const sel = (p.aids && p.aids.selection) || (p.travaux) || [];
+        const nbGestes = sel.length;
+        const onlyMenuiseries = nbGestes === 1 && sel.includes('menuiseries');
+        let plafondPtz;
+        if (onlyMenuiseries)          plafondPtz = 7000;   // 1 action parois vitrées seule
+        else if (nbGestes >= 3)       plafondPtz = 30000;  // lot de 3 travaux ou plus
+        else if (nbGestes === 2)      plafondPtz = 25000;  // lot de 2 travaux
+        else if (nbGestes === 1)      plafondPtz = 15000;  // 1 action autre que parois vitrées
+        else                          plafondPtz = 7000;   // fallback
+        if (rac > 0) montant = Math.min(rac, plafondPtz);
+      }
+      if (montant && montant > 0){
+        const localNom = (model.key === 'local' && aids.local && aids.local.nom) ? aids.local.nom : null;
+        items.push({ ...model, montant, customName: localNom });
+      }
+    });
+
+    // Met à jour les compteurs
+    const cntAll = document.getElementById('cnt-all');
+    const cntEli = document.getElementById('cnt-eli');
+    if (cntAll) cntAll.textContent = '(' + items.length + ')';
+    if (cntEli) cntEli.textContent = '(' + items.length + ')';
+
+    if (!items.length){
+      container.innerHTML = '';
+      if (emptyEl) emptyEl.hidden = false;
+      return;
+    }
+    if (emptyEl) emptyEl.hidden = true;
+
+    container.innerHTML = items.map((a, idx) => {
+      const displayName = a.customName ? escHtml(a.customName) : escHtml(a.name);
+      return `
+      <article class="aid" data-status="eligible" data-key="${a.key}">
+        <div class="aid-head">
+          <div class="aid-h-l">
+            <div class="aid-logo ${a.logoClass}">${a.logo}</div>
+            <div>
+              <div class="aid-name">${displayName}</div>
+              <div class="aid-org">${escHtml(a.org)}</div>
+              <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+                <span class="pill eligible" style="background:var(--success-50);color:var(--success-600);padding:3px 10px;border-radius:999px;font:600 11px var(--font-mono);text-transform:uppercase;letter-spacing:.04em">Éligible — à déposer</span>
+                ${a.key === 'mpr' && p.aids && p.aids.mpr && p.aids.mpr.isRenovAmpleur ? '<span class="pill" style="background:var(--warning-50);color:var(--warning-600);padding:3px 10px;border-radius:999px;font:600 11px var(--font-mono);text-transform:uppercase;letter-spacing:.04em" title="Audit énergétique + 2 gestes d\'isolation + saut de 2 classes DPE">Parcours accompagné · MAR obligatoire</span>' : ''}
+              </div>
+            </div>
+          </div>
+          <div class="aid-amount">
+            <div class="v">${fmtEUR(a.montant)}</div>
+            <div class="s">Montant estimé</div>
+          </div>
+        </div>
+        <div class="aid-body" style="padding:0 22px 18px">
+          <p style="color:var(--slate-600);font-size:13.5px;margin:0 0 14px;line-height:1.55">${escHtml(a.desc)}</p>
+          <details style="margin-bottom:14px">
+            <summary style="cursor:pointer;font-size:13px;color:var(--teal-700);font-weight:500;user-select:none">Voir les pièces requises</summary>
+            <ul style="margin:8px 0 0;padding-left:18px;font-size:13px;color:var(--slate-700);line-height:1.7">
+              ${a.pieces.map(pi => '<li>' + escHtml(pi) + '</li>').join('')}
+            </ul>
+          </details>
+          ${a.key === 'mpr' ? `<div style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:10px;padding:12px 14px;margin:12px 0;display:flex;gap:10px;align-items:flex-start;font-size:13px;color:#78350F">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;margin-top:1px"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h0"/></svg>
+            <div>
+              <b>À savoir avant de déposer</b> — L'Anah exige que <b>vous créiez votre compte MaPrimeRénov' vous-même</b> (5 minutes sur maprimerenov.gouv.fr avec France Connect+). C'est une règle anti-fraude 2026 qui s'applique à tous les mandataires du marché, sans exception. <b>Rassurez-vous, nous vous accompagnons pas à pas</b> : guide illustré, tuto vidéo, checklist des pièces à préparer et support email si besoin. Une fois le compte créé, désignez-nous comme mandataire administratif — nous gérons tout le reste jusqu'au versement de votre prime.
+            </div>
+          </div>` : ''}
+          <div class="aid-actions" style="display:flex;gap:8px;flex-wrap:wrap">
+            ${(function(){
+              if (a.key === 'tva') {
+                return `<button type="button" class="btn btn-primary" data-tva="1" data-aid-name="${escHtml(displayName)}" data-aid-amount="${a.montant}">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Télécharger l'attestation pour mon artisan
+                </button>
+                <span style="font-size:12px;color:var(--slate-500);align-self:center">L'artisan applique le taux directement sur sa facture.</span>`;
+              }
+              if (a.key === 'eptz') {
+                return `<button type="button" class="btn btn-primary" data-eptz="1" data-aid-name="${escHtml(displayName)}" data-aid-amount="${a.montant}">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Préparer mon dossier pour la banque
+                </button>
+                <span style="font-size:12px;color:var(--slate-500);align-self:center">À apporter à votre banquier en agence.</span>`;
+              }
+              // Rénovation d'ampleur : pour MPR, c'est un MAR qui doit déposer (pas RénoFacile)
+              const isRenovAmpleurMpr = a.key === 'mpr' && p.aids && p.aids.mpr && p.aids.mpr.isRenovAmpleur;
+              if (isRenovAmpleurMpr){
+                return `<a href="https://france-renov.gouv.fr/annuaires-professionnels/accompagnant" target="_blank" rel="noopener" class="btn btn-primary">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                  Choisir mon MAR (annuaire ANAH) ↗
+                </a>
+                <span style="font-size:12px;color:var(--warning-600);align-self:center">⚠ Rénovation d'ampleur — votre MAR dépose le dossier MPR pour vous (et non RénoFacile).</span>`;
+              }
+              return `<button type="button" class="btn btn-primary" data-depot="${a.key}" data-aid-name="${escHtml(displayName)}" data-aid-amount="${a.montant}">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16v-4a2 2 0 0 0-2-2h-7l-3-3H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h7"/><path d="m16 19 2 2 4-4"/></svg>
+                Confier le dépôt à RénoFacile
+              </button>
+              <a href="${escHtml(a.portalUrl)}" target="_blank" rel="noopener" class="btn btn-secondary" style="font-size:12.5px">
+                ou faire moi-même sur le portail officiel ↗
+              </a>`;
+            })()}
+          </div>
+        </div>
+        <div class="aid-foot" style="padding:12px 22px;border-top:1px solid var(--border);background:var(--slate-50);font-size:12px;color:var(--slate-500);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <span>Aide officielle — ${escHtml(a.org)}</span>
+          <span>Estimation indicative, à confirmer après dépôt du dossier</span>
+        </div>
+      </article>`;
+    }).join('');
+  }
+
+  /* ───── Wizard "Confier le dépôt à RénoFacile" ─────
+     3 étapes : récap profil → upload pièces → signature mandat.
+     À la validation : enregistre le dossier dans profile.dossiers_a_deposer
+     et déclenche le statut "à traiter" côté admin. */
+  function openDepotWizard(aidKey, aidName, aidAmount){
+    const p = getProfile();
+    const fullName = ((p.firstname||'')+' '+(p.lastname||'')).trim() || '—';
+    const fmt = n => new Intl.NumberFormat('fr-FR').format(Math.round(n||0)) + ' €';
+    const PIECES_BY_KEY = {
+      mpr:   ['Avis d\'imposition N-2', 'Devis d\'un artisan RGE', 'Photo avant travaux', 'Justificatif d\'identité'],
+      cee:   ['Devis signé d\'un artisan RGE', 'Justificatif de domicile', 'Avis d\'imposition'],
+      local: ['Justificatif de domicile', 'Devis ou facture', 'Formulaire de la collectivité'],
+      tva:   ['Devis mentionnant le taux 5,5 %', 'Attestation TVA simplifiée'],
+      eptz:  ['Devis des travaux', 'Avis d\'imposition', 'Justificatif d\'identité'],
+      mpa:   ['Avis d\'imposition N-2', "Justificatif d'âge ou évaluation GIR", 'Justificatif de handicap ou PCH (le cas échéant)', "Devis des travaux d'adaptation", "Diagnostic du logement établi par l'AMO"],
+      mpld:  ['Avis d\'imposition N-2', 'Grille de dégradation ou d\'insalubrité', 'Audit énergétique', 'Devis d\'entreprises RGE', 'Justificatif d\'identité'],
+    };
+    const pieces = PIECES_BY_KEY[aidKey] || ['Pièces justificatives'];
+
+    let modal = document.getElementById('depot-modal');
+    if (modal) modal.remove();
+    modal = document.createElement('div');
+    modal.id = 'depot-modal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,.6);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;overflow-y:auto';
+    modal.innerHTML =
+      '<div style="background:#fff;border-radius:14px;max-width:560px;width:100%;padding:0;box-shadow:0 20px 60px rgba(15,23,42,.25);max-height:92vh;overflow-y:auto">' +
+        '<div style="padding:24px 28px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;z-index:2">' +
+          '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px">' +
+            '<div>' +
+              '<div style="font:600 11px var(--font-mono);color:var(--teal-700);letter-spacing:.06em;text-transform:uppercase">Confier mon dépôt</div>' +
+              '<h3 style="margin:6px 0 4px;font-size:18px;color:var(--slate-900)">' + escHtml(aidName) + '</h3>' +
+              '<div style="font-size:13px;color:var(--slate-500)">Montant estimé : <b style="color:var(--teal-800)">' + fmt(aidAmount) + '</b></div>' +
+            '</div>' +
+            '<button id="depot-close" style="background:transparent;border:0;font-size:22px;color:var(--slate-400);cursor:pointer;line-height:1;padding:0">×</button>' +
+          '</div>' +
+          '<div style="display:flex;gap:6px;margin-top:14px" id="depot-steps">' +
+            '<div data-step="1" class="depot-pip on" style="flex:1;height:4px;border-radius:2px;background:var(--teal-700)"></div>' +
+            '<div data-step="2" class="depot-pip" style="flex:1;height:4px;border-radius:2px;background:var(--slate-200)"></div>' +
+            '<div data-step="3" class="depot-pip" style="flex:1;height:4px;border-radius:2px;background:var(--slate-200)"></div>' +
+          '</div>' +
+        '</div>' +
+        '<div id="depot-body" style="padding:24px 28px"></div>' +
+        '<div style="padding:14px 28px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:8px;position:sticky;bottom:0;background:#fff">' +
+          '<button id="depot-prev" class="btn btn-secondary" style="opacity:.4;cursor:not-allowed" disabled>← Précédent</button>' +
+          '<button id="depot-next" class="btn btn-primary">Continuer →</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(modal);
+
+    let step = 1;
+    const uploaded = {}; // pieces uploadées : { 'piece_index' : { name, size } }
+    let signatureDataURL = null;
+
+    const stepRenderers = {
+      1: () => {
+        return '<h4 style="margin:0 0 12px;font-size:14px;color:var(--slate-700)">1. Vérifions vos informations</h4>' +
+          '<table style="width:100%;font-size:13.5px;border-collapse:collapse">' +
+            '<tr><td style="padding:7px 0;color:var(--slate-500);width:42%">Nom complet</td><td><b>' + escHtml(fullName) + '</b></td></tr>' +
+            '<tr><td style="padding:7px 0;color:var(--slate-500);border-top:1px solid var(--border)">Email</td><td style="border-top:1px solid var(--border)">' + escHtml(p.email||'—') + '</td></tr>' +
+            '<tr><td style="padding:7px 0;color:var(--slate-500);border-top:1px solid var(--border)">Adresse</td><td style="border-top:1px solid var(--border)">' + escHtml(p.address||'—') + '</td></tr>' +
+            '<tr><td style="padding:7px 0;color:var(--slate-500);border-top:1px solid var(--border)">Logement</td><td style="border-top:1px solid var(--border)">' + escHtml((p.logement&&p.logement.type)||'—') + ' · ' + ((p.logement&&p.logement.surface)||'—') + ' m² · ' + ((p.logement&&p.logement.year)||'—') + '</td></tr>' +
+            '<tr><td style="padding:7px 0;color:var(--slate-500);border-top:1px solid var(--border)">RFR</td><td style="border-top:1px solid var(--border)">' + fmt(p.foyer&&p.foyer.rfr) + '</td></tr>' +
+            '<tr><td style="padding:7px 0;color:var(--slate-500);border-top:1px solid var(--border)">Catégorie</td><td style="border-top:1px solid var(--border)"><b>' + escHtml((p.foyer&&p.foyer.cat)||(p.aids&&p.aids.profile&&p.aids.profile.cat)||'—') + '</b></td></tr>' +
+          '</table>' +
+          '<div style="margin-top:14px;padding:10px 12px;background:var(--teal-50);border:1px solid var(--teal-100);border-radius:8px;font-size:12.5px;color:var(--teal-900)">' +
+            'Ces informations sont issues de votre diagnostic. Pour les modifier, allez dans <a href="mon-profil.html" style="color:var(--teal-700);font-weight:600">Mon profil</a>.' +
+          '</div>';
+      },
+      2: () => {
+        let html = '<h4 style="margin:0 0 6px;font-size:14px;color:var(--slate-700)">2. Téléversez vos pièces justificatives</h4>' +
+          '<p style="font-size:13px;color:var(--slate-500);margin:0 0 14px">Acceptés : PDF, JPG, PNG. Maximum 10 Mo par pièce.</p>';
+        pieces.forEach((piece, i) => {
+          const up = uploaded[i];
+          html += '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px">' +
+            '<div style="flex:1">' +
+              '<div style="font-size:13.5px;color:var(--slate-800)">' + escHtml(piece) + '</div>' +
+              (up ? '<div style="font-size:11.5px;color:var(--teal-700);margin-top:2px">✓ ' + escHtml(up.name) + ' · ' + Math.round(up.size/1024) + ' Ko</div>' : '<div style="font-size:11.5px;color:var(--slate-400);margin-top:2px">À téléverser</div>') +
+            '</div>' +
+            '<button data-upload-idx="' + i + '" class="btn ' + (up ? 'btn-secondary' : 'btn-primary') + '" style="font-size:12.5px;padding:6px 12px">' +
+              (up ? 'Remplacer' : 'Choisir un fichier') +
+            '</button>' +
+          '</div>';
+        });
+        return html;
+      },
+      3: () => {
+        return '<h4 style="margin:0 0 6px;font-size:14px;color:var(--slate-700)">3. Signez le mandat de dépôt</h4>' +
+          '<p style="font-size:13px;color:var(--slate-500);margin:0 0 12px">En signant, vous autorisez <b>RénoFacile</b> à déposer cette demande d\'aide en votre nom auprès de l\'organisme compétent.</p>' +
+          '<canvas id="depot-canvas" width="500" height="160" style="border:1.5px dashed var(--slate-300);border-radius:10px;width:100%;background:#fff;touch-action:none;display:block;cursor:crosshair"></canvas>' +
+          '<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--slate-400);margin-top:6px">' +
+            '<button id="depot-sig-clear" style="background:transparent;border:0;color:var(--teal-700);cursor:pointer;font-size:12.5px;font-weight:500">Effacer</button>' +
+            '<span>Signé le ' + new Date().toLocaleDateString('fr-FR') + '</span>' +
+          '</div>' +
+          '<div style="margin-top:14px;padding:10px 12px;background:#FFFBEB;border:1px solid #FCD34D;border-radius:8px;font-size:11.5px;color:#854D0E;line-height:1.5">' +
+            'Mandat de dépôt simple. Signature manuscrite numérique équivalente à une signature scannée. RénoFacile s\'engage à déposer votre dossier sous 48h ouvrées et à vous tenir informé.' +
+          '</div>';
+      },
+    };
+
+    function renderStep(){
+      document.querySelectorAll('#depot-steps .depot-pip').forEach((el, i) => {
+        el.style.background = (i+1) <= step ? 'var(--teal-700)' : 'var(--slate-200)';
+      });
+      document.getElementById('depot-body').innerHTML = stepRenderers[step]();
+      const prev = document.getElementById('depot-prev');
+      const next = document.getElementById('depot-next');
+      prev.disabled = step === 1;
+      prev.style.opacity = step === 1 ? .4 : 1;
+      prev.style.cursor = step === 1 ? 'not-allowed' : 'pointer';
+      next.textContent = step === 3 ? 'Envoyer mon dossier à RénoFacile ✓' : 'Continuer →';
+
+      if (step === 2){
+        document.querySelectorAll('[data-upload-idx]').forEach(b => b.addEventListener('click', () => {
+          const idx = +b.dataset.uploadIdx;
+          const i = document.createElement('input');
+          i.type = 'file'; i.accept = '.pdf,.jpg,.jpeg,.png';
+          i.onchange = () => {
+            const f = i.files && i.files[0];
+            if (!f) return;
+            if (f.size > 10*1024*1024){ alert('Fichier trop volumineux (max 10 Mo).'); return; }
+            uploaded[idx] = { name: f.name, size: f.size, mime: f.type };
+            renderStep(); // re-render pour afficher l'état uploadé
+          };
+          i.click();
+        }));
+      }
+      if (step === 3){
+        const canvas = document.getElementById('depot-canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.strokeStyle = '#0F172A'; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+        let drawing = false;
+        const getPos = e => {
+          const r = canvas.getBoundingClientRect();
+          const t = e.touches ? e.touches[0] : e;
+          return { x: (t.clientX - r.left) * canvas.width / r.width, y: (t.clientY - r.top) * canvas.height / r.height };
+        };
+        canvas.addEventListener('mousedown', e => { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+        canvas.addEventListener('mousemove', e => { if (drawing){ const p = getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); signatureDataURL = canvas.toDataURL('image/png'); } });
+        canvas.addEventListener('mouseup', () => drawing = false);
+        canvas.addEventListener('mouseleave', () => drawing = false);
+        canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); });
+        canvas.addEventListener('touchmove', e => { e.preventDefault(); if (drawing){ const p = getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); signatureDataURL = canvas.toDataURL('image/png'); } });
+        canvas.addEventListener('touchend', () => drawing = false);
+        document.getElementById('depot-sig-clear').addEventListener('click', () => {
+          ctx.clearRect(0,0,canvas.width,canvas.height); signatureDataURL = null;
+        });
+      }
+    }
+
+    function close(){ modal.remove(); }
+    document.getElementById('depot-close').addEventListener('click', close);
+    document.getElementById('depot-prev').addEventListener('click', () => { if (step>1){ step--; renderStep(); } });
+    document.getElementById('depot-next').addEventListener('click', () => {
+      // Validation par étape
+      if (step === 2){
+        if (Object.keys(uploaded).length < pieces.length){
+          alert('Veuillez téléverser toutes les pièces requises (' + pieces.length + ' au total).');
+          return;
+        }
+      }
+      if (step === 3){
+        if (!signatureDataURL){
+          alert('Veuillez signer le mandat de dépôt.');
+          return;
+        }
+        // Validation finale : enregistrement
+        try {
+          const prof = getProfile();
+          const dossiers = Array.isArray(prof.dossiers_a_deposer) ? prof.dossiers_a_deposer : [];
+          dossiers.push({
+            aidKey, aidName, aidAmount,
+            piecesUploadees: Object.entries(uploaded).map(([i,m]) => ({ piece: pieces[i], name: m.name, size: m.size })),
+            mandatSignature: signatureDataURL,
+            confiéLe: new Date().toISOString(),
+            statut: 'a_deposer',
+          });
+          prof.dossiers_a_deposer = dossiers;
+          // Statut dossier global passe à "a_traiter" pour que l'admin le voie
+          prof.dossierStatus = 'a_traiter';
+          prof.dossierStatusHistory = prof.dossierStatusHistory || [];
+          prof.dossierStatusHistory.unshift({
+            at: new Date().toISOString(), from: prof.dossierStatusHistory[0]?.to || 'nouveau',
+            to: 'a_traiter', by: prof.email || 'client',
+            note: 'Demande de dépôt confiée pour ' + aidName,
+          });
+          localStorage.setItem('renofacile.profile', JSON.stringify(prof));
+
+          // Mirror côté clients pour que l'admin voie immédiatement
+          try {
+            const clients = JSON.parse(localStorage.getItem('renofacile.clients') || '[]');
+            const idx = clients.findIndex(c => c.email === prof.email);
+            if (idx >= 0){
+              clients[idx].dossierStatus = 'a_traiter';
+              clients[idx].dossiers_a_deposer = dossiers;
+              clients[idx].updatedAt = new Date().toISOString();
+              localStorage.setItem('renofacile.clients', JSON.stringify(clients));
+            }
+          } catch {}
+        } catch(e){ console.warn('Save dossier :', e); }
+        close();
+        // Toast / Message confirmation
+        const ok = document.createElement('div');
+        ok.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--teal-700);color:#fff;padding:14px 22px;border-radius:10px;font-size:14px;z-index:10000;max-width:90vw;box-shadow:0 8px 24px rgba(15,118,110,.3)';
+        ok.innerHTML = '<b>✓ Dossier confié à RénoFacile.</b><br><span style="opacity:.9;font-size:13px">Notre équipe le dépose sous 48h ouvrées. Vous recevrez une notification.</span>';
+        document.body.appendChild(ok);
+        setTimeout(() => ok.remove(), 5000);
+        return;
+      }
+      step++; renderStep();
+    });
+
+    renderStep();
+  }
+
+  // Branche les boutons "Confier le dépôt" sur les cartes aides (MPR / CEE / local)
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('[data-depot]');
+    if (btn){
+      openDepotWizard(btn.dataset.depot, btn.dataset.aidName, +btn.dataset.aidAmount);
+      return;
+    }
+    const tvaBtn = e.target.closest('[data-tva]');
+    if (tvaBtn){
+      downloadTvaAttestation();
+      return;
+    }
+    const ptzBtn = e.target.closest('[data-eptz]');
+    if (ptzBtn){
+      downloadPtzDossier(+ptzBtn.dataset.aidAmount);
+      return;
+    }
+  });
+
+  /* ───── PDF wrappers ─────
+     Les générateurs sont factorisés dans _pdf_docs.js (RFDocs.*) pour pouvoir
+     être réutilisés depuis mes-documents.html sans dupliquer le code. */
+  function downloadTvaAttestation(){
+    if (!window.RFDocs || !window.RFDocs.generateTvaAttestation) {
+      toast('Bibliothèque PDF indisponible. Vérifiez votre connexion internet.');
+      return;
+    }
+    try {
+      window.RFDocs.generateTvaAttestation(getProfile());
+      toast('Attestation TVA (PDF) téléchargée. À remettre à votre artisan AVANT le début des travaux.');
+    } catch(e){
+      console.warn('TVA PDF :', e);
+      toast('Erreur lors de la génération du PDF.');
+    }
+  }
+  function downloadPtzDossier(maxAmount){
+    if (!window.RFDocs || !window.RFDocs.generatePtzDossier) {
+      toast('Bibliothèque PDF indisponible. Vérifiez votre connexion internet.');
+      return;
+    }
+    try {
+      window.RFDocs.generatePtzDossier(getProfile(), maxAmount);
+      toast('Dossier éco-PTZ (PDF) téléchargé. À imprimer et apporter à votre banquier.');
+    } catch(e){
+      console.warn('PTZ PDF :', e);
+      toast('Erreur lors de la génération du PDF.');
+    }
+  }
+
+  function triggerDownload(html, filename){
+    const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 100);
+  }
+  function toast(msg){
+    const el = document.createElement('div');
+    el.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--teal-700);color:#fff;padding:12px 22px;border-radius:8px;font-size:13.5px;z-index:10000;max-width:90vw;box-shadow:0 8px 24px rgba(15,118,110,.3)';
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 4000);
+  }
+
+  // Filter pills
+  document.querySelectorAll('.filters button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.filters button').forEach(x => x.classList.remove('on'));
+      b.classList.add('on');
+      const f = b.dataset.f;
+      document.querySelectorAll('#aids-dynamic .aid').forEach(a => {
+        a.style.display = (f === 'all' || a.dataset.status === f) ? '' : 'none';
+      });
+    });
+  });
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render);
+  else render();
+  window.addEventListener('storage', e => { if (e.key === KEY) render(); });
+})();
+</script>
+<script>
+/* Les sections MPA et LHI ne s'affichent que si l'utilisateur a réellement un
+   dossier de ce type : la page « Mes aides » reflète ses parcours, elle ne
+   suggère pas de produits qu'il n'a pas demandés. Cachées par défaut (`hidden`
+   dans le HTML), révélées ici. */
+(function revealMatchingSections(){
+  try {
+    if (!window.RFDossiers || typeof RFDossiers.getAll !== 'function') return;
+    var types = {};
+    (RFDossiers.getAll() || []).forEach(function(d){ if (d && d.type) types[d.type] = true; });
+    if (types.autonomie){
+      var mpa = document.getElementById('aid-block-mpa');
+      if (mpa) mpa.removeAttribute('hidden');
+    }
+    if (types.indigne){
+      var lhi = document.getElementById('aid-block-lhi');
+      if (lhi) lhi.removeAttribute('hidden');
+    }
+    // Le catalogue énergétique et « Vos dossiers en cours » restent gérés par
+    // la logique existante.
+  } catch (_) {}
+})();
+</script>
+<script>
+/* Page « Mes aides » polymorphique : avec ?dossier=xxx, elle n'expose que les
+   aides du type ouvert. Sans paramètre, elle reste le catalogue transversal.
+   Ce bloc tourne en dernier : il a le dernier mot sur les bascules ci-dessus. */
+function adaptToOpenDossier(){
+  function getOpenDossier(){
+    try {
+      if (!window.RFDossiers) return null;
+      var id = new URLSearchParams(location.search).get('dossier');
+      if (id){
+        var byId = RFDossiers.getById(id);
+        if (byId) return byId;
+      }
+      // Arrivée par le lien de la sidebar : on ouvre le dossier le plus récent,
+      // sinon la page reste en catalogue transversal alors qu'un dossier existe.
+      var actifs = (RFDossiers.getActifs && RFDossiers.getActifs()) || [];
+      return actifs.length ? actifs[actifs.length - 1] : null;
+    } catch (_) { return null; }
+  }
+  var dossier = getOpenDossier();
+
+  /* L'état « Aucun diagnostic réalisé » — et les 4 cards pédagogiques qu'il
+     contient — n'a de sens que pour un compte vide. Il est piloté par
+     renofacile.profile, qui reste vide sur un parcours MPA ou LHI. */
+  try {
+    var unDossierExiste = !!(window.RFDossiers && (RFDossiers.getActifs() || []).length);
+    var emptyGlobal = document.getElementById('empty-aids');
+    if (emptyGlobal && unDossierExiste) emptyGlobal.hidden = true;
+  } catch (_) {}
+
+  if (!dossier || !dossier.type) return;
+
+  var eur = function(n){ return Math.round(Number(n) || 0).toLocaleString('fr-FR') + ' €'; };
+  var type = dossier.type;
+  var r = (window.rfResolveDossierResult ? window.rfResolveDossierResult(dossier) : dossier.result) || {};
+
+  var blocs = {
+    autonomie:   document.getElementById('aid-block-mpa'),
+    indigne:     document.getElementById('aid-block-lhi'),
+    energetique: document.querySelector('[data-aid-block="energetique"]'),
+  };
+  Object.keys(blocs).forEach(function(k){
+    if (blocs[k]) blocs[k].hidden = (k !== type);
+  });
+  // L'état vide « aucun diagnostic » n'a pas de sens quand un dossier est ouvert.
+  var empty = document.getElementById('empty-aids');
+  if (empty && type !== 'energetique') empty.hidden = true;
+
+  var titres = {
+    energetique: 'Mes aides — Rénovation énergétique',
+    autonomie:   "Mes aides — Adaptation à l'autonomie",
+    indigne:     'Mes aides — Habitat dégradé ou insalubre',
+  };
+  var h1 = document.querySelector('h1.page-title');
+  if (h1 && titres[type]) h1.textContent = titres[type];
+
+  // Montant du dossier ouvert : celui qui a été acheté, pas un recalcul.
+  // Même source de vérité que la card dossier (aides directes pour un LHI).
+  var total = (window.rfTotalDossier && window.rfTotalDossier(dossier, r)) || 0;
+  if (!total){
+    if (type === 'autonomie')   total = (r.aide && r.aide.total) || 0;
+    if (type === 'indigne')     total = (r.aide && (r.aide.totalApresEcretement || r.aide.total)) || 0;
+    if (type === 'energetique') total = r.totalAides || 0;
+  }
+
+  var conf = {
+    autonomie: { sel: '#aid-block-mpa', cta: "Voir mon dossier MaPrimeAdapt' →" },
+    indigne:   { sel: '#aid-block-lhi', cta: 'Voir mon dossier Ma Prime Logement Décent →' },
+  }[type];
+  if (conf && total > 0){
+    var amountEl = document.querySelector(conf.sel + ' .aid-amount');
+    if (amountEl) amountEl.innerHTML = '<div class="v">' + eur(total) + '</div><div class="s">total estimé</div>';
+    var ctaEl = document.querySelector(conf.sel + ' .aid-foot a');
+    if (ctaEl){
+      ctaEl.textContent = conf.cta;
+      ctaEl.href = 'dashboard.html?dossier=' + encodeURIComponent(dossier.id);
+    }
+  }
+
+  /* Les blocs statiques MPA / LHI servent la découverte (« voici ce que cette
+     aide peut apporter »). Dès qu'un dossier du type est ouvert, la card du haut
+     porte déjà l'information chiffrée : on retire le doublon. */
+  var blocStatique = document.getElementById(type === 'indigne' ? 'aid-block-lhi' : (type === 'autonomie' ? 'aid-block-mpa' : ''));
+  if (blocStatique) blocStatique.hidden = true;
+
+  /* Les mini-cards « À évaluer » présentent le catalogue énergétique. Elles
+     vivent dans l'état vide, déjà masqué plus haut ; ce filet garantit qu'elles
+     ne réapparaîtront pas sur un dossier MPA ou LHI si l'état vide change. */
+  if (type !== 'energetique'){
+    document.querySelectorAll('[data-aid-mini="energetique"]').forEach(function(el){ el.hidden = true; });
+  }
+
+  /* Formulaires officiels attendus selon le dispositif. Les statuts reflètent la
+     réalité du parcours : rien n'est générable avant le diagnostic de l'opérateur. */
+  (function renderDossiersADeposer(){
+    var section = document.getElementById('dossiers-a-deposer');
+    var host = document.getElementById('dossiers-a-deposer-list');
+    if (!section || !host) return;
+    var variant = r.variant || (dossier.profile && dossier.profile.variant) || 'occupant';
+    var FORMULAIRES = {
+      energetique: [
+        { nm: "Demande MaPrimeRénov'",              st: 'En attente de pièces',        ico: 'DOC' },
+        { nm: 'Attestation CEE (prime énergie)',    st: 'En attente de pièces',        ico: 'DOC' },
+        { nm: 'Attestation TVA 5,5 %',              st: "Document d'aide · à remettre à l'artisan", ico: 'PDF', pret: true },
+        { nm: 'Dossier éco-PTZ',                    st: "Document d'aide · à apporter à votre banque", ico: 'PDF', pret: true },
+      ],
+      autonomie: [
+        { nm: "Demande MaPrimeAdapt' — Anah",       st: 'En attente du diagnostic AMO', ico: 'DOC' },
+        { nm: 'Mandat de représentation AMO',       st: "À signer après le rendez-vous avec l'opérateur", ico: 'DOC' },
+      ],
+      indigne: [
+        { nm: 'Demande Ma Prime Logement Décent — Anah', st: "En attente de l'audit énergétique et de la grille d'évaluation", ico: 'DOC' },
+        { nm: 'Mandat opérateur spécialisé LHI',    st: "À signer après le rendez-vous avec l'opérateur", ico: 'DOC' },
+        { nm: "Convention Loc'Avantages",           st: 'À signer avec l\'Anah — engagement locatif de 6 ans', ico: 'DOC', variant: 'bailleur' },
+        { nm: 'Dossier éco-PTZ',                    st: "Document d'aide · à apporter à votre banque", ico: 'PDF', pret: true },
+      ],
+    };
+    var liste = (FORMULAIRES[type] || []).filter(function(f){ return !f.variant || f.variant === variant; });
+    if (!liste.length) return;
+    host.innerHTML = liste.map(function(f, i){
+      return '<div style="display:flex;justify-content:space-between;align-items:center;gap:14px;padding:14px 0' +
+          (i ? ';border-top:1px solid var(--slate-100,#f1f5f9)' : '') + '">' +
+        '<div style="display:flex;align-items:center;gap:12px;min-width:0">' +
+          '<span class="file-ic ' + (f.pret ? 'gen' : '') + '" style="flex:0 0 auto">' + f.ico + '</span>' +
+          '<div style="min-width:0"><div style="font-weight:600;font-size:14.5px;color:var(--slate-900)">' + f.nm + '</div>' +
+          '<div style="font-size:12.5px;color:var(--slate-500)">' + f.st + '</div></div>' +
+        '</div>' +
+        '<a class="btn ' + (f.pret ? 'btn-primary' : 'btn-secondary') + '" href="mes-documents.html" style="flex:0 0 auto;font-size:12.5px">' +
+          (f.pret ? 'Ouvrir' : 'Voir le détail') + '</a>' +
+      '</div>';
+    }).join('');
+    section.hidden = false;
+  })();
+
+  /* Vue « adaptation à l'autonomie » : subvention travaux, service AMO et
+     prestations à demander ailleurs (APA, PCH) selon le profil. */
+  if (type === 'autonomie'){
+    var detailMpa = document.getElementById('mpa-detail');
+    if (detailMpa) detailMpa.hidden = false;
+    var aideMpa = r.aide || {};
+    var montantMpa = aideMpa.travaux || aideMpa.total || 0;
+    var elMpa = document.getElementById('mpa-travaux-amount');
+    if (elMpa) elMpa.textContent = montantMpa > 0 ? eur(montantMpa) : '— €';
+    var btnMpa = document.querySelector('#mpa-detail [data-depot="mpa"]');
+    if (btnMpa) btnMpa.setAttribute('data-aid-amount', String(Math.round(montantMpa)));
+    var profMpa = dossier.profile || {};
+    if ((Number(profMpa.age) || 0) >= 60){
+      var apa = document.querySelector('#mpa-detail [data-aid="apa"]');
+      if (apa) apa.hidden = false;
+    }
+    if (profMpa.handicap === 'oui_50plus' || profMpa.handicap === 'oui_pch'){
+      var pch = document.querySelector('#mpa-detail [data-aid="pch"]');
+      if (pch) pch.hidden = false;
+    }
+  }
+
+  // Vue « habitat dégradé » : empilement détaillé, aide par aide.
+  if (type === 'indigne'){
+    var detail = document.getElementById('lhi-detail');
+    if (detail) detail.hidden = false;
+    var a = r.aide || {};
+    // Montant absent du moteur : « — € » plutôt qu'un 0 € trompeur.
+    var put = function(id, v){
+      var e = document.getElementById(id);
+      if (e) e.textContent = (v > 0) ? eur(v) : '— €';
+    };
+    put('lhi-mpld-amount', a.totalApresEcretement || a.total || a.base || 0);
+    put('lhi-mpr-amount', a.mprCumulable || 0);
+    put('lhi-regional-amount', a.local || 0);
+    if (a.ecoPtz){
+      var ptzEl = document.getElementById('lhi-ptz-amount');
+      if (ptzEl) ptzEl.textContent = eur(a.ecoPtz);
+    }
+    var setBtnAmount = function(key, v){
+      var b = document.querySelector('#lhi-detail [data-depot="' + key + '"]');
+      if (b) b.setAttribute('data-aid-amount', String(Math.round(v || 0)));
+    };
+    setBtnAmount('mpld', a.totalApresEcretement || a.total || a.base || 0);
+    setBtnAmount('mpr', a.mprCumulable || 0);
+    var variant = r.variant || (dossier.profile && dossier.profile.variant) || 'occupant';
+    var alerte = document.querySelector('#lhi-detail .lhi-alert[data-variant="' + variant + '"]');
+    if (alerte) alerte.hidden = false;
+  }
+
+  // Widget sidebar : il doit parler du dossier ouvert, pas du dernier diagnostic
+  // énergétique stocké dans le profil.
+  if (type !== 'energetique'){
+    var set = function(id, v){ var e = document.getElementById(id); if (e) e.textContent = v; };
+    set('rf-aides-val', total > 0 ? eur(total) : '— €');
+    var cout = 0;
+    // coutEstime (MPA) et coutHT (LHI) sont des montants HT : conversion avant
+    // affichage sous l'étiquette TTC. totalTTC prime quand il existe.
+    var tv = r.travaux || {};
+    cout = tv.totalTTC || Math.round((tv.coutEstime || tv.coutHT || 0) * 1.055);
+    set('rf-aides-sub', cout > 0 ? 'sur ' + eur(cout) + ' TTC' : 'Estimation indicative');
+  }
+}
+// Le widget sidebar est réécrit au DOMContentLoaded par le script de bascule :
+// on passe après lui, sinon le dossier ouvert est écrasé par le profil.
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', adaptToOpenDossier);
+else adaptToOpenDossier();
+</script>
+<script id="rf-glossaire-links">
+/* Ajoute « Voir la fiche complète » vers le glossaire sur chaque card d'aide. */
+(function(){
+  var MAP = {
+    mpr:'mpr-geste', cee:'cee', local:'climaxion', tva:'tva-55', eptz:'eco-ptz',
+    'mpa-travaux':'mpa-travaux', apa:'apa', pch:'pch', 'amo-mpa':'amo-mpa',
+    mpld:'mpld', 'mpr-cumulable':'mpr-geste', 'eco-ptz':'eco-ptz',
+    'regional-lhi':'habiter-mieux-grand-est', audit:'audit-lhi', amo:'amo-lhi'
+  };
+  function decorate(){
+    document.querySelectorAll('article.aid').forEach(function(card){
+      if (card.querySelector('.rf-gloss-link')) return;
+      var anchor = MAP[card.getAttribute('data-key') || card.getAttribute('data-aid') || ''];
+      if (!anchor) return;
+      var actions = card.querySelector('.aid-actions');
+      if (!actions) {
+        actions = document.createElement('div');
+        actions.className = 'aid-actions';
+        actions.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;padding:0 22px 18px';
+        card.appendChild(actions);
+      }
+      var a = document.createElement('a');
+      a.className = 'rf-gloss-link';
+      a.href = 'glossaire-aides.html#' + anchor;
+      a.textContent = 'Voir la fiche complète ↗';
+      a.style.cssText = 'align-self:center;font:600 12.5px/1 inherit;color:var(--teal-700);text-decoration:none';
+      a.addEventListener('mouseenter', function(){ a.style.textDecoration = 'underline'; });
+      a.addEventListener('mouseleave', function(){ a.style.textDecoration = 'none'; });
+      actions.appendChild(a);
+    });
+  }
+  var pending = false;
+  function schedule(){ if (pending) return; pending = true; requestAnimationFrame(function(){ pending = false; decorate(); }); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', schedule); else schedule();
+  new MutationObserver(schedule).observe(document.body, {childList:true, subtree:true});
+})();
+</script>
+<script>
+/* Copilote de parcours — peuple le bloc #rf-admin quand un dossier est ouvert.
+   Sans dossier, le bloc reste masqué et la page garde son catalogue transversal. */
+(function initAdminCopilote(){
+  'use strict';
+  if (!window.RFDossiers) return;
+
+  function openDossier(){
+    try {
+      var id = new URLSearchParams(location.search).get('dossier');
+      if (id){ var byId = RFDossiers.getById(id); if (byId) return byId; }
+      var actifs = (RFDossiers.getActifs && RFDossiers.getActifs()) || [];
+      return actifs.length ? actifs[actifs.length - 1] : null;
+    } catch (e){ return null; }
+  }
+
+  var dossier = openDossier();
+  var root = document.getElementById('rf-admin');
+  if (!dossier || !dossier.type || !root) return;
+
+  var esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); };
+  var setTxt = function(id, v){ var el = document.getElementById(id); if (el) el.textContent = v; };
+  var eur = function(n){ return Math.round(Number(n) || 0).toLocaleString('fr-FR') + ' €'; };
+
+  document.body.classList.add('rf-admin-type-' + dossier.type);
+  root.classList.add('is-on');
+
+  var timeline = RFDossiers.getTimeline(dossier);
+  var currentIdx = RFDossiers.getCurrentStepIndex(dossier);
+  var step = timeline[currentIdx];
+  var adresse = (dossier.profile && dossier.profile.logement && dossier.profile.logement.adresse) || '';
+
+  var r = (window.rfResolveDossierResult ? window.rfResolveDossierResult(dossier) : dossier.result) || {};
+  var totalAides = (window.rfTotalDossier && window.rfTotalDossier(dossier, r)) || RFDossiers.totalAides(dossier) || 0;
+
+  /* ── Hero ── */
+  var greetEl = document.getElementById('rf-admin-greeting');
+  if (greetEl && window.RFUser) greetEl.textContent = RFUser.getGreeting();
+  setTxt('rf-hero-type', RFDossiers.meta(dossier.type).titre);
+  setTxt('rf-hero-adresse', adresse ? '· ' + adresse : '');
+  setTxt('rf-hero-aides', totalAides ? eur(totalAides) : '—');
+  setTxt('rf-hero-step', currentIdx + ' / ' + timeline.length);
+
+  /* ── Mini-stepper ── */
+  var stepper = document.getElementById('rf-stepper');
+  if (stepper){
+    stepper.innerHTML = timeline.map(function(s, idx){
+      var status = idx < currentIdx ? 'done' : (idx === currentIdx ? 'current' : 'pending');
+      var short = s.court || s.libelle.split(' ')[0];
+      return '<div class="rf-step rf-step--' + status + '">' +
+        '<span class="rf-step__badge">' + (status === 'done' ? '✓' : (idx + 1)) + '</span>' +
+        '<span class="rf-step__label">' + esc(short) + '</span></div>';
+    }).join('');
+    var cur = stepper.querySelector('.rf-step--current');
+    if (cur && stepper.scrollWidth > stepper.clientWidth) stepper.scrollLeft = Math.max(0, cur.offsetLeft - stepper.clientWidth / 2 + cur.offsetWidth / 2);
+  }
+
+  /* ── Card action immédiate ── */
+  if (step){
+    setTxt('rf-next-num', currentIdx + 1);
+    setTxt('rf-next-title', step.libelle);
+    setTxt('rf-next-desc', step.description || step.action || '');
+    var dw = document.getElementById('rf-next-delai-wrap');
+    if (dw){ dw.hidden = !step.delai; setTxt('rf-next-delai', step.delai || ''); }
+    var uw = document.getElementById('rf-next-duree-wrap');
+    if (uw){ uw.hidden = !step.duree; setTxt('rf-next-duree', step.duree || ''); }
+    var tips = document.getElementById('rf-next-tips');
+    var tipsList = document.getElementById('rf-next-tips-list');
+    if (tips && tipsList){
+      if (step.tips && step.tips.length){
+        tips.hidden = false;
+        tipsList.innerHTML = step.tips.map(function(t){ return '<li>' + esc(t) + '</li>'; }).join('');
+      } else { tips.hidden = true; }
+    }
+    var cta = document.getElementById('rf-next-cta');
+    if (cta){
+      if (step.cta && step.href){
+        cta.hidden = false;
+        cta.textContent = step.cta;
+        cta.href = step.href;
+        if (/^https?:/.test(step.href)){ cta.target = '_blank'; cta.rel = 'noopener'; }
+      } else { cta.hidden = true; }
+    }
+    var markDone = document.getElementById('rf-mark-done');
+    if (markDone){
+      markDone.hidden = currentIdx >= timeline.length - 1;
+      markDone.addEventListener('click', function(){
+        try { RFDossiers.advanceEtape(dossier.id); } catch (e){}
+        location.reload();
+      });
+    }
+  }
+
+  /* ── Checklist ── */
+  var host = document.getElementById('rf-checklist');
+  if (host){
+    setTxt('rf-check-done', currentIdx);
+    setTxt('rf-check-total', timeline.length);
+    host.innerHTML = timeline.map(function(s, idx){
+      var status = idx < currentIdx ? 'done' : (idx === currentIdx ? 'current' : 'pending');
+      var badge = status === 'done' ? 'Fait' : (status === 'current' ? 'En cours' : 'À venir');
+      var mark = status === 'done' ? '✓' : (status === 'current' ? '●' : '');
+      return '<div class="rf-check__item rf-check__item--' + status + '">' +
+        '<span class="rf-check__box">' + mark + '</span>' +
+        '<span class="rf-check__label">' + esc(s.libelle) + '</span>' +
+        '<span class="rf-check__badge">' + badge + '</span></div>';
+    }).join('');
+  }
+
+  /* ── Documents attendus ── */
+  var docHost = document.getElementById('rf-admin-doc-list');
+  if (docHost){
+    var docs = (RFDossiers.getDocumentsAttendus(dossier) || []).slice(0, 4);
+    docHost.innerHTML = docs.length ? docs.map(function(doc){
+      return '<div class="rf-admin-doc">' +
+        '<div class="rf-admin-doc__ico">DOC</div>' +
+        '<div><div class="rf-admin-doc__name">' + esc(doc.libelle) + '</div>' +
+        '<div class="rf-admin-doc__for">' + (doc.obligatoire ? 'Pièce obligatoire' : 'Pièce complémentaire') + '</div></div>' +
+        '<a class="rf-admin-doc__cta" href="mes-documents.html?dossier=' + encodeURIComponent(dossier.id) + '">Téléverser</a>' +
+      '</div>';
+    }).join('') : '<p style="color:var(--slate-500);font-size:14px;margin:0">Aucune pièce à fournir pour l\'instant.</p>';
+  }
+
+  /* ── Récap ── */
+  var coutTTC = (r.travaux && (r.travaux.totalTTC || r.travaux.coutEstime)) || r.coutTravaux || r.totalTravaux || 0;
+  setTxt('rf-summary-adresse', adresse || '—');
+  setTxt('rf-summary-aides', totalAides ? eur(totalAides) : '—');
+  setTxt('rf-summary-reste', coutTTC ? eur(Math.max(0, coutTTC - totalAides)) : 'À chiffrer avec vos devis');
+  setTxt('rf-summary-partenaire', (dossier.partenaire && dossier.partenaire.nom)
+    || (dossier.transmisLe ? 'Accompagnateur agréé — désignation en cours' : 'Non transmis'));
+})();
+</script>
+<script src="_mar_ui.js"></script>
+</body>
+</html>
