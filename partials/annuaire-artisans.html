@@ -1,0 +1,176 @@
+<!-- Fragment rhabillé : balisage et identifiants d'origine conservés (les scripts métier s'y accrochent). -->
+
+<div class="app">
+  <aside class="sidebar">
+    <a class="brand" href="index.dc.html" aria-label="JungleRenov, accueil"><span data-jr-logo="horizontal/principal" data-h="30"></span></a>
+
+    <div class="total-widget" id="rf-aides-widget">
+      <div class="lbl">Aides estimées</div>
+      <div class="val" id="rf-aides-val">—</div>
+      <div class="sub" id="rf-aides-sub">Simulation à compléter</div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section">Mon parcours</div>
+      <a href="dashboard.dc.html"><span data-jr-picto="dossier"></span> Mon projet</a>
+      <a href="mes-aides.dc.html"><span data-jr-picto="revenus"></span> Mes aides</a>
+      <a href="mes-documents.dc.html"><span data-jr-picto="document"></span> Mes documents</a>
+      <div class="nav-section" style="margin-top:8px">Outils</div>
+      <a href="annuaire-artisans.dc.html" class="active"><span data-jr-picto="devis"></span> Annuaire artisans</a>
+      <a href="glossaire-aides.dc.html"><span data-jr-picto="information"></span> Comprendre les aides</a>
+      <div class="nav-section" style="margin-top:8px">Compte</div>
+      <a href="mon-profil.dc.html"><span data-jr-picto="proprietaire"></span> Mon profil</a>
+      <a href="page-info.dc.html?p=contact"><span data-jr-picto="email"></span> Paramètres</a>
+
+      <div class="exit" style="margin-top:6px;padding-top:14px;border-top:1px solid var(--border)">
+        <a href="index.dc.html"><span data-jr-picto="retour"></span> Retour à l'accueil du site</a>
+      </div>
+    </nav>
+
+    <div class="me">
+      <div class="av" id="rf-me-av">RF</div>
+      <div>
+        <div class="nm" id="rf-me-name">Mon compte</div>
+        <div class="em" id="rf-me-plan">—</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="container">
+    <div class="breadcrumb">Outils · Annuaire artisans</div>
+    <h1>Trouver un artisan RGE pour vos travaux</h1>
+    <p class="lead">Nous filtrons l'<b>annuaire officiel RGE</b> (annuaire-rge.faire.fr, géré par l'État) selon votre projet et votre localisation. C'est la source la plus fiable et la plus complète : ~50 000 entreprises certifiées, mises à jour quotidiennement par les organismes de qualification (Qualibat, Qualifelec, Qualit'EnR…).</p>
+
+    <div class="layout-search">
+      <aside class="filters" id="filters">
+        <button type="button" class="filters-toggle" id="filters-toggle" aria-expanded="false" aria-controls="filters-body"><span>Filtres (<span id="filters-count">0</span>)</span><span class="filters-chev" aria-hidden="true"></span></button>
+        <div class="filters-body" id="filters-body">
+        <h3>Affiner ma recherche</h3>
+
+        <div class="f-group" id="addr-group">
+          <label class="field-label" for="client-addr" style="display:block;margin-bottom:6px">Votre point de départ</label>
+          <input type="text" id="client-addr" class="input" placeholder="Code postal ou adresse (ex : 54000 Nancy)" autocomplete="street-address" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:17px;color:var(--slate-800);background:#FFFFFF">
+          <small id="addr-hint" style="display:block;margin-top:4px;font-size:17px;line-height:24px;color:#567166">Pour trier par distance.</small>
+        </div>
+
+        <div class="f-group">
+          <div class="field"><label class="field-label" for="dep">Département</label>
+            <select class="select" id="dep">
+              <option value="">Tous les départements</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="f-group">
+          <div class="field"><div class="dist-row"><label class="field-label" for="dist">Distance maximale</label><span class="dist-val" id="dist-val">30 km</span></div>
+            <input type="range" class="slider" id="dist" min="5" max="100" step="5" value="30" aria-describedby="dist-val">
+          </div>
+        </div>
+
+        <div class="f-group f-travaux">
+          <div class="field-label" id="types-label">Type de travaux</div>
+          <div id="types-travaux" aria-labelledby="types-label"></div>
+          <div class="t-chips-wrap" id="t-chips-wrap" hidden="">
+            <div class="t-chips-label">Vos travaux cochés</div>
+            <div class="t-chips" id="t-chips"></div>
+          </div>
+        </div>
+        <div class="f-foot">
+          <button type="button" class="btn btn-primary" id="btn-search"><span class="dirty-dot" id="dirty-dot" hidden=""></span><span id="btn-search-label">Rechercher</span></button>
+          <button type="button" class="f-reset" id="btn-reset">Réinitialiser</button>
+        </div>
+        </div>
+      </aside>
+
+      <div>
+        <!-- SECTION FAVORIS : visible si au moins un artisan ajouté au dossier -->
+        <div id="favs-section" hidden="" style="background:#FFFFFF;border:1px solid var(--teal-200);border-radius:6px;padding:20px;margin-bottom:18px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div>
+              <div style="font:600 17px var(--font-mono);color:var(--teal-700);">Mon dossier</div>
+              <h3 style="margin:4px 0 0;font-size:17px;font-weight:600;color:var(--slate-900)">Artisans sélectionnés <span id="favs-count" style="background:var(--teal-700);color:#FFFFFF;border-radius:6px;padding:2px 9px;font:600 17px var(--font-mono);margin-left:6px">0</span></h3>
+            </div>
+            <button type="button" id="favs-clear" style="background:transparent;border:0;color:var(--slate-500);cursor:pointer;font-size:17px;text-decoration:underline">Tout retirer</button>
+          </div>
+          <div id="favs-list"></div>
+          <div style="margin-top:10px;padding:10px 12px;background:var(--teal-50);border-radius:6px;font-size:17px;color:var(--teal-900)">
+            <b>Étapes suivantes :</b> contactez vos artisans pour des devis comparables, puis déposez-les dans <a href="mes-documents.dc.html" style="color:var(--teal-700);font-weight:500">Mes documents</a>. Nous vérifierons leur cohérence avec votre dossier d'aides.
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+            <a href="dashboard.dc.html" class="btn btn-primary" style="flex:1;justify-content:center;text-decoration:none;min-width:160px">
+              Retour au tableau de bord</a>
+            <a href="mes-documents.dc.html" class="btn btn-secondary" style="flex:1;justify-content:center;text-decoration:none;min-width:160px">
+              Déposer un devis
+            </a>
+          </div>
+        </div>
+
+        <div class="results-zone" id="results-zone">
+          <div class="res-notice" id="res-notice" role="status" hidden=""><span data-jr-picto="information"></span><span>Vos filtres ont changé — relancez la recherche.</span></div>
+
+          <div class="res-head" id="res-head" hidden="">
+            <p class="res-line" id="res-line" aria-live="polite"></p>
+            <p class="res-crit" id="res-crit"></p>
+          </div>
+
+          <!-- Note MAR — affichée si l'utilisateur est en rénovation d'ampleur -->
+          <div id="mar-notice" hidden="" style="padding:14px 16px;background:var(--card);border:1px solid var(--ink);border-radius:6px;font-size:17px;color:#123A2E;display:flex;gap:10px;align-items:flex-start">
+            <span data-jr-picto="information"></span>
+            <div>
+              <b>Votre projet est une rénovation d'ampleur.</b> En plus des artisans RGE ci-dessous, vous devez désigner un <b>Mon Accompagnateur Rénov' (MAR)</b> agréé par l'Anah — il déposera votre dossier MaPrimeRénov' à votre place. Choisissez librement dans <a href="https://france-renov.gouv.fr/annuaires-professionnels/accompagnant" target="_blank" rel="noopener" style="color:#123A2E;font-weight:600;text-decoration:underline">l'annuaire officiel Anah</a>. Ses honoraires (1 500 à 3 000 €) sont partiellement couverts par le forfait d'accompagnement MPR.
+            </div>
+          </div>
+
+          <div id="artisans-results" hidden="">
+            <div id="artisans-list"></div>
+            <div class="res-source" id="res-source">
+              Source : <a href="https://data.ademe.fr/datasets/liste-des-entreprises-rge-2" target="_blank" rel="noopener">ADEME — base officielle des entreprises RGE</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="tips">
+          <h2 id="tips-titre">Comment choisir le bon artisan ?</h2>
+          <div class="tip-grid" id="tips-grid">
+            <div class="tip">
+              <div class="ic"><span data-jr-picto="information"></span></div>
+              <h3>Vérifiez la certification RGE active</h3>
+              <p>La date d'expiration doit dépasser la date de fin de travaux prévue, sinon les aides ne s'appliquent pas.</p>
+            </div>
+            <div class="tip">
+              <div class="ic"><span data-jr-picto="information"></span></div>
+              <h3>Demandez 3 devis comparables</h3>
+              <p>Imposez le même périmètre, les mêmes matériaux et le même niveau de garantie pour pouvoir comparer.</p>
+            </div>
+            <div class="tip">
+              <div class="ic"><span data-jr-picto="information"></span></div>
+              <h3>Méfiez-vous des prix trop bas</h3>
+              <p>Un devis 30 % sous le marché est souvent un signe d'arnaque ou de sous-traitance non déclarée.</p>
+            </div>
+            <div class="tip">
+              <div class="ic"><span data-jr-picto="information"></span></div>
+              <h3>Privilégiez les artisans locaux</h3>
+              <p>Distance ≤ 50 km idéalement : meilleure réactivité, frais de déplacement réduits, suivi SAV facilité.</p>
+            </div>
+            <div class="tip">
+              <div class="ic"><span data-jr-picto="information"></span></div>
+              <h3>Vérifiez l'assurance décennale</h3>
+              <p>L'attestation doit couvrir l'année des travaux et mentionner les corps de métier que vous engagez.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+
+
+
+
+
+
+
+
+
+

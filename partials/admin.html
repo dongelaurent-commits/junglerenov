@@ -1,0 +1,188 @@
+<!-- Fragment rhabillé : balisage et identifiants d'origine conservés (les scripts métier s'y accrochent). -->
+
+
+<!-- Mur de connexion (affiché si pas de session admin) -->
+<div class="auth-wall" id="auth-wall">
+  <div class="card">
+    <h2>Accès administrateur</h2>
+    <div class="sub">Connexion requise pour gérer les clients et leurs dossiers.</div>
+    <form id="auth-form" autocomplete="on">
+      <div class="field">
+        <label for="auth-email">Email</label>
+        <input type="email" id="auth-email" placeholder="vous@exemple.fr" required="" autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="auth-pw">Mot de passe</label>
+        <input type="password" id="auth-pw" placeholder="••••••" required="" autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn-go">Se connecter</button>
+      <div class="err" id="auth-err"></div>
+    </form>
+      <div class="switch">
+      Vous êtes client ? <a href="dashboard.dc.html">Aller à votre espace</a>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="brand" aria-label="JungleRenov, accueil"><span data-jr-logo="horizontal/principal" data-h="30"></span></div>
+
+    <nav class="nav">
+      <div class="nav-section">Gestion</div>
+      <a href="#clients" class="active" data-view="clients">
+        <span data-jr-picto="information"></span>
+        Clients <span class="count" id="count-clients">—</span>
+      </a>
+      <a href="#documents" data-view="documents">
+        <span data-jr-picto="information"></span>
+        Documents <span class="count" id="count-docs">—</span>
+      </a>
+      <a href="#waitlist" data-view="waitlist">
+        <span data-jr-picto="information"></span>
+        Liste d'attente <span class="count" id="count-waitlist">—</span>
+      </a>
+      <a href="#audit" data-view="audit">
+        <span data-jr-picto="information"></span>
+        Historique
+      </a>
+
+      <div class="nav-section" style="margin-top:8px">Outils</div>
+      <a href="index.dc.html" target="_blank">
+        <span data-jr-picto="retour"></span>
+        Retour à l'accueil du site
+      </a>
+    </nav>
+
+    <div class="me">
+      <div class="av" id="me-av">A</div>
+      <div>
+        <div class="nm" id="me-name">Admin</div>
+        <div class="role" id="me-role">admin</div>
+      </div>
+      <a href="#" class="logout" id="btn-logout">Quitter</a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- VUE CLIENTS -->
+    <div id="view-clients">
+      <h1 class="page-title">Clients &amp; dossiers</h1>
+      <p class="lead">Tous les clients JungleRenov et l'état de leur dossier.</p>
+
+      <div class="kpis">
+        <div class="kpi"><div class="lbl">Clients actifs</div><div class="val" id="kpi-actifs">—</div><div class="delta" id="kpi-actifs-d">—</div></div>
+        <div class="kpi"><div class="lbl">Dossiers transmis</div><div class="val" id="kpi-transmis">—</div><div class="delta">à un partenaire habilité</div></div>
+        <div class="kpi"><div class="lbl">Aides distribuées</div><div class="val" id="kpi-aides">—</div><div class="delta">cumulé depuis lancement</div></div>
+        <div class="kpi"><div class="lbl">Docs à traiter</div><div class="val" id="kpi-docs">—</div><div class="delta">en attente d'action</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Liste des clients</h2>
+          <div class="actions">
+            <div class="search">
+              <span data-jr-picto="information"></span>
+              <input type="text" id="search" placeholder="Rechercher par nom, email, ville…">
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-chips" id="filter-chips" aria-label="Filtrer par statut de dossier">
+          <!-- Chips injectés en JS depuis RFStore.DOSSIER_STATUSES -->
+        </div>
+
+        <table id="clients-table">
+          <thead>
+            <tr>
+              <th>Client</th>
+                <th>Logement</th>
+              <th>Aides estimées</th>
+              <th>Dossier</th>
+              <th>Inscription</th>
+            </tr>
+          </thead>
+          <tbody id="clients-tbody">
+            <tr><td colspan="6" class="empty">Chargement…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VUE DOCUMENTS -->
+    <div id="view-documents" hidden="">
+      <h1 class="page-title">Documents à traiter</h1>
+      <p class="lead">Pièces fournies par les clients et dossiers générés en attente.</p>
+      <div class="panel">
+        <div class="panel-head"><h2>En attente de votre action</h2></div>
+        <div id="docs-list-wrap">
+          <div class="empty">
+            <span data-jr-picto="information"></span>
+            <div>Aucun document en attente.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VUE LISTE D'ATTENTE GÉOGRAPHIQUE -->
+    <div id="view-waitlist" hidden="">
+      <h1 class="page-title">Liste d'attente géographique</h1>
+      <p class="lead">Visiteurs hors zone active ayant demandé à être prévenus de l'ouverture du service dans leur région. Aucun paiement n'a été encaissé.</p>
+
+      <div class="kpis">
+        <div class="kpi"><div class="lbl">Inscrits au total</div><div class="val" id="rf-waitlist-kpi-total">—</div><div class="delta">toutes régions confondues</div></div>
+        <div class="kpi"><div class="lbl">Région la plus demandée</div><div class="val" id="rf-waitlist-kpi-region" style="font-size:18px">—</div><div class="delta" id="rf-waitlist-kpi-region-n">—</div></div>
+        <div class="kpi"><div class="lbl">Zones roadmap</div><div class="val" id="rf-waitlist-kpi-roadmap">—</div><div class="delta">ouverture T3 2026</div></div>
+        <div class="kpi"><div class="lbl">Hors périmètre</div><div class="val" id="rf-waitlist-kpi-blocked">—</div><div class="delta">reste du territoire</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Inscriptions</h2>
+          <button type="button" class="btn btn-primary" id="rf-waitlist-export">Exporter en CSV</button>
+        </div>
+        <table>
+          <thead><tr><th>Email</th><th>Code postal</th><th>Région</th><th>Tunnel</th><th>Inscription</th></tr></thead>
+          <tbody id="rf-waitlist-tbody"></tbody>
+        </table>
+        <div class="empty" id="rf-waitlist-empty" hidden="">
+          <span data-jr-picto="information"></span>
+          <div>Aucune inscription sur la liste d'attente.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VUE HISTORIQUE -->
+    <div id="view-audit" hidden="">
+      <h1 class="page-title">Historique des actions admin</h1>
+      <p class="lead">Journal complet des actions effectuées par l'équipe (50 dernières).</p>
+      <div class="panel">
+        <table>
+          <thead>
+            <tr><th>Date</th><th>Admin</th><th>Action</th><th>Détails</th></tr>
+          </thead>
+          <tbody id="audit-tbody"><tr><td colspan="4" class="empty">Chargement…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- DRAWER CLIENT -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h2 id="d-title">Détail client</h2>
+    <button class="drawer-close" id="d-close"></button>
+  </div>
+  <div class="drawer-body" id="d-body"></div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+
+
+
+
+

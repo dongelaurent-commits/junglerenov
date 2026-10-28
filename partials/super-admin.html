@@ -1,0 +1,277 @@
+<!-- Fragment rhabillé : balisage et identifiants d'origine conservés (les scripts métier s'y accrochent). -->
+
+
+<!-- Mur de connexion super-admin -->
+<div class="auth-wall" id="auth-wall">
+  <div class="card-aw">
+    <h2>Accès super-administrateur</h2>
+    <div class="sub">Connexion requise pour gérer le site et l'équipe.</div>
+    <form id="auth-form" autocomplete="on">
+      <div class="field">
+        <label for="auth-email">Email</label>
+        <input type="email" id="auth-email" placeholder="vous@exemple.fr" required="" autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="auth-pw">Mot de passe</label>
+        <input type="password" id="auth-pw" placeholder="••••••" required="" autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn-go">Se connecter</button>
+      <div class="err" id="auth-err"></div>
+    </form>
+    </div>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="brand" aria-label="JungleRenov, accueil"><span data-jr-logo="horizontal/principal" data-h="30"></span></div>
+
+    <nav class="nav">
+      <div class="nav-section">Pilotage</div>
+      <a class="active" data-view="overview">
+        <span data-jr-picto="information"></span>
+        Vue d'ensemble
+      </a>
+      <a data-view="admins">
+        <span data-jr-picto="information"></span>
+        Administrateurs
+      </a>
+      <a data-view="settings">
+        <span data-jr-picto="information"></span>
+        Paramètres site
+      </a>
+      <a data-view="partenaires">
+        <span data-jr-picto="information"></span>
+        Partenaires
+        <span id="cancel-badge" style="margin-left:auto;background:var(--danger-600);color:#FFFFFF;font:700 17px var(--font-mono);padding:2px 7px;border-radius:6px;display:none">0</span>
+      </a>
+      <a data-view="waitlist">
+        <span data-jr-picto="information"></span>
+        Liste d'attente <span class="count" id="count-waitlist">—</span>
+      </a>
+      <a data-view="audit">
+        <span data-jr-picto="information"></span>
+        Audit log complet
+      </a>
+
+      <div class="nav-section" style="margin-top:8px">Liens rapides</div>
+      <a href="admin.dc.html">
+        <span data-jr-picto="information"></span>
+        Espace admin
+      </a>
+      <a href="index.dc.html" target="_blank">
+        <span data-jr-picto="retour"></span>
+        Retour à l'accueil du site
+      </a>
+    </nav>
+
+    <div class="me">
+      <div class="av" id="me-av">S</div>
+      <div>
+        <div class="nm" id="me-name">Super admin</div>
+        <div class="role">super_admin</div>
+      </div>
+      <a href="#" class="logout" id="btn-logout">Quitter</a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- VUE OVERVIEW -->
+    <div id="view-overview">
+      <h1 class="page-title">Vue d'ensemble du site</h1>
+      <p class="lead">Pilotage stratégique de JungleRenov — métriques business, croissance, santé opérationnelle.</p>
+
+      <div class="kpis">
+        <div class="kpi featured"><div class="lbl">Revenu partenaires HT</div><div class="val" id="kpi-mrr">—</div><div class="delta">dossiers transmis × barème contractuel B2B</div></div>
+        <div class="kpi"><div class="lbl">Clients actifs</div><div class="val" id="kpi-actifs">—</div><div class="delta" id="kpi-actifs-d">—</div></div>
+        <div class="kpi"><div class="lbl">Total aides estimées</div><div class="val" id="kpi-aides">—</div><div class="delta">cumulé</div></div>
+        <div class="kpi"><div class="lbl">Admins actifs</div><div class="val" id="kpi-admins">—</div><div class="delta">y compris super admin</div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head"><h2>Répartition des clients</h2></div>
+          <div class="panel-body" id="tier-breakdown" style="font-size:17px"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>Dernières actions admin</h2></div>
+          <div class="panel-body" id="last-actions" style="font-size:17px;color:var(--slate-600)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VUE ADMINS -->
+    <div id="view-admins" hidden="">
+      <h1 class="page-title">Gestion des administrateurs</h1>
+      <p class="lead">Comptes ayant accès à l'espace admin et super admin.</p>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Liste des admins</h2>
+          <button class="btn btn-primary" id="btn-add-admin">+ Ajouter un admin</button>
+        </div>
+        <table>
+          <thead><tr><th>Email</th><th>Rôle</th><th>Actions</th></tr></thead>
+          <tbody id="admins-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VUE PARAMÈTRES -->
+    <div id="view-settings" hidden="">
+      <h1 class="page-title">Paramètres du site</h1>
+      <p class="lead">Configuration globale qui s'applique à tous les utilisateurs.</p>
+
+      <div class="panel">
+        <div class="panel-head"><h2>Site</h2></div>
+        <div class="panel-body">
+          <div class="setting">
+            <div class="info">
+              <div class="name">Mode maintenance</div>
+              <div class="desc">Affiche une page « En maintenance » à tous les visiteurs. Les admins gardent l'accès.</div>
+            </div>
+            <div class="switch" id="sw-maintenance" data-key="maintenance"></div>
+          </div>
+          <div class="setting">
+            <div class="info">
+              <div class="name">Inscriptions ouvertes</div>
+              <div class="desc">Si désactivé, la simulation reste accessible mais la création de compte est bloquée.</div>
+            </div>
+            <div class="switch on" id="sw-signups" data-key="signups"></div>
+          </div>
+          
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:16px">
+        <div class="panel-head"><h2>Modèle économique</h2></div>
+        <div class="panel-body" style="font-size:17px;color:var(--slate-600)">
+          <div style="padding:18px 20px;background:var(--teal-50,#F4F1E8);border:1px solid var(--teal-100,#E9E3D3);border-radius:6px">
+            <div style="font:600 17px var(--font-mono);color:var(--teal-700)">Rémunération B2B, par dossier transmis</div>
+            <div style="display:flex;gap:26px;flex-wrap:wrap;margin-top:10px">
+              <div><div style="font:700 24px var(--font-mono);color:var(--slate-900)">290 € HT</div><div style="font-size:17px">Rénovation d'ampleur · MAR</div></div>
+              <div><div style="font:700 24px var(--font-mono);color:var(--slate-900)">190 € HT</div><div style="font-size:17px">Rénovation par geste · AMO</div></div>
+              <div><div style="font:700 24px var(--font-mono);color:var(--slate-500)">290 € HT <span style="font:600 17px var(--font-mono);color:#123A2E;background:#E9E3D3;padding:2px 6px;border-radius:4px;vertical-align:middle">À CONFIRMER</span></div><div style="font-size:17px">Habitat dégradé · opérateur agréé</div></div>
+            </div>
+          </div>
+          <p style="margin:12px 0 0;font-size:17px;color:var(--slate-500);line-height:1.55"><b>Le particulier ne paie jamais.</b> Le site n'a aucun rôle transactionnel : il qualifie, monte le dossier et le transmet. JungleRenov est rémunéré par le partenaire habilité qui reprend le dossier, hors plateforme.</p>
+          <p style="margin:10px 0 0;font-size:17px;color:var(--slate-500)">Source unique : <code>_storage.js</code> (REMUNERATION_HT). Les deux premiers montants viennent des documents « La solution JungleRenov » 2027 et 2028 ; le troisième n'y est pas chiffré et reste à arrêter. L'état mensuel par partenaire est exporté depuis l'onglet Partenaires.</p>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:16px">
+        <div class="panel-head"><h2>Zone de danger</h2></div>
+        <div class="panel-body">
+          <div class="setting">
+            <div class="info">
+              <div class="name">Vider toutes les données de démo</div>
+              <div class="desc">Supprime tous les clients, documents, audit log. Conserve les comptes admin. Action irréversible.</div>
+            </div>
+            <button class="btn btn-danger" id="btn-wipe">Tout effacer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VUE PARTENAIRES — état mensuel à adresser à chaque partenaire habilité -->
+    <div id="view-partenaires" hidden="">
+      <h1 class="page-title">Partenaires · état mensuel</h1>
+      <p class="lead">Dossiers transmis par partenaire habilité, valorisés au barème contractuel. C'est la base de la relation B2B : le particulier ne règle jamais rien.</p>
+
+      <div class="kpis">
+        <div class="kpi"><div class="lbl">Dossiers transmis</div><div class="val" id="prt-total">—</div><div class="delta">toutes périodes</div></div>
+        <div class="kpi"><div class="lbl">Ce mois-ci</div><div class="val" id="prt-mois">—</div><div class="delta" id="prt-mois-lbl">—</div></div>
+        <div class="kpi featured"><div class="lbl">À refacturer ce mois</div><div class="val" id="prt-montant">—</div><div class="delta">HT, hors plateforme</div></div>
+        <div class="kpi"><div class="lbl">Partenaires actifs</div><div class="val" id="prt-nb">—</div><div class="delta">ayant reçu au moins un dossier</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>État du mois par partenaire</h2>
+          <button class="btn btn-primary" id="prt-export">Exporter en CSV</button>
+        </div>
+        <table>
+          <thead><tr><th>Partenaire</th><th>Rôle</th><th>Département</th><th>Dossiers ce mois</th><th>Montant HT</th></tr></thead>
+          <tbody id="partenaires-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="panel" style="margin-top:16px">
+        <div class="panel-head"><h2>Détail des dossiers transmis</h2></div>
+        <table>
+          <thead><tr><th>Dossier</th><th>Volet</th><th>Partenaire</th><th>Transmis le</th><th>Statut</th><th>Montant HT</th></tr></thead>
+          <tbody id="partenaires-detail-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- VUE LISTE D'ATTENTE GÉOGRAPHIQUE -->
+    <div id="view-waitlist" hidden="">
+      <h1 class="page-title">Liste d'attente géographique</h1>
+      <p class="lead">Visiteurs hors zone active ayant demandé à être prévenus de l'ouverture du service dans leur région. Aucun paiement n'a été encaissé.</p>
+
+      <div class="kpis">
+        <div class="kpi"><div class="lbl">Inscrits au total</div><div class="val" id="rf-waitlist-kpi-total">—</div><div class="delta">toutes régions confondues</div></div>
+        <div class="kpi"><div class="lbl">Région la plus demandée</div><div class="val" id="rf-waitlist-kpi-region" style="font-size:18px">—</div><div class="delta" id="rf-waitlist-kpi-region-n">—</div></div>
+        <div class="kpi"><div class="lbl">Zones roadmap</div><div class="val" id="rf-waitlist-kpi-roadmap">—</div><div class="delta">ouverture T3 2026</div></div>
+        <div class="kpi"><div class="lbl">Hors périmètre</div><div class="val" id="rf-waitlist-kpi-blocked">—</div><div class="delta">reste du territoire</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Inscriptions</h2>
+          <button type="button" class="btn btn-primary" id="rf-waitlist-export">Exporter en CSV</button>
+        </div>
+        <table>
+          <thead><tr><th>Email</th><th>Code postal</th><th>Région</th><th>Tunnel</th><th>Inscription</th></tr></thead>
+          <tbody id="rf-waitlist-tbody"></tbody>
+        </table>
+        <div class="empty" id="rf-waitlist-empty" hidden="">
+          <span data-jr-picto="information"></span>
+          <div>Aucune inscription sur la liste d'attente.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VUE AUDIT -->
+    <div id="view-audit" hidden="">
+      <h1 class="page-title">Audit log complet</h1>
+      <p class="lead">Toutes les actions effectuées par les administrateurs (500 dernières).</p>
+      <div class="panel">
+        <table>
+          <thead><tr><th>Date</th><th>Admin</th><th>Action</th><th>Détails</th></tr></thead>
+          <tbody id="audit-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal Ajouter admin -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <h3>Ajouter un administrateur</h3>
+    <label>Email
+      <input type="email" id="new-admin-email" placeholder="prenom.nom@junglerenov.fr">
+    </label>
+    <label>Rôle
+      <select id="new-admin-role">
+        <option value="admin">Admin</option>
+        <option value="super_admin">Super admin</option>
+      </select>
+    </label>
+    <p style="font-size:17px;color:var(--slate-500);margin:6px 0 0">Mot de passe par défaut : <code>change-me</code> — l'admin devra le modifier à la première connexion (en V1).</p>
+    <div class="actions">
+      <button class="btn" id="modal-cancel">Annuler</button>
+      <button class="btn btn-primary" id="modal-ok">Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+
+
+
+

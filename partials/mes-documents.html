@@ -1,0 +1,183 @@
+<!-- Fragment rhabillé : balisage et identifiants d'origine conservés (les scripts métier s'y accrochent). -->
+
+<div class="layout">
+  <aside class="sidebar">
+    <a class="brand" href="index.dc.html" aria-label="JungleRenov, accueil"><span data-jr-logo="horizontal/principal" data-h="30"></span></a>
+
+    <div class="total-widget" id="rf-aides-widget">
+      <div class="lbl">Aides estimées</div>
+      <div class="val" id="rf-aides-val">—</div>
+      <div class="sub" id="rf-aides-sub">Simulation à compléter</div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section">Mon parcours</div>
+      <a href="dashboard.dc.html"><span data-jr-picto="dossier"></span> Mon projet</a>
+      <a href="mes-aides.dc.html"><span data-jr-picto="revenus"></span> Mes aides</a>
+      <a href="mes-documents.dc.html" class="active"><span data-jr-picto="document"></span> Mes documents</a>
+      <div class="nav-section" style="margin-top:8px">Outils</div>
+      <a href="annuaire-artisans.dc.html"><span data-jr-picto="devis"></span> Annuaire artisans</a>
+      <a href="glossaire-aides.dc.html"><span data-jr-picto="information"></span> Comprendre les aides</a>
+      <div class="nav-section" style="margin-top:8px">Compte</div>
+      <a href="mon-profil.dc.html"><span data-jr-picto="proprietaire"></span> Mon profil</a>
+      <a href="page-info.dc.html?p=contact"><span data-jr-picto="email"></span> Paramètres</a>
+
+      <div class="exit" style="margin-top:6px;padding-top:14px;border-top:1px solid var(--border)">
+        <a href="index.dc.html"><span data-jr-picto="retour"></span> Retour à l'accueil du site</a>
+      </div>
+    </nav>
+
+    <div class="me">
+      <div class="av" id="rf-me-av">RF</div>
+      <div>
+        <div class="nm" id="rf-me-name">Mon compte</div>
+        <div class="em" id="rf-me-plan">—</div>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="breadcrumb">Mon parcours · Mes documents</div>
+    <h1 class="page-title">Mes documents</h1>
+    <p class="lead">Téléversez les pièces nécessaires à votre dossier et téléchargez les formulaires officiels que nous générons automatiquement à partir de votre simulation.</p>
+
+    <div class="dos-picker" id="dos-picker" hidden="">
+      <label for="filtre-dossier">Dossier concerné</label>
+      <select id="filtre-dossier"></select>
+      <span class="dos-hint" id="dos-picker-hint"></span>
+    </div>
+
+    <!-- (Bloc de récupération supprimé : la page affiche directement les pièces standard) -->
+
+    <!-- Section 1 : Pièces à fournir -->
+    <div id="docs-main">
+      <div class="section-title">
+        <h2>Pièces à me fournir</h2>
+        <span class="count" id="pieces-count">— à fournir</span>
+      </div>
+      <div class="doc-list" id="pieces-list"></div>
+
+      <div class="dropzone">
+        <div class="ic"><span data-jr-picto="information"></span></div>
+        <div>
+          <div class="h">Glissez-déposez vos documents ici</div>
+          <div class="s">PDF, JPG, PNG, DOCX — jusqu'à 20 Mo par fichier · Stockage chiffré, conforme RGPD.</div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-secondary" id="btn-qr">Scanner avec mon téléphone</button>
+          <button class="btn btn-primary" id="btn-choose">Choisir un fichier</button>
+        </div>
+      </div>
+
+      <!-- Section 2 : Dossiers générés -->
+      <div class="section-title" style="margin-top:48px">
+        <h2>Mes dossiers générés par JungleRenov</h2>
+        <span class="count" id="dossiers-count">—</span>
+      </div>
+      <div class="doc-list" id="dossiers-list"></div>
+
+      <!-- Étapes du parcours MaPrimeRénov' — transparence règle Anah 2026 -->
+      <div class="section-title" style="margin-top:48px">
+        <h2 id="depot-titre">Déposer mon dossier MaPrimeRénov'</h2>
+        <span class="count">3 étapes</span>
+      </div>
+
+      <div id="depot-etapes">
+      <div class="wizard-step mpr-account-step" style="background:#FFFFFF;border:1px solid var(--border);border-radius:6px;padding:20px;margin-bottom:14px">
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div style="width:36px;height:36px;border-radius:6px;background:#1F6B3F;color:#FFFFFF;display:grid;place-items:center;font:700 17px var(--font-sans);flex:0 0 auto">1</div>
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:17px;color:var(--slate-900);margin-bottom:4px">Créer votre compte MaPrimeRénov' — <span style="color:var(--teal-700)">et nous vous accompagnons pas à pas</span></div>
+            <div style="font-size:17px;color:var(--slate-600);margin-bottom:12px">
+              Cette étape ne peut pas être automatisée — <b>l'Anah exige que vous créiez votre compte vous-même</b> pour lutter contre la fraude (règle 2026). Comptez 5 minutes, c'est gratuit. <b>Rassurez-vous : nous ne vous laissons pas seul.</b> Nous mettons à votre disposition un guide illustré, un tutoriel vidéo et un support par email si vous êtes bloqué.
+            </div>
+
+            <div style="background:var(--slate-50);border:1px solid var(--border);border-radius:6px;padding:14px;margin-bottom:12px">
+              <div style="font-weight:600;font-size:17px;color:var(--slate-800);margin-bottom:8px">Deux façons de vérifier votre identité</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div style="background:#FFFFFF;padding:10px 12px;border-radius:6px;border:1px solid var(--border)">
+                  <div style="font-weight:600;font-size:17px;color:var(--teal-700);margin-bottom:2px">FranceConnect+ · instantané</div>
+                  <div style="font-size:17px;color:var(--slate-500)">Vous vous connectez avec vos identifiants Impôts, Ameli ou La Poste. Compte créé en 2 minutes.</div>
+                </div>
+                <div style="background:#FFFFFF;padding:10px 12px;border-radius:6px;border:1px solid var(--border)">
+                  <div style="font-weight:600;font-size:17px;color:var(--amber-600);margin-bottom:2px">Code par courrier · 5-7 jours</div>
+                  <div style="font-size:17px;color:var(--slate-500)">Un courrier avec un code à saisir vous est envoyé à votre adresse fiscale.</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background:var(--teal-50);border:1px solid var(--teal-100);border-radius:6px;padding:14px;margin-bottom:14px">
+              <div style="font-weight:600;font-size:17px;color:var(--teal-900);margin-bottom:8px;display:flex;align-items:center;gap:6px">
+                <span data-jr-picto="information"></span>
+                Notre accompagnement pour cette étape
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:17px;color:var(--teal-900)">
+                <div style="display:flex;gap:6px;align-items:flex-start"><span style="color:var(--teal-700);flex:0 0 auto;margin-top:2px">▸</span> <span><b>Guide pas à pas illustré</b> — les 8 étapes de la création de compte avec captures d'écran, imprimable en 1 clic</span></div>
+                <div style="display:flex;gap:6px;align-items:flex-start"><span style="color:var(--teal-700);flex:0 0 auto;margin-top:2px">▸</span> <span><b>Tutoriel vidéo (2 min)</b> — nous parcourons ensemble le portail, vous n'avez qu'à suivre</span></div>
+                <div style="display:flex;gap:6px;align-items:flex-start"><span style="color:var(--teal-700);flex:0 0 auto;margin-top:2px">▸</span> <span><b>Checklist des pièces</b> à préparer avant de commencer (numéro fiscal, DPE, adresse…)</span></div>
+                <div style="display:flex;gap:6px;align-items:flex-start"><span style="color:var(--teal-700);flex:0 0 auto;margin-top:2px">▸</span> <span><b>Support par email</b> si vous êtes bloqué — nous répondons à toutes vos questions</span></div>
+              </div>
+            </div>
+
+            <a href="https://www.maprimerenov.gouv.fr/" target="_blank" rel="noopener" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;margin-right:8px">
+              Ouvrir maprimerenov.gouv.fr
+              <span data-jr-picto="information"></span>
+            </a>
+            <a href="page-info.dc.html?p=guide-mpr" class="btn btn-secondary" id="btn-guide-mpr" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none">
+              Voir notre guide pas à pas
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="wizard-step" style="background:#FFFFFF;border:1px solid var(--border);border-radius:6px;padding:20px;margin-bottom:14px">
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div style="width:36px;height:36px;border-radius:6px;background:#1F6B3F;color:#FFFFFF;display:grid;place-items:center;font:700 17px var(--font-sans);flex:0 0 auto">2</div>
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:17px;color:var(--slate-900);margin-bottom:4px">Nous désigner comme <abbr title="Personne autorisée à accomplir des démarches en votre nom. Vous restez le bénéficiaire de l'aide.">mandataire</abbr> administratif — <span style="color:var(--teal-700)">nous vous guidons en 2 clics</span></div>
+            <div style="font-size:17px;color:var(--slate-600);margin-bottom:12px">
+              Une fois votre compte créé, ajoutez JungleRenov comme <b>mandataire administratif</b> (2 clics dans votre espace MPR). Cela nous autorise à préparer, déposer et suivre votre dossier — <b>sans jamais toucher aux fonds</b> qui restent versés directement sur votre compte bancaire. Nous vous envoyons un email avec les captures d'écran des 2 clics à effectuer, vous ne pouvez pas vous tromper.
+            </div>
+            <div style="background:var(--teal-50);border:1px solid var(--teal-100);border-radius:6px;padding:10px 12px;font-size:17px;color:var(--teal-900);margin-bottom:10px">
+              <b>Notre SIRET à saisir</b> : <span style="font:600 17px var(--font-mono)">[À RENSEIGNER après création SAS]</span>
+            </div>
+            <div style="font-size:17px;color:var(--slate-500)">
+              ▸ Guide vidéo (1 min) montrant les 2 clics exacts · ▸ Support email si vous ne trouvez pas le bouton
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wizard-step" style="background:#FFFFFF;border:1px solid var(--border);border-radius:6px;padding:20px">
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div style="width:36px;height:36px;border-radius:6px;background:#E9E3D3;color:#123A2E;display:grid;place-items:center;font:700 17px var(--font-sans);flex:0 0 auto">3</div>
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:17px;color:var(--slate-900);margin-bottom:4px">Nous prenons le relais — <span style="color:var(--teal-700)">et vous informons à chaque étape</span></div>
+            <div style="font-size:17px;color:var(--slate-600);margin-bottom:12px">
+              Dossier préparé, pièces uploadées, réponses aux demandes de l'Anah, suivi de statut — <b>nous gérons tout jusqu'au versement de votre prime</b>. Vous recevez un email à chaque étape franchie : dépôt effectué, dossier accepté, prime versée. Vous pouvez aussi suivre l'avancement en temps réel depuis votre espace JungleRenov.
+            </div>
+            <div style="font-size:17px;color:var(--slate-500)">
+              ▸ Emails de suivi automatiques · ▸ Timeline visuelle dans votre espace · ▸ Support par email pour toute question
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </main>
+<p class="rf-glossaire-lien"><a href="glossaire-aides.dc.html#vocabulaire" target="_blank" rel="noopener">Un mot vous échappe&nbsp;? Le vocabulaire des aides, expliqué</a></p>
+</div>
+
+<div class="toast" id="toast">Document téléversé</div>
+
+
+
+
+
+
+
+
+
+
+
+
